@@ -502,91 +502,9 @@ select option {
         }
 
 
-        /* Opponent column should never truncate */
-        @media (max-width: 860px) {
-  /* tighter vertical spacing */
-  tbody td {
-    padding: 6px 0;
-  }
+        
+       
 
-  /* default line is label left, value right; numbers look good right-aligned */
-  tbody td.right {
-    text-align: right;
-  }
-
-  /* The stacked “label: value” row */
-  tbody td[data-label] {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  /* Let long values wrap under label when needed (prevents weird squeezing) */
-  tbody td[data-label] > *:last-child {
-    flex: 1 1 auto;
-    text-align: right;
-    min-width: 0;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-  }
-}
-        @media (max-width: 860px) {
-  /* Opponent line: left-aligned row with logo + name, allow wrapping */
-  tbody td[data-label="Opponent"] {
-    display: block;              /* break away from the generic flex row */
-    padding-top: 10px;           /* give it some air */
-  }
-
-  tbody td[data-label="Opponent"]::before {
-    display: none !important;    /* you already do this; keep it explicit */
-  }
-
-  .opp {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-    flex-wrap: nowrap;           /* keep logo and first part together */
-  }
-
-  .opp .logo {
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
-    flex: 0 0 auto;
-  }
-
-  /* let the school name wrap on small phones instead of pushing width */
-  .opp span:last-child {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-  }
-}
-@media (max-width: 860px) {
-  /* Date line as subtle chip */
-  tbody td[data-label="Date"] {
-    order: -10; /* appear first in the card */
-  }
-  tbody td[data-label="Date"] .muted,
-  tbody td[data-label="Date"] {
-    display: inline-block;
-    color: rgba(255, 255, 255, .85);
-    background: rgba(255, 255, 255, .06);
-    border: 1px solid rgba(255, 255, 255, .10);
-    padding: 4px 8px;
-    border-radius: 999px;
-  }
-
-  /* Result at the end, left-aligned and allowed to wrap */
-  tbody td[data-label="Result"] {
-    order: 10;              /* appear last */
-    margin-top: 6px;
-    text-align: left;       /* override right alignment */
-    white-space: normal;    /* allow wrap for long results like “(12)” etc. */
-  }
-}
 @media (max-width: 860px) {
   td[data-label="Opponent"],
   th[data-key="opponent"] {
@@ -595,29 +513,35 @@ select option {
   }
 }
 
-        @media (max-width: 860px) {
+        /* Keep the table layout on mobile; allow sideways scroll */
+@media (max-width: 860px) {
   .table-wrap {
-    overflow-x: hidden; /* we no longer need horizontal scroll once rows are stacked */
+    overflow-x: auto !important;        /* enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch;  /* smooth scrolling on iOS */
   }
 
-  tbody {
-    padding: 4px 0;
+  /* Ensure we did NOT convert any table parts into blocks */
+  thead { display: table-header-group !important; }
+  tbody { display: table-row-group !important; }
+  tr    { display: table-row !important; }
+  td,
+  th    { display: table-cell !important; }
+
+  /* Keep everything in a single line per cell (prevents per-cell wrapping) */
+  thead th,
+  tbody td {
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  tbody tr {
-    margin: 10px 0;
-    border: 1px solid rgba(255, 255, 255, .08);
-    background: rgba(255, 255, 255, .03);
-    border-radius: 10px;
-    padding: 10px 12px 6px; /* keep your existing inner padding */
-  }
-
-  /* remove the old row divider under each td (you already unset border-bottom on td) */
-  tbody tr:hover td {
-    background: transparent; /* no hover striping on mobile cards */
+  /* Opponent cell: keep on one line too (or switch to normal if you want name wrapping) */
+  td[data-label="Opponent"] .opp span:last-child {
+    white-space: nowrap;  /* change to 'normal' if you want the school to wrap instead of scrolling */
   }
 }
 
+       
 
         table {
             width: 100%;
