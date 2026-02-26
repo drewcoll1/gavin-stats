@@ -259,7 +259,7 @@
             padding: 10px 12px;
             border-radius: 12px;
             cursor: pointer;
-            user-: none;
+            user-select: none;
             font-weight: 700;
             font-size: 13px;
         }
@@ -2137,7 +2137,7 @@ document.getElementById("heroIvyOPS").textContent = fmt3(ivyOPS);
             if (teamStrip) {
                 const rec = teamRecords[currentSeason];
 
-                if (!rec === "career") {
+                if (!rec) { {
                     teamStrip.innerHTML = `
             <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
             <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
