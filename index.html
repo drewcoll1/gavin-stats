@@ -737,55 +737,6 @@ select option {
             display: block;
         }
 
-        @media (max-width: 860px) {
-            thead {
-                display: none;
-            }
-
-            table,
-            tbody,
-            tr,
-            td {
-                display: block;
-                width: 100%;
-            }
-
-            tbody tr {
-                border-bottom: 1px solid rgba(255, 255, 255, .08);
-                padding: 10px 10px 6px;
-            }
-
-            tbody td {
-                border-bottom: none;
-                padding: 6px 0;
-                white-space: normal;
-            }
-
-            tbody td.right {
-                text-align: left;
-            }
-
-            tbody td[data-label] {
-                display: flex;
-                justify-content: space-between;
-                gap: 12px;
-            }
-
-            tbody td[data-label]::before {
-                content: attr(data-label);
-                color: rgba(255, 255, 255, .60);
-                font-size: 12px;
-            }
-
-            tbody td[data-label="Opponent"] {
-                justify-content: flex-start;
-            }
-
-            tbody td[data-label="Opponent"]::before {
-                content: "";
-                display: none;
-            }
-        }
 
         /* (Removed) ANALYTICS chart styles */
     </style>
