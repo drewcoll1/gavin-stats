@@ -512,31 +512,7 @@ select option {
     white-space: normal !important;
   }
 }
-        /* Keep "Opponent ↕" on one line in small view */
-@media (max-width: 860px) {
-  /* Make all header cells a simple horizontal flex row */
-  thead th {
-    display: flex !important;
-    align-items: center;
-    gap: 6px;             /* space between text and arrow */
-    white-space: nowrap !important; /* no wrapping in header text */
-    min-width: 0;         /* allow flex shrinking without forcing wraps */
-  }
-
-  /* The sort arrow should never wrap; it’s a fixed-size inline block */
-  thead th .sort {
-    display: inline-block;
-    flex: 0 0 auto;       /* don't shrink */
-    white-space: nowrap;
-    line-height: 1;
-  }
-
-  /* (Optional) give the Opponent header just a touch more room */
-  thead th[data-key="opponent"] {
-    padding-right: 8px;   /* reduce chance of a cramped wrap */
-    min-width: 10ch;      /* tune if needed */
-  }
-}
+      
 
 
         /* Keep the table layout on mobile; allow sideways scroll */
