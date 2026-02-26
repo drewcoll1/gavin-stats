@@ -259,7 +259,7 @@
             padding: 10px 12px;
             border-radius: 12px;
             cursor: pointer;
-            user-select: none;
+            user-: none;
             font-weight: 700;
             font-size: 13px;
         }
@@ -446,14 +446,22 @@
         }
 
         input[type="text"],
-        select {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text);
-            font-size: 13px;
-            min-width: 160px;
-        }
+        
+/* Keep your current select styling for the closed control */
+select {
+  color: var(--text);
+  background-color: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Fix the popup list colors across browsers */
+select option {
+  color: #111;             /* dark text */
+  background-color: #fff;  /* light background */
+}
+
 
         select {
             cursor: pointer;
