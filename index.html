@@ -585,6 +585,57 @@ select option {
   min-width: 640px;  /* adjust to your column set; 640–760px usually feels right */
 }
 
+        /* Opponent cell layout: left cluster (logo+name) + right emoji */
+td[data-label="Opponent"] .opp {
+  display: flex;
+  align-items: center;
+  gap: 10px;         /* gap between left cluster and emoji */
+  min-width: 0;      /* allow inner ellipsis */
+}
+
+/* Left cluster: logo + name should not push the emoji off line */
+td[data-label="Opponent"] .opp-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;      /* critical so the name can ellipsis */
+  flex: 1 1 auto;    /* take available space; lets emoji sit at far right */
+}
+
+/* Team name truncates nicely if space is tight */
+td[data-label="Opponent"] .opp-name {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Emoji badge stays on the far right and never wraps */
+td[data-label="Opponent"] .opp-emoji {
+  margin-left: auto;     /* push to the far right edge */
+  flex: 0 0 auto;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Keep your logo sizes consistent */
+td[data-label="Opponent"] .logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .10);
+  flex: 0 0 auto;
+}
+
+/* Mobile: same behavior; keep the one-line layout you opted for */
+@media (max-width: 860px) {
+  td[data-label="Opponent"] .opp-emoji {
+    white-space: nowrap;
+  }
+}
+
 
 
        
