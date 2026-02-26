@@ -1,0 +1,2324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gavin Collins #16</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        :root {
+            --bg: #0e0f12;
+            --panel: #171922;
+            --panel2: #1f2230;
+            --text: #ffffff;
+            --muted: #a8adbd;
+            --accent: #cc0000;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+            background: radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
+                radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
+                var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            width: min(1150px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 18px 0 34px;
+            position: relative;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity .08s ease, transform .08s ease;
+            max-width: 360px;
+            padding: 10px 10px;
+            border-radius: 12px;
+            background: rgba(10, 11, 14, .92);
+            border: 1px solid rgba(255, 255, 255, .10);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, .92);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+            transform: translateY(0px);
+        }
+
+        .tip-title {
+            font-weight: 900;
+            letter-spacing: .25px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .tip-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 3px 0;
+        }
+
+        .tip-row .k {
+            color: rgba(255, 255, 255, .68);
+        }
+
+        .tip-row .v {
+            font-weight: 800;
+            color: rgba(255, 255, 255, .95);
+        }
+
+        #vsOppHitTypeChart {
+            width: 100%;
+            height: 220px;
+            display: block;
+        }
+
+        .tip-sub {
+            margin-top: 8px;
+            color: rgba(255, 255, 255, .65);
+            font-size: 11px;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+                linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+            border: 1px solid rgba(255, 255, 255, .06);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 18px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero:before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background:
+                radial-gradient(900px 300px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
+                radial-gradient(600px 240px at 60% 0%, rgba(255, 255, 255, .05), transparent 55%),
+                radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .35), transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-row {
+            position: relative;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .hero-left {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            min-width: 280px;
+        }
+
+        .player-photo {
+            width: 92px;
+            height: 92px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, .65);
+            object-fit: cover;
+            object-position: center top;
+            /* or center */
+        }
+
+        .player-meta h1 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: .2px;
+            line-height: 1.05;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .penn-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            background: transparent;
+            border: none;
+            padding: 0;
+            flex: 0 0 auto;
+        }
+
+        .player-meta .sub {
+            margin: 6px 0 0;
+            color: rgba(255, 255, 255, .78);
+            font-size: 14px;
+        }
+
+        .pill-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .pill {
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(0, 0, 0, .25);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill select {
+            background: rgba(0, 0, 0, .18);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 999px;
+            padding: 4px 10px;
+            outline: none;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .hero-right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: flex-end;
+            max-width: 100%;
+        }
+
+        .quick-card {
+            flex: 1 1 140px;
+            max-width: 180px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, .28);
+            border: 1px solid rgba(255, 255, 255, .10);
+            padding: 10px 12px;
+        }
+
+        .quick-card .label {
+            color: rgba(255, 255, 255, .72);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .quick-card .value {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: .4px;
+        }
+
+        .quick-card .hint {
+            margin-top: 4px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .60);
+        }
+
+        /* TABS */
+        .tabs {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .04);
+            color: rgba(255, 255, 255, .85);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .tab.active {
+            background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
+            border-color: rgba(204, 0, 0, .45);
+        }
+
+        /* GRID */
+        .grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1.25fr .75fr;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        @media (max-width: 980px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-right {
+                justify-content: flex-start;
+            }
+
+            .quick-card {
+                max-width: none;
+            }
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
+                var(--panel);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .panel-head {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 15px;
+            letter-spacing: .3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .9);
+        }
+
+        .panel-sub {
+            margin: 6px 0 0;
+            font-size: 12px;
+            color: var(--muted);
+            max-width: 70ch;
+        }
+
+        .panel-body {
+            padding: 14px;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .05);
+            color: rgba(255, 255, 255, .82);
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .tag b {
+            color: white;
+        }
+
+        .stat-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .stat {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, .0)),
+                var(--panel2);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 12px;
+            padding: 10px 10px 9px;
+            min-height: 68px;
+            min-width: 0;
+        }
+
+        .stat .k {
+            font-size: 11px;
+            letter-spacing: .35px;
+            color: rgba(255, 255, 255, .68);
+            text-transform: uppercase;
+        }
+
+        .stat .v {
+            margin-top: 6px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: .2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .stat .s {
+            margin-top: 4px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .60);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .chart-wrap {
+            position: relative;
+            min-height: 240px;
+        }
+
+        .chart-wrap::before {
+            content: "";
+            position: absolute;
+            inset: -18px;
+            background:
+                radial-gradient(420px 220px at 35% 55%, rgba(255, 80, 80, .20), transparent 60%),
+                radial-gradient(320px 220px at 35% 55%, rgba(120, 180, 255, .12), transparent 55%),
+                radial-gradient(320px 220px at 80% 45%, rgba(155, 89, 255, .10), transparent 55%);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+
+        #hitTypeChart {
+            position: relative;
+        }
+
+        .left-controls,
+        .right-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, .25);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 12px;
+            padding: 9px 10px;
+        }
+
+        .input label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, .75);
+            white-space: nowrap;
+        }
+
+        input[type="text"],
+        select {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 13px;
+            min-width: 160px;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-weight: 800;
+            color: white;
+            background: linear-gradient(180deg, rgba(204, 0, 0, .95), rgba(204, 0, 0, .65));
+            box-shadow: 0 10px 20px rgba(204, 0, 0, .18);
+        }
+
+        .player-meta .sub strong {
+            font-weight: 900;
+            color: white;
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+            box-shadow: none;
+            color: rgba(255, 255, 255, .9);
+        }
+
+        /* TABLE */
+
+        .table-wrap {
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(0, 0, 0, .18);
+            overflow-x: auto;
+            /* allow horizontal scroll */
+            overflow-y: hidden;
+        }
+
+
+        /* Opponent column should never truncate */
+        td[data-label="Opponent"],
+        th[data-key="opponent"] {
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
+            min-width: 100ch;
+            /* adjust if needed */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .75);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, .0)),
+                rgba(20, 22, 32, .95);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            padding: 10px 10px;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        thead th .sort {
+            opacity: .7;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        tbody td {
+            padding: 10px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            font-size: 13px;
+            color: rgba(255, 255, 255, .92);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        tbody tr:hover td {
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .muted {
+            color: rgba(255, 255, 255, .65);
+        }
+
+        .note {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, .62);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, .08);
+            margin: 12px 0;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        /* Opponent with logo */
+        .opp {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .logo {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+            flex: 0 0 auto;
+        }
+
+        .logo.fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .opp span:last-child {
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        .chart-wrap {
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(0, 0, 0, .18);
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        #hitTypeChart {
+            width: 100%;
+            height: 220px;
+            display: block;
+        }
+
+        @media (max-width: 860px) {
+            thead {
+                display: none;
+            }
+
+            table,
+            tbody,
+            tr,
+            td {
+                display: block;
+                width: 100%;
+            }
+
+            tbody tr {
+                border-bottom: 1px solid rgba(255, 255, 255, .08);
+                padding: 10px 10px 6px;
+            }
+
+            tbody td {
+                border-bottom: none;
+                padding: 6px 0;
+                white-space: normal;
+            }
+
+            tbody td.right {
+                text-align: left;
+            }
+
+            tbody td[data-label] {
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            tbody td[data-label]::before {
+                content: attr(data-label);
+                color: rgba(255, 255, 255, .60);
+                font-size: 12px;
+            }
+
+            tbody td[data-label="Opponent"] {
+                justify-content: flex-start;
+            }
+
+            tbody td[data-label="Opponent"]::before {
+                content: "";
+                display: none;
+            }
+        }
+
+        /* (Removed) ANALYTICS chart styles */
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="tooltip" class="tooltip"></div>
+
+        <div class="hero">
+            <div class="hero-row">
+                <div class="hero-left">
+                    <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
+                    <div class="player-meta">
+                        <h1>
+                            Gavin Collins
+                            <img class="penn-logo" src="penn_logo.png" alt="Penn logo" />
+                        </h1>
+
+                        <div class="sub">
+                            <strong>#16</strong> • RF • B/T: R/L
+                        </div>
+                        <div class="sub" style="margin-top:4px;">
+                            <span id="heroSeasonText">2025</span> • Game Log • Batting + Fielding
+                        </div>
+
+                        <div class="pill-row">
+                            <div class="pill">
+                                Season:
+                                <select id="seasonSelect" aria-label="Select season">
+                                    <option value="2024">2024</option>
+                                    <option value="2025" selected>2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="career">Career</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-right">
+                    <div class="quick-card">
+                        <div class="label">AVG</div>
+                        <div class="value" id="heroAVG">—</div>
+                        <div class="hint">Batting average</div>
+                    </div>
+                    <div class="quick-card">
+                        <div class="label">OBP</div>
+                        <div class="value" id="heroOBP">—</div>
+                        <div class="hint">On-base percentage</div>
+                    </div>
+                    <div class="quick-card">
+                        <div class="label">OPS</div>
+                        <div class="value" id="heroOPS">—</div>
+                        <div class="hint">OBP + SLG</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Stat sections">
+                <div class="tab active" data-tab="batting">Batting</div>
+                <div class="tab" data-tab="fielding">Fielding</div>
+                <!-- removed Analytics tab -->
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- LEFT -->
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2 class="panel-title" id="panelTitle">Batting • Game Log</h2>
+                        <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter
+                            to narrow the log.</p>
+                    </div>
+                    <div class="tag" id="rowCountTag"><b>—</b> rows</div>
+                </div>
+
+                <div class="panel-body">
+                    <!-- Batting -->
+                    <div class="section active" id="section-batting">
+                        <div class="controls">
+                            <div class="left-controls">
+                                <div class="input">
+                                    <label for="searchBat">Search</label>
+                                    <input id="searchBat" type="text" placeholder="opponent, etc." />
+                                </div>
+                                <div class="input">
+                                    <label for="oppBat">Opponent</label>
+                                    <select id="oppBat"></select>
+                                </div>
+                            </div>
+                            <div class="right-controls">
+                                <button class="btn secondary" id="resetBat">Reset</button>
+                            </div>
+                        </div>
+                        <!-- All-time vs filtered opponent -->
+                        <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
+                            <div class="tag" style="margin-bottom:10px;">All-time vs <b id="vsOppName">—</b></div>
+
+                            <div class="stat-strip" id="vsOppStrip"></div>
+
+                            <div class="divider"></div>
+
+                            <div class="tag" style="margin-bottom:10px;">Hit Type vs <b id="vsOppName2">—</b></div>
+                            <div class="chart-wrap">
+                                <canvas id="vsOppHitTypeChart" width="600" height="220"></canvas>
+                            </div>
+
+                        </div>
+
+                        <!-- All-time fielding vs filtered opponent -->
+
+                        <div class="table-wrap">
+
+                            <table id="battingTable">
+                                <thead>
+                                    <tr>
+                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
+                                        </th>
+                                        <th data-key="opponent">Opponent <span class="sort">↕</span></th>
+                                        <th class="right" data-key="H" style="width: 5ch;">H <span class="sort">↕</span>
+                                        </th>
+                                        <th class="right" data-key="AB" style="width: 5ch;">AB <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="R" style="width: 5ch;">R <span class="sort">↕</span>
+                                        </th>
+                                        <th class="right" data-key="2B" style="width: 6ch;">2B <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="3B" style="width: 6ch;">3B <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="HR" style="width: 6ch;">HR <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="RBI" style="width: 6ch;">RBI <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="TB" style="width: 6ch;">TB <span
+                                                class="sort">↕</span></th>
+                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="battingBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Fielding -->
+                    <div class="section" id="section-fielding">
+                        <div class="controls">
+                            <div class="left-controls">
+                                <div class="input">
+                                    <label for="searchFld">Search</label>
+                                    <input id="searchFld" type="text" placeholder="opponent, etc." />
+                                </div>
+                                <div class="input">
+                                    <label for="oppFld">Opponent</label>
+                                    <select id="oppFld"></select>
+                                </div>
+                            </div>
+                            <div class="right-controls">
+                                <button class="btn secondary" id="resetFld">Reset</button>
+                            </div>
+                        </div>
+                        <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
+                            <div class="tag" style="margin-bottom:10px;">All-time fielding vs <b id="vsOppNameFld">—</b>
+                            </div>
+                            <div class="stat-strip" id="vsOppStripFld"></div>
+
+                        </div>
+
+                        <div class="table-wrap">
+                            <table id="fieldingTable">
+                                <thead>
+                                    <tr>
+                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
+                                        </th>
+                                        <th data-key="opponent">Opponent <span class="sort">↕</span></th>
+                                        <th class="right" data-key="TC" style="width: 6ch;">TC <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="PO" style="width: 6ch;">PO <span
+                                                class="sort">↕</span></th>
+                                        <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span>
+                                        </th>
+                                        <th class="right" data-key="E" style="width: 6ch;">E <span class="sort">↕</span>
+                                        </th>
+                                        <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span
+                                                class="sort">↕</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fieldingBody"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="note">Fielding % = (PO + A) / (PO + A + E). If a row has 0 chances, FPCT shows “—”.
+                        </div>
+                    </div>
+
+                    <!-- (Removed) Analytics section -->
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2 class="panel-title">Season Summary</h2>
+                        <p class="panel-sub">Batting and fielding at a glance.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <!-- TEAM RECORD -->
+                    <div class="tag" style="margin-bottom:10px;">Team Record</div>
+                    <div class="stat-strip" id="teamRecordStrip"></div>
+
+                    <div class="divider"></div>
+                    <div class="tag" style="margin-bottom:10px;">Batting</div>
+                    <div class="stat-strip" id="summaryStrip"></div>
+
+                    <div class="divider"></div>
+                    <div class="divider"></div>
+                    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+                    <div class="chart-wrap">
+                        <canvas id="hitTypeChart" width="600" height="220"></canvas>
+                    </div>
+
+
+                    <div class="tag" style="margin-bottom:10px;">Fielding</div>
+                    <div class="stat-strip" id="fieldingStrip"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- (Removed) ANALYTICS panel -->
+    </div>
+
+    <script>
+        /* ------------ LOGO LOCATIONS ------------ */
+        const logoMap = {
+            "Abilene Christian": "/assets/logos/abilene-christian.svg",
+            "USC Upstate": "/assets/logos/usc-upstate.svg",
+            "Charleston Southern": "/assets/logos/charleston-southern.svg",
+            "Charleston": "/assets/logos/college-of-charleston.png",
+            "Villanova": "/assets/logos/villanova.svg",
+            "Lafayette": "/assets/logos/lafayette.svg.png",
+            "Lehigh": "/assets/logos/lehigh.svg",
+            "Brown": "/assets/logos/brown.svg",
+            "Delaware": "/assets/logos/delaware.svg",
+            "Columbia": "/assets/logos/columbia.svg",
+            "Yale": "/assets/logos/yale.svg",
+            "Cornell": "/assets/logos/corenell.svg.png",
+            "Saint Joseph's": "/assets/logos/saint-josephs.svg",
+            "Princeton": "/assets/logos/princeton.svg.png",
+            "Delaware State": "/assets/logos/delaware-state.png",
+            "Dartmouth": "/assets/logos/dartmouth.svg",
+            "Virginia": "/assets/logos/virginia.svg",
+            "St. John's (NY)": "/assets/logos/st-johns-ny.png",
+            "Florida State": "/assets/logos/florida-state.svg.png",
+            "Troy": "/assets/logos/troy.svg.png",
+            "Rutgers": "/assets/logos/rutger.svg",
+            "Harvard": "/assets/logos/harvard.svg",
+            "Rider": "/assets/logos/rider.svg.png",
+            "Wagner": "/assets/logos/wagner.svg",
+            "Texas A&M": "/assets/logos/texas-am.svg.png",
+        };
+
+        /* ------------ RAW DATA ------------ */
+        const seasonsRaw = {
+            "2024": {
+                batting: [
+                    ["2/23/2024", "Abilene Christian", "0-2", 0, 0, 0, 0, 1, "L, 3-4"],
+                    ["2/24/2024", "Abilene Christian", "0-3", 0, 0, 0, 0, 0, "L, 4-10"],
+                    ["2/24/2024", "Abilene Christian", "1-1", 1, 0, 0, 1, 1, "W, 7-2"],
+                    ["2/25/2024", "Abilene Christian", "0-3", 0, 0, 0, 0, 0, "L, 3-9"],
+
+                    ["3/2/2024", "USC Upstate", "1-1", 1, 0, 0, 1, 1, "L, 4-14"],
+                    ["3/2/2024", "USC Upstate", "0-1", 1, 0, 0, 0, 0, "W, 11-5"],
+                    ["3/3/2024", "USC Upstate", "0-3", 0, 0, 0, 0, 0, "L, 1-12"],
+
+                    ["3/5/2024", "Charleston Southern", "1-3", 1, 0, 0, 0, 1, "W, 9-6"],
+                    ["3/6/2024", "Charleston Southern", "0-2", 0, 0, 0, 0, 0, "L, 5-11"],
+
+                    ["3/8/2024", "Charleston", "1-3", 0, 0, 0, 0, 0, "L, 5-11"],
+                    ["3/9/2024", "Charleston", "0-3", 0, 0, 0, 0, 0, "L, 4-7"],
+                    ["3/10/2024", "Charleston", "0-2", 0, 0, 0, 0, 0, "W, 6-5"],
+
+                    ["3/13/2024", "Villanova", "2-4", 1, 0, 0, 0, 0, "W, 8-3"],
+
+                    ["3/16/2024", "Lafayette", "2-5", 0, 0, 0, 0, 0, "W, 8-1"],
+                    ["3/16/2024", "Lafayette", "1-3", 1, 0, 0, 0, 0, "L, 3-6"],
+                    ["3/17/2024", "Lafayette", "2-4", 3, 1, 0, 0, 2, "W, 22-8"],
+
+                    ["3/20/2024", "Lehigh", "1-2", 1, 1, 0, 0, 2, "W, 12-11"],
+
+                    ["3/22/2024", "Brown", "2-3", 1, 0, 0, 0, 0, "W, 4-1"],
+                    ["3/22/2024", "Brown", "0-3", 2, 0, 0, 0, 0, "W, 6-5 (11)"],
+                    ["3/24/2024", "Brown", "1-3", 0, 0, 0, 0, 0, "W, 5-3"],
+
+                    ["3/26/2024", "Delaware", "1-3", 1, 0, 0, 0, 1, "L, 6-12"],
+
+                    ["3/30/2024", "Columbia", "0-3", 0, 0, 0, 0, 1, "L, 6-14"],
+                    ["3/30/2024", "Columbia", "1-4", 0, 0, 0, 0, 0, "L, 1-11"],
+                    ["3/31/2024", "Columbia", "1-4", 0, 0, 0, 0, 0, "L, 7-9"],
+
+                    ["4/6/2024", "Yale", "3-4", 1, 3, 0, 0, 0, "W, 7-4"],
+                    ["4/6/2024", "Yale", "1-4", 1, 1, 0, 0, 1, "W, 9-6"],
+                    ["4/7/2024", "Yale", "0-3", 0, 0, 0, 0, 0, "L, 3-12"],
+
+                    ["4/10/2024", "Villanova", "0-3", 0, 0, 0, 0, 1, "L, 3-5"],
+
+                    ["4/13/2024", "Cornell", "0-4", 0, 0, 0, 0, 1, "W, 6-5"],
+                    ["4/13/2024", "Cornell", "0-4", 0, 0, 0, 0, 0, "L, 11-18"],
+                    ["4/14/2024", "Cornell", "1-5", 0, 0, 0, 0, 2, "L, 9-11"],
+
+                    ["4/17/2024", "Saint Joseph's", "1-3", 1, 1, 0, 0, 1, "L, 3-8"],
+
+                    ["4/20/2024", "Princeton", "0-3", 0, 0, 0, 0, 0, "L, 2-3"],
+                    ["4/20/2024", "Princeton", "0-3", 0, 0, 0, 0, 0, "W, 12-7"],
+                    ["4/21/2024", "Princeton", "0-3", 0, 0, 0, 0, 0, "L, 1-3"],
+
+                    ["4/27/2024", "Harvard", "0-0", 0, 0, 0, 0, 0, "W, 7-5 (10)"],
+                    ["4/27/2024", "Harvard", "0-0", 0, 0, 0, 0, 0, "W, 8-3"],
+                    ["4/28/2024", "Harvard", "0-0", 0, 0, 0, 0, 0, "L, 4-14"],
+
+                    ["4/30/2024", "Delaware State", "1-5", 0, 0, 0, 0, 1, "W, 13-1"],
+
+                    ["5/3/2024", "Dartmouth", "1-4", 0, 1, 0, 0, 0, "L, 3-12"],
+                    ["5/4/2024", "Dartmouth", "3-6", 0, 2, 0, 0, 3, "W, 16-4"],
+                    ["5/4/2024", "Dartmouth", "3-5", 2, 1, 0, 0, 3, "W, 24-5 (8)"],
+
+                    ["5/17/2024", "Columbia", "3-5", 1, 0, 0, 0, 1, "W, 8-4"],
+
+                    ["5/19/2024", "Cornell", "2-4", 0, 0, 0, 0, 0, "L, 6-7"],
+                    ["5/19/2024", "Princeton", "2-5", 2, 0, 0, 0, 0, "W, 9-4"],
+
+                    ["5/20/2024", "Cornell", "0-5", 0, 0, 0, 0, 0, "W, 11-9"],
+                    ["5/20/2024", "Cornell", "0-1", 2, 0, 0, 0, 0, "W, 12-6"],
+
+                    ["5/31/2024", "Virginia", "0-3", 0, 0, 0, 0, 0, "L, 2-4"],
+                    ["6/1/2024", "St. John's (NY)", "2-6", 2, 1, 0, 0, 0, "L, 9-10 (12)"],
+                ],
+                fielding: [
+                    ["2/23/2024", "Abilene Christian", 1, 1, 0, 0, "L, 3-4"],
+                    ["2/24/2024", "Abilene Christian", 2, 2, 0, 0, "L, 4-10"],
+                    ["2/24/2024", "Abilene Christian", 1, 1, 0, 0, "W, 7-2"],
+                    ["2/25/2024", "Abilene Christian", 2, 2, 0, 0, "L, 3-9"],
+
+                    ["3/2/2024", "USC Upstate", 0, 0, 0, 0, "L, 4-14"],
+                    ["3/2/2024", "USC Upstate", 1, 1, 0, 0, "W, 11-5"],
+                    ["3/3/2024", "USC Upstate", 0, 0, 0, 0, "L, 1-12"],
+
+                    ["3/5/2024", "Charleston Southern", 1, 1, 0, 0, "W, 9-6"],
+                    ["3/6/2024", "Charleston Southern", 2, 2, 0, 0, "L, 5-11"],
+
+                    ["3/8/2024", "Charleston", 3, 2, 0, 1, "L, 5-11"],
+                    ["3/9/2024", "Charleston", 4, 2, 2, 0, "L, 4-7"],
+                    ["3/10/2024", "Charleston", 0, 0, 0, 0, "W, 6-5"],
+
+                    ["3/13/2024", "Villanova", 5, 5, 0, 0, "W, 8-3"],
+
+                    ["3/16/2024", "Lafayette", 0, 0, 0, 0, "W, 8-1"],
+                    ["3/16/2024", "Lafayette", 1, 1, 0, 0, "L, 3-6"],
+                    ["3/17/2024", "Lafayette", 2, 2, 0, 0, "W, 22-8"],
+
+                    ["3/20/2024", "Lehigh", 1, 1, 0, 0, "W, 12-11"],
+
+                    ["3/22/2024", "Brown", 2, 2, 0, 0, "W, 4-1"],
+                    ["3/22/2024", "Brown", 1, 1, 0, 0, "W, 6-5 (11)"],
+                    ["3/24/2024", "Brown", 1, 1, 0, 0, "W, 5-3"],
+
+                    ["3/26/2024", "Delaware", 1, 1, 0, 0, "L, 6-12"],
+
+                    ["3/30/2024", "Columbia", 1, 1, 0, 0, "L, 6-14"],
+                    ["3/30/2024", "Columbia", 3, 3, 0, 0, "L, 1-11"],
+                    ["3/31/2024", "Columbia", 1, 1, 0, 0, "L, 7-9"],
+
+                    ["4/6/2024", "Yale", 2, 2, 0, 0, "W, 7-4"],
+                    ["4/6/2024", "Yale", 3, 3, 0, 0, "W, 9-6"],
+                    ["4/7/2024", "Yale", 1, 1, 0, 0, "L, 3-12"],
+
+                    ["4/10/2024", "Villanova", 0, 0, 0, 0, "L, 3-5"],
+
+                    ["4/13/2024", "Cornell", 4, 4, 0, 0, "W, 6-5"],
+                    ["4/13/2024", "Cornell", 1, 1, 0, 0, "L, 11-18"],
+                    ["4/14/2024", "Cornell", 4, 4, 0, 0, "L, 9-11"],
+
+                    ["4/17/2024", "Saint Joseph's", 1, 1, 0, 0, "L, 3-8"],
+
+                    ["4/20/2024", "Princeton", 1, 1, 0, 0, "L, 2-3"],
+                    ["4/20/2024", "Princeton", 1, 1, 0, 0, "W, 12-7"],
+                    ["4/21/2024", "Princeton", 1, 1, 0, 0, "L, 1-3"],
+
+                    ["4/27/2024", "Harvard", 2, 1, 0, 1, "W, 7-5 (10)"],
+                    ["4/27/2024", "Harvard", 3, 3, 0, 0, "W, 8-3"],
+                    ["4/28/2024", "Harvard", 2, 2, 0, 0, "L, 4-14"],
+
+                    ["4/30/2024", "Delaware State", 0, 0, 0, 0, "W, 13-1"],
+
+                    ["5/3/2024", "Dartmouth", 1, 1, 0, 0, "L, 3-12"],
+                    ["5/4/2024", "Dartmouth", 1, 1, 0, 0, "W, 16-4"],
+                    ["5/4/2024", "Dartmouth", 3, 3, 0, 0, "W, 24-5 (8)"],
+
+                    ["5/17/2024", "Columbia", 0, 0, 0, 0, "W, 8-4"],
+
+                    ["5/19/2024", "Cornell", 2, 2, 0, 0, "L, 6-7"],
+                    ["5/19/2024", "Princeton", 2, 2, 0, 0, "W, 9-4"],
+
+                    ["5/20/2024", "Cornell", 3, 3, 0, 0, "W, 11-9"],
+                    ["5/20/2024", "Cornell", 1, 1, 0, 0, "W, 12-6"],
+
+                    ["5/31/2024", "Virginia", 2, 2, 0, 0, "L, 2-4"],
+                    ["6/1/2024", "St. John's (NY)", 2, 2, 0, 0, "L, 9-10 (12)"],
+                ],
+            },
+            "2025": {
+                batting: [
+                    ["2/21/2025", "Florida State", "1-2", 1, 0, 0, 0, 0, "L, 2-24 (7)"],
+                    ["2/22/2025", "Florida State", "1-5", 0, 0, 0, 0, 0, "L, 3-9"],
+                    ["2/23/2025", "Florida State", "1-3", 1, 0, 0, 0, 1, "L, 3-5"],
+
+                    ["2/28/2025", "Troy", "0-3", 0, 0, 0, 0, 0, "L, 1-11 (7)"],
+                    ["3/1/2025", "Troy", "2-5", 2, 0, 1, 1, 2, "L, 9-10"],
+                    ["3/2/2025", "Troy", "1-4", 1, 0, 0, 0, 0, "L, 1-6"],
+
+                    ["3/7/2025", "Delaware", "2-4", 2, 1, 0, 0, 2, "L, 7-12"],
+                    ["3/8/2025", "Delaware", "1-4", 1, 1, 0, 0, 0, "W, 2-1"],
+                    ["3/9/2025", "Delaware", "3-7", 0, 0, 0, 0, 1, "L, 12-13 (12)"],
+
+                    ["3/11/2025", "Rutgers", "1-5", 0, 0, 0, 0, 0, "L, 2-3 (11)"],
+
+                    ["3/14/2025", "Lafayette", "1-4", 2, 0, 0, 0, 1, "W, 12-7"],
+                    ["3/15/2025", "Lafayette", "1-4", 1, 0, 0, 0, 0, "W, 9-7"],
+                    ["3/15/2025", "Lafayette", "0-5", 1, 0, 0, 0, 0, "W, 7-6 (8)"],
+
+                    ["3/19/2025", "Lehigh", "2-4", 3, 0, 0, 0, 0, "W, 19-2 (7)"],
+
+                    ["3/22/2025", "Harvard", "2-3", 1, 1, 0, 1, 2, "W, 5-4 (10)"],
+                    ["3/22/2025", "Harvard", "1-5", 0, 0, 0, 0, 1, "W, 6-3"],
+                    ["3/23/2025", "Harvard", "2-3", 2, 0, 0, 0, 3, "W, 14-4"],
+
+                    ["3/25/2025", "Saint Joseph's", "1-4", 2, 0, 0, 0, 0, "L, 10-14 (8)"],
+
+                    ["3/28/2025", "Dartmouth", "2-4", 0, 0, 0, 0, 0, "L, 7-8"],
+                    ["3/28/2025", "Dartmouth", "1-2", 1, 0, 0, 0, 1, "L, 2-5"],
+                    ["3/29/2025", "Dartmouth", "1-2", 0, 1, 0, 0, 1, "W, 5-1"],
+
+                    ["4/1/2025", "Lafayette", "2-6", 1, 1, 0, 0, 1, "W, 16-11"],
+
+                    ["4/4/2025", "Princeton", "2-4", 1, 1, 0, 0, 0, "W, 2-1"],
+                    ["4/4/2025", "Princeton", "0-4", 0, 0, 0, 0, 0, "W, 7-5"],
+                    ["4/5/2025", "Princeton", "2-6", 1, 0, 0, 0, 0, "W, 7-6 (12)"],
+
+                    ["4/13/2025", "Cornell", "2-2", 1, 0, 0, 1, 3, "W, 4-3"],
+                    ["4/13/2025", "Cornell", "1-3", 2, 0, 0, 0, 1, "W, 9-4"],
+                    ["4/14/2025", "Cornell", "3-4", 2, 1, 0, 0, 2, "W, 16-1"],
+
+                    ["4/19/2025", "Yale", "0-5", 0, 0, 0, 0, 0, "W, 4-3 (10)"],
+                    ["4/19/2025", "Yale", "2-3", 1, 0, 0, 0, 0, "L, 4-7"],
+                    ["4/20/2025", "Yale", "1-3", 0, 0, 0, 0, 0, "L, 4-8"],
+
+                    ["4/23/2025", "Rider", "1-5", 1, 0, 0, 0, 4, "W, 20-16"],
+
+                    ["4/25/2025", "Columbia", "0-4", 0, 0, 0, 0, 0, "L, 3-4"],
+                    ["4/27/2025", "Columbia", "2-3", 2, 2, 0, 0, 1, "W, 9-8"],
+                    ["4/27/2025", "Columbia", "1-3", 0, 0, 0, 0, 0, "L, 3-11"],
+
+                    ["4/30/2025", "Wagner", "0-1", 0, 0, 0, 0, 0, "W, 12-2 (7)"],
+
+                    ["5/2/2025", "Brown", "0-2", 0, 0, 0, 0, 0, "L, 1-4"],
+                    ["5/3/2025", "Brown", "1-3", 1, 0, 0, 1, 2, "L, 6-7 (12)"],
+                    ["5/3/2025", "Brown", "1-4", 1, 0, 0, 0, 0, "W, 5-2"],
+
+                    ["5/16/2025", "Columbia", "3-5", 0, 0, 0, 0, 0, "L, 3-4 (10)"],
+                    ["5/17/2025", "Yale", "1-3", 1, 0, 0, 0, 0, "L, 2-7"],
+                ],
+
+                fielding: [
+                    ["2/21/2025", "Florida State", 1, 1, 0, 0, "L, 2-24 (7)"],
+                    ["2/22/2025", "Florida State", 0, 0, 0, 0, "L, 3-9"],
+                    ["2/23/2025", "Florida State", 2, 2, 0, 0, "L, 3-5"],
+
+                    ["2/28/2025", "Troy", 1, 1, 0, 0, "L, 1-11 (7)"],
+                    ["3/1/2025", "Troy", 2, 2, 0, 0, "L, 9-10"],
+                    ["3/2/2025", "Troy", 0, 0, 0, 0, "L, 1-6"],
+
+                    ["3/7/2025", "Delaware", 0, 0, 0, 0, "L, 7-12"],
+                    ["3/8/2025", "Delaware", 0, 0, 0, 0, "W, 2-1"],
+                    ["3/9/2025", "Delaware", 1, 1, 0, 0, "L, 12-13 (12)"],
+
+                    ["3/11/2025", "Rutgers", 3, 3, 0, 0, "L, 2-3 (11)"],
+
+                    ["3/14/2025", "Lafayette", 1, 1, 0, 0, "W, 12-7"],
+                    ["3/15/2025", "Lafayette", 2, 2, 0, 0, "W, 9-7"],
+                    ["3/15/2025", "Lafayette", 1, 1, 0, 0, "W, 7-6 (8)"],
+
+                    ["3/19/2025", "Lehigh", 1, 1, 0, 0, "W, 19-2 (7)"],
+
+                    ["3/22/2025", "Harvard", 2, 1, 0, 1, "W, 5-4 (10)"],
+                    ["3/22/2025", "Harvard", 3, 3, 0, 0, "W, 6-3"],
+                    ["3/23/2025", "Harvard", 2, 2, 0, 0, "W, 14-4"],
+
+                    ["3/25/2025", "Saint Joseph's", 0, 0, 0, 0, "L, 10-14 (8)"],
+
+                    ["3/28/2025", "Dartmouth", 1, 1, 0, 0, "L, 7-8"],
+                    ["3/28/2025", "Dartmouth", 2, 2, 0, 0, "L, 2-5"],
+                    ["3/29/2025", "Dartmouth", 0, 0, 0, 0, "W, 5-1"],
+
+                    ["4/1/2025", "Lafayette", 0, 0, 0, 0, "W, 16-11"],
+
+                    ["4/4/2025", "Princeton", 0, 0, 0, 0, "W, 2-1"],
+                    ["4/4/2025", "Princeton", 2, 2, 0, 0, "W, 7-5"],
+                    ["4/5/2025", "Princeton", 1, 1, 0, 0, "W, 7-6 (12)"],
+
+                    ["4/13/2025", "Cornell", 3, 3, 0, 0, "W, 4-3"],
+                    ["4/13/2025", "Cornell", 1, 1, 0, 0, "W, 9-4"],
+                    ["4/14/2025", "Cornell", 1, 1, 0, 0, "W, 16-1"],
+
+                    ["4/19/2025", "Yale", 3, 3, 0, 0, "W, 4-3 (10)"],
+                    ["4/19/2025", "Yale", 0, 0, 0, 0, "L, 4-7"],
+                    ["4/20/2025", "Yale", 1, 1, 0, 0, "L, 4-8"],
+
+                    ["4/23/2025", "Rider", 0, 0, 0, 0, "W, 20-16"],
+
+                    ["4/25/2025", "Columbia", 2, 2, 0, 0, "L, 3-4"],
+                    ["4/27/2025", "Columbia", 3, 2, 0, 1, "W, 9-8"],
+                    ["4/27/2025", "Columbia", 1, 1, 0, 0, "L, 3-11"],
+
+                    ["4/30/2025", "Wagner", 0, 0, 0, 0, "W, 12-2 (7)"],
+
+                    ["5/2/2025", "Brown", 1, 1, 0, 0, "L, 1-4"],
+                    ["5/3/2025", "Brown", 1, 1, 0, 0, "L, 6-7 (12)"],
+                    ["5/3/2025", "Brown", 1, 1, 0, 0, "W, 5-2"],
+
+                    ["5/16/2025", "Columbia", 3, 3, 0, 0, "L, 3-4 (10)"],
+                    ["5/17/2025", "Yale", 2, 2, 0, 0, "L, 2-7"],
+                ]
+            },
+            "2026": {
+                batting: [
+                    ["2/20/2026", "Texas A&M", "0-4", 0, 0, 0, 0, 0],
+                    ["2/21/2026", "Texas A&M", "3-5", 0, 1, 0, 0, 1],
+                    ["2/22/2026", "Texas A&M", "0-4", 0, 0, 0, 0, 0],
+                ],
+                fielding: [
+                    ["2/20/2026", "Texas A&M", 2, 1, 0, 1],
+                    ["2/21/2026", "Texas A&M", 0, 0, 0, 0],
+                    ["2/22/2026", "Texas A&M", 0, 0, 0, 0],
+                ]
+            }
+        };
+
+        // Official totals (batting) you provided for Gavin Collins
+        // TEAM RECORDS (must be its own const)
+        const teamRecords = {
+            "2024": {
+                overall: "24-25",
+                overallPct: ".490",
+                conf: "11-10",
+                confPct: ".524",
+                streak: "L2",
+                home: "10-6",
+                away: "11-17",
+                neutral: "3-2"
+            },
+
+            "2025": {
+                overall: "21-20",
+                overallPct: "—",
+                conf: "13-8",
+                confPct: "—",
+                streak: "L2",
+                home: "11-7",
+                away: "9-11",
+                neutral: "1-2"
+            },
+
+            "2026": {
+                overall: "0-3",
+                overallPct: ".000",
+                conf: "0-0",
+                confPct: ".000",
+                streak: "L3",
+                home: "0-0",
+                away: "0-3",
+                neutral: "0-0"
+            },
+            "career": {
+                overall: "45-48",
+                overallPct: ".484",
+                conf: "24-18",
+                confPct: ".571",
+                streak: "L3",
+                home: "21-13",
+                away: "20-31",
+                neutral: "4-4"
+            }
+
+        };
+
+        // Official totals (batting) you provided for Gavin Collins
+        const officialTotals = {
+            "2024": {
+                AVG: 0.274, OPS: 0.743, GP: 42, GS: 41,
+                AB: 146, R: 25, H: 40, "2B": 12, "3B": 0, HR: 1, RBI: 23, TB: 55,
+                SLG: 0.377, BB: 18, HBP: 6, SO: 25, GDP: 3,
+                OBP: 0.366, SF: 5, SH: 0, SB: 6, SBAtt: 6
+            },
+            "2025": {
+                AVG: 0.335, OPS: 0.926, GP: 41, GS: 41,
+                AB: 155, R: 36, H: 52, "2B": 9, "3B": 1, HR: 4, RBI: 29, TB: 75,
+                SLG: 0.484, BB: 27, HBP: 5, SO: 26, GDP: 1,
+                OBP: 0.442, SF: 3, SH: 0, SB: 3, SBAtt: 4
+            },
+            "2026": {
+                AVG: 0.231, OPS: 0.539, GP: 3, GS: 3,
+                AB: 13, R: 0, H: 3, "2B": 1, "3B": 0, HR: 0, RBI: 1, TB: 4,
+                SLG: 0.308, BB: 0, HBP: 0, SO: 3, GDP: 0,
+                OBP: 0.231, SF: 0, SH: 0, SB: 0, SBAtt: 0
+            }
+        };
+
+        /* ------------ HELPERS ------------ */
+        const $ = (sel) => document.querySelector(sel);
+
+        function parseHAB(hab) {
+            const parts = String(hab).split("-");
+            return { H: Number(parts[0] || 0), AB: Number(parts[1] || 0) };
+        }
+
+        function toDateValue(mmddyyyy) {
+            const [m, d, y] = mmddyyyy.split("/").map(n => n.padStart(2, "0"));
+            return `${y}-${m}-${d}`;
+        }
+        function fmt3(x) {
+            if (!isFinite(x)) return "—";
+            const v = Math.round(x * 1000) / 1000;
+            return (v < 1 ? v.toFixed(3).replace("0.", ".") : v.toFixed(3));
+        }
+        function safeDiv(a, b) { return b === 0 ? NaN : (a / b); }
+        function logoFor(opponent) { return logoMap[opponent] || ""; }
+
+        function initials(opponent) {
+            const clean = opponent.replace(/\(.*?\)/g, "").replace(/[^A-Za-z\s']/g, "").trim();
+            const parts = clean.split(/\s+/).filter(Boolean);
+            const a = parts[0]?.[0] || "?";
+            const b = parts[1]?.[0] || "";
+            return (a + b).toUpperCase();
+        }
+
+        function computeBattingTotals(rows) {
+            const t = { H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
+            for (const g of rows) {
+                t.H += g.H; t.AB += g.AB; t.R += g.R;
+                t["2B"] += g["2B"]; t["3B"] += g["3B"]; t.HR += g.HR; t.RBI += g.RBI;
+                t.TB += g.TB;
+            }
+            return t;
+        }
+        function computeHitTypeTotals(rows) {
+            let singles = 0, doubles = 0, triples = 0, hrs = 0;
+            for (const g of rows) {
+                doubles += (g["2B"] || 0);
+                triples += (g["3B"] || 0);
+                hrs += (g.HR || 0);
+                // singles per game: H - 2B - 3B - HR (never below 0)
+                const s = (g.H || 0) - (g["2B"] || 0) - (g["3B"] || 0) - (g.HR || 0);
+                singles += Math.max(0, s);
+            }
+            return { singles, doubles, triples, hrs };
+        }
+
+        function drawBarChart(canvas, labels, values) {
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const dpr = window.devicePixelRatio || 1;
+
+            // Make it crisp on retina
+            const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
+            const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 220;
+            canvas.width = Math.round(cssW * dpr);
+            canvas.height = Math.round(cssH * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const w = cssW, h = cssH;
+            ctx.clearRect(0, 0, w, h);
+
+            // chart area
+            const pad = 26;
+            const bottom = h - 34;
+            const top = 14;
+            const left = 20;
+            const right = w - 14;
+
+            // axis line
+            ctx.strokeStyle = "rgba(255,255,255,.18)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(left, bottom);
+            ctx.lineTo(right, bottom);
+            ctx.stroke();
+
+            const maxV = Math.max(1, ...values);
+            const barCount = values.length;
+            const gap = 14;
+            const barW = Math.max(26, ((right - left) - gap * (barCount - 1)) / barCount);
+
+            // bars
+            for (let i = 0; i < barCount; i++) {
+                const v = values[i];
+                const x = left + i * (barW + gap);
+                const barH = ((bottom - top) * v) / maxV;
+                const y = bottom - barH;
+
+                // bar fill
+                ctx.fillStyle = "rgba(204,0,0,.75)";
+                ctx.fillRect(x, y, barW, barH);
+
+                // top value
+                ctx.fillStyle = "rgba(255,255,255,.92)";
+                ctx.font = "12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(String(v), x + barW / 2, y - 6);
+
+                // label
+                ctx.fillStyle = "rgba(255,255,255,.72)";
+                ctx.font = "12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(labels[i], x + barW / 2, bottom + 18);
+            }
+        }
+
+        function computeAdvancedFromLog(t) {
+            return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
+        }
+        function setSharedOpponent(opp) {
+            // Update both states
+            battingState.opp = opp;
+            fieldingState.opp = opp;
+
+            // Update both dropdowns (only if that opponent exists in the dropdown)
+            const batSelect = $("#oppBat");
+            const fldSelect = $("#oppFld");
+
+            const batHas = Array.from(batSelect.options).some(o => o.value === opp);
+            const fldHas = Array.from(fldSelect.options).some(o => o.value === opp);
+
+            batSelect.value = batHas ? opp : "";
+            fldSelect.value = fldHas ? opp : "";
+
+            // Refresh both tables (even if you can’t see one tab, keeps state consistent)
+            refreshBatting();
+            refreshFielding();
+
+            // Update the “vs opponent” strips
+            renderVsOpponentAllTime(battingState.opp);
+            renderVsOpponentFieldingAllTime(fieldingState.opp);
+        }
+
+        function computeFieldingTotals(rows) {
+            const t = { TC: 0, PO: 0, A: 0, E: 0 };
+            for (const g of rows) {
+                t.TC += g.TC; t.PO += g.PO; t.A += g.A; t.E += g.E;
+            }
+            const denom = (t.PO + t.A + t.E);
+            const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
+            return { ...t, FPCT };
+        }
+        function sumOfficialTotals(keys) {
+            const tot = { AB: 0, H: 0, TB: 0, BB: 0, HBP: 0, SF: 0, SO: 0 };
+            for (const k of keys) {
+                const s = officialTotals[k];
+                if (!s) continue;
+                tot.AB += (s.AB || 0);
+                tot.H += (s.H || 0);
+                tot.TB += (s.TB || 0);
+                tot.BB += (s.BB || 0);
+                tot.HBP += (s.HBP || 0);
+                tot.SF += (s.SF || 0);
+                tot.SO += (s.SO || 0);
+            }
+            return tot;
+        }
+
+        function computeRateStatsFromOfficial(t) {
+            const AVG = safeDiv(t.H, t.AB);
+            const SLG = safeDiv(t.TB, t.AB);
+            const OBP = safeDiv((t.H + t.BB + t.HBP), (t.AB + t.BB + t.HBP + t.SF));
+            const OPS = (isFinite(OBP) && isFinite(SLG)) ? (OBP + SLG) : NaN;
+            return { AVG, OBP, SLG, OPS };
+        }
+
+        function renderOpponentSelect(selectEl, rows) {
+            const opponents = Array.from(new Set(rows.map(r => r.opponent))).sort((a, b) => a.localeCompare(b));
+            selectEl.innerHTML = "";
+            const optAll = document.createElement("option");
+            optAll.value = "";
+            optAll.textContent = "All opponents";
+            selectEl.appendChild(optAll);
+            for (const opp of opponents) {
+                const o = document.createElement("option");
+                o.value = opp;
+                o.textContent = opp;
+                selectEl.appendChild(o);
+            }
+        }
+        function renderVsOpponentFieldingAllTime(opponent) {
+            const wrap = $("#vsOppWrapFld");
+            const nameEl = $("#vsOppNameFld");
+            const strip = $("#vsOppStripFld");
+            if (!wrap || !nameEl || !strip) return;
+
+            if (!opponent) {
+                wrap.style.display = "none";
+                nameEl.textContent = "—";
+                strip.innerHTML = "";
+                return;
+            }
+
+            // All-time = CAREER fielding logs
+            const rows = careerFieldingLog.filter(r => r.opponent === opponent);
+
+            // Totals + FPCT using your existing helper
+            const t = computeFieldingTotals(rows);
+
+            nameEl.textContent = opponent;
+            wrap.style.display = "block";
+
+            const items = [
+                { k: "G", v: rows.length, s: "Games vs opponent" },
+                { k: "TC", v: t.TC, s: "Total chances" },
+                { k: "PO", v: t.PO, s: "Putouts" },
+                { k: "A", v: t.A, s: "Assists" },
+                { k: "E", v: t.E, s: "Errors" },
+                { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
+            ];
+
+            strip.innerHTML = items.map(x => `
+    <div class="stat">
+      <div class="k">${x.k}</div>
+      <div class="v">${x.v}</div>
+      <div class="s">${x.s}</div>
+    </div>
+  `).join("");
+        }
+
+        function opponentCellHTML(r) {
+            if (r.logo) {
+                return `
+          <div class="opp">
+            <img class="logo" src="${r.logo}" alt="${r.opponent} logo"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+            <span class="logo fallback" style="display:none;">${initials(r.opponent)}</span>
+            <span>${r.opponent}</span>
+          </div>
+        `;
+            }
+            return `
+        <div class="opp">
+          <span class="logo fallback">${initials(r.opponent)}</span>
+          <span>${r.opponent}</span>
+        </div>
+      `;
+        }
+
+        /* ------------ STATE ------------ */
+        let currentSeason = "2025";
+        let battingLog = [];
+        let fieldingLog = [];
+        let careerBattingLog = [];
+        let careerFieldingLog = [];
+
+        function buildSeasonLogs(seasonKey) {
+            const season = seasonsRaw[seasonKey];
+
+            const bat = season.batting.map(r => {
+                const { H, AB } = parseHAB(r[2]);
+                const R = Number(r[3]);
+                const DB = Number(r[4]);
+                const TR = Number(r[5]);
+                const HR = Number(r[6]);
+                const RBI = Number(r[7]);
+                const singles = H - DB - TR - HR;
+                const TB = singles + 2 * DB + 3 * TR + 4 * HR;
+                const result = r[8] || ""; // score string like "W, 7-2"
+
+                return {
+                    date: r[0],
+                    dateValue: toDateValue(r[0]),
+                    opponent: r[1],
+                    logo: logoFor(r[1]),
+                    H, AB, R, "2B": DB, "3B": TR, HR, RBI, TB,
+                    result
+                };
+            });
+
+            const fld = season.fielding.map(r => {
+                const TC = Number(r[2]);
+                const PO = Number(r[3]);
+                const A = Number(r[4]);
+                const E = Number(r[5]);
+                const denom = (PO + A + E);
+                const fp = denom === 0 ? NaN : (PO + A) / denom;
+                const result = r[6] || ""; // score string like "W, 7-2"
+
+                return {
+                    date: r[0],
+                    dateValue: toDateValue(r[0]),
+                    opponent: r[1],
+                    logo: logoFor(r[1]),
+                    TC, PO, A, E, FPCT: fp,
+                    result
+                };
+            });
+
+            return { bat, fld };
+        }
+
+        function buildCareer() {
+            careerBattingLog = [];
+            careerFieldingLog = [];
+
+            for (const s of Object.keys(seasonsRaw)) {
+                const { bat, fld } = buildSeasonLogs(s);
+                careerBattingLog.push(...bat.map(x => ({ ...x, season: s })));
+                careerFieldingLog.push(...fld.map(x => ({ ...x, season: s })));
+            }
+
+            careerBattingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
+            careerFieldingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
+        }
+
+        /* ------------ TABLE RENDER ------------ */
+        function renderBattingTable(rows) {
+            const body = $("#battingBody");
+            body.innerHTML = "";
+            for (const r of rows) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+          <td class="muted" data-label="Date">${r.date}</td>
+          <td data-label="Opponent">${opponentCellHTML(r)}</td>
+          <td class="right" data-label="H">${r.H}</td>
+          <td class="right" data-label="AB">${r.AB}</td>
+          <td class="right" data-label="R">${r.R}</td>
+          <td class="right" data-label="2B">${r["2B"]}</td>
+          <td class="right" data-label="3B">${r["3B"]}</td>
+          <td class="right" data-label="HR">${r.HR}</td>
+          <td class="right" data-label="RBI">${r.RBI}</td>
+          <td class="right" data-label="TB">${r.TB}</td>
+          <td data-label="Result">${r.result || ""}</td>
+        `;
+                body.appendChild(tr);
+            }
+            $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+        }
+
+        function renderFieldingTable(rows) {
+            const body = $("#fieldingBody");
+            body.innerHTML = "";
+            for (const r of rows) {
+                const tr = document.createElement("tr");
+                const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
+                tr.innerHTML = `
+          <td class="muted" data-label="Date">${r.date}</td>
+          <td data-label="Opponent">${opponentCellHTML(r)}</td>
+          <td class="right" data-label="TC">${r.TC}</td>
+          <td class="right" data-label="PO">${r.PO}</td>
+          <td class="right" data-label="A">${r.A}</td>
+          <td class="right" data-label="E">${r.E}</td>
+          <td class="right" data-label="FPCT">${fp}</td>
+          <td data-label="Result">${r.result || ""}</td>
+        `;
+                body.appendChild(tr);
+            }
+            $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+        }
+
+        const battingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
+        const fieldingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
+
+        function sortRows(rows, key, dir) {
+            const mult = dir === "asc" ? 1 : -1;
+            return [...rows].sort((a, b) => {
+                const av = a[key], bv = b[key];
+                if (key === "FPCT") {
+                    const aNan = !isFinite(av), bNan = !isFinite(bv);
+                    if (aNan && bNan) return 0;
+                    if (aNan) return 1;
+                    if (bNan) return -1;
+                    return (av - bv) * mult;
+                }
+                if (typeof av === "number" && typeof bv === "number") {
+                    if (av < bv) return -1 * mult;
+                    if (av > bv) return 1 * mult;
+                    return 0;
+                }
+                return String(av).localeCompare(String(bv)) * mult;
+            });
+        }
+
+        function filterRows(rows, state) {
+            const q = state.search.trim().toLowerCase();
+            return rows.filter(r => {
+                const matchOpp = !state.opp || r.opponent === state.opp;
+                if (!q) return matchOpp;
+                const hay = Object.values(r).join(" ").toLowerCase();
+                return matchOpp && hay.includes(q);
+            });
+        }
+
+        function refreshBatting() {
+            const filtered = filterRows(battingLog, battingState);
+            const sorted = sortRows(filtered, battingState.key, battingState.dir);
+            renderBattingTable(sorted);
+        }
+
+        function refreshFielding() {
+            const filtered = filterRows(fieldingLog, fieldingState);
+            const sorted = sortRows(filtered, fieldingState.key, fieldingState.dir);
+            renderFieldingTable(sorted);
+        }
+
+        function hookTableSort(tableSelector, state, refreshFn) {
+            const table = document.querySelector(tableSelector);
+            table.querySelectorAll("thead th").forEach(th => {
+                th.addEventListener("click", () => {
+                    const key = th.getAttribute("data-key");
+                    if (!key) return;
+                    if (state.key === key) state.dir = (state.dir === "asc") ? "desc" : "asc";
+                    else { state.key = key; state.dir = "asc"; }
+                    refreshFn();
+                });
+            });
+        }
+
+        /* ------------ SUMMARY (dropdown controls season/career) ------------ */
+        function resetState(state) {
+            state.key = "dateValue";
+            state.dir = "asc";
+            state.search = "";
+            state.opp = "";
+        }
+
+
+
+        function createHitPie() {
+            let state = {
+                canvas: null,
+                ctx: null,
+                labels: [],
+                values: [],
+                slices: [],
+                hoveredIndex: -1,
+                hoverAnim: 0,
+                hoverTarget: 0,
+                introT: 0,
+                fadeT: 0,
+                raf: null
+            };
+
+            // Your “obvious but not crazy” baseball palette
+            const palette = [
+                ["#C41E3A", "#8B0000"],  // 1B – red
+                ["#1F3A93", "#0B1E3F"],  // 2B – navy
+                ["#2E8B57", "#1F5C3A"],  // 3B – green
+                ["#F4A300", "#C77C00"]   // HR – gold
+            ];
+
+            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+            function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+            function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+
+            function setupCanvas(canvas) {
+                const ctx = canvas.getContext("2d");
+                state.canvas = canvas;
+                state.ctx = ctx;
+
+                if (!canvas.__hitPieBound) {
+                    canvas.addEventListener("mousemove", onMove);
+                    canvas.addEventListener("mouseleave", onLeave);
+                    canvas.__hitPieBound = true;
+                }
+            }
+
+            function resizeToDPR() {
+                const { canvas, ctx } = state;
+                if (!canvas || !ctx) return;
+
+                const dpr = window.devicePixelRatio || 1;
+                const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
+                const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 240;
+
+                canvas.width = Math.round(cssW * dpr);
+                canvas.height = Math.round(cssH * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                return { w: cssW, h: cssH };
+            }
+
+            function buildSlices(w, h, introRotation) {
+                const total = state.values.reduce((a, b) => a + b, 0);
+                state.slices = [];
+                if (!total) return { total: 0 };
+
+                const cx = w * 0.32;
+                const cy = h * 0.55;
+                const r = Math.min(w, h) * 0.36;
+
+                let start = (-Math.PI / 2) + introRotation;
+                for (let i = 0; i < state.values.length; i++) {
+                    const v = state.values[i];
+                    const angle = (v / total) * Math.PI * 2;
+                    const end = start + angle;
+
+                    state.slices.push({ i, label: state.labels[i], value: v, pct: v / total, start, end, cx, cy, r });
+                    start = end;
+                }
+                return { total, cx, cy, r };
+            }
+
+            function drawBackgroundGlow(ctx, cx, cy, r) {
+                const glow = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 1.35);
+                glow.addColorStop(0, "rgba(196,30,58,.18)");
+                glow.addColorStop(0.4, "rgba(31,58,147,.14)");
+                glow.addColorStop(0.7, "rgba(244,163,0,.10)");
+                glow.addColorStop(1, "rgba(0,0,0,0)");
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r * 1.28, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            function drawSlice(ctx, s, hoverPop, isHovered) {
+                const { cx, cy, r } = s;
+                const mid = (s.start + s.end) / 2;
+                const pop = hoverPop * (isHovered ? 14 : 0);
+                const ox = Math.cos(mid) * pop;
+                const oy = Math.sin(mid) * pop;
+
+                const grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+                grad.addColorStop(0, palette[s.i][0]);
+                grad.addColorStop(1, palette[s.i][1]);
+
+                ctx.shadowColor = "rgba(0,0,0,.45)";
+                ctx.shadowBlur = isHovered ? 18 : 12;
+                ctx.shadowOffsetY = isHovered ? 9 : 6;
+
+                ctx.beginPath();
+                ctx.moveTo(cx + ox, cy + oy);
+                ctx.arc(cx + ox, cy + oy, r, s.start, s.end);
+                ctx.closePath();
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetY = 0;
+
+                ctx.strokeStyle = isHovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.14)";
+                ctx.lineWidth = isHovered ? 2.4 : 2;
+                ctx.stroke();
+            }
+
+            function drawLegend(ctx, w, h, total) {
+                const lx = w * 0.62;
+                const ly = h * 0.30;
+                const rowH = 28;
+
+                ctx.textAlign = "left";
+                ctx.fillStyle = "rgba(255,255,255,.85)";
+                ctx.font = "800 12px ui-sans-serif";
+                ctx.fillText("", lx, ly - 26);
+
+                for (let i = 0; i < state.labels.length; i++) {
+                    const y = ly + i * rowH;
+
+                    ctx.fillStyle = palette[i][0];
+                    ctx.beginPath();
+                    ctx.arc(lx, y - 6, 6, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = "rgba(255,255,255,.92)";
+                    ctx.font = "700 14px ui-sans-serif";
+                    ctx.fillText(state.labels[i], lx + 16, y);
+
+                    const v = state.values[i] || 0;
+                    const pct = total ? ((v / total) * 100).toFixed(1) : "0.0";
+                    ctx.fillStyle = "rgba(255,255,255,.65)";
+                    ctx.font = "13px ui-sans-serif";
+                    ctx.fillText(`${v} (${pct}%)`, lx + 78, y);
+                }
+            }
+
+            function drawCenter(ctx, cx, cy, total) {
+                ctx.beginPath();
+                ctx.arc(cx, cy, 44, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(0,0,0,.35)";
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255,255,255,.10)";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.fillStyle = "rgba(255,255,255,.95)";
+                ctx.font = "900 22px ui-sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(total, cx, cy + 7);
+
+                ctx.fillStyle = "rgba(255,255,255,.60)";
+                ctx.font = "12px ui-sans-serif";
+                ctx.fillText("Total Hits", cx, cy + 25);
+            }
+
+            function renderFrame() {
+                if (!state.canvas || !state.ctx) return;
+                const ctx = state.ctx;
+
+                const { w, h } = resizeToDPR() || { w: 600, h: 240 };
+                ctx.clearRect(0, 0, w, h);
+
+                state.introT = clamp01(state.introT + 0.035);
+                state.fadeT = clamp01(state.fadeT + 0.06);
+                state.hoverAnim += (state.hoverTarget - state.hoverAnim) * 0.18;
+
+                const introEase = easeOutExpo(state.introT);
+                const fade = easeOutCubic(state.fadeT);
+                const introRotation = (1 - introEase) * (Math.PI * 0.20);
+
+                const { total, cx, cy, r } = buildSlices(w, h, introRotation);
+
+                ctx.globalAlpha = fade;
+
+                if (!total) {
+                    ctx.fillStyle = "rgba(255,255,255,.75)";
+                    ctx.font = "15px ui-sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("No hit data available", w / 2, h / 2);
+                    ctx.globalAlpha = 1;
+                    cancelIfDone();
+                    return;
+                }
+
+                drawBackgroundGlow(ctx, cx, cy, r);
+
+                const hoverIndex = state.hoveredIndex;
+                for (const s of state.slices) {
+                    if (s.i === hoverIndex) continue;
+                    drawSlice(ctx, s, state.hoverAnim, false);
+                }
+                if (hoverIndex >= 0 && state.slices[hoverIndex]) {
+                    drawSlice(ctx, state.slices[hoverIndex], state.hoverAnim, true);
+                }
+
+                drawCenter(ctx, cx, cy, total);
+                drawLegend(ctx, w, h, total);
+
+                ctx.globalAlpha = 1;
+                cancelIfDone();
+            }
+
+            function cancelIfDone() {
+                const still =
+                    state.introT < 1 ||
+                    state.fadeT < 1 ||
+                    Math.abs(state.hoverAnim - state.hoverTarget) > 0.01;
+
+                if (still) state.raf = requestAnimationFrame(renderFrame);
+                else state.raf = null;
+            }
+
+            function ensureRAF() {
+                if (!state.raf) state.raf = requestAnimationFrame(renderFrame);
+            }
+
+            function getMousePos(evt) {
+                const rect = state.canvas.getBoundingClientRect();
+                return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+            }
+
+            function hitTest(pos) {
+                for (const s of state.slices) {
+                    const dx = pos.x - s.cx;
+                    const dy = pos.y - s.cy;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist > s.r) continue;
+
+                    let a = Math.atan2(dy, dx);
+                    const to0_2pi = (ang) => (ang < 0 ? ang + Math.PI * 2 : ang);
+
+                    const an = to0_2pi(a);
+                    const sn = to0_2pi(s.start);
+                    const en = to0_2pi(s.end);
+
+                    const inside = (sn <= en) ? (an >= sn && an <= en) : (an >= sn || an <= en);
+                    if (inside) return s.i;
+                }
+                return -1;
+            }
+
+            function showTooltip(i, evt) {
+                const tip = document.getElementById("tooltip");
+                if (!tip) return;
+
+                const total = state.values.reduce((a, b) => a + b, 0) || 1;
+                const v = state.values[i] || 0;
+                const pct = ((v / total) * 100).toFixed(1);
+
+                tip.innerHTML = `
+      <div class="tip-title">Hit Type</div>
+      <div class="tip-row"><span class="k">Type</span><span class="v">${state.labels[i]}</span></div>
+      <div class="tip-row"><span class="k">Count</span><span class="v">${v}</span></div>
+      <div class="tip-row"><span class="k">Share</span><span class="v">${pct}%</span></div>
+      <div class="tip-sub">Based on filtered logs</div>
+    `;
+
+                const pad = 14;
+                tip.style.left = (evt.pageX + pad) + "px";
+                tip.style.top = (evt.pageY + pad) + "px";
+                tip.classList.add("show");
+            }
+
+            function hideTooltip() {
+                const tip = document.getElementById("tooltip");
+                if (!tip) return;
+                tip.classList.remove("show");
+            }
+
+            function onMove(evt) {
+                const pos = getMousePos(evt);
+                const idx = hitTest(pos);
+
+                if (idx !== state.hoveredIndex) {
+                    state.hoveredIndex = idx;
+                    state.hoverTarget = (idx >= 0) ? 1 : 0;
+                    ensureRAF();
+                }
+
+                if (idx >= 0) showTooltip(idx, evt);
+                else hideTooltip();
+            }
+
+            function onLeave() {
+                state.hoveredIndex = -1;
+                state.hoverTarget = 0;
+                hideTooltip();
+                ensureRAF();
+            }
+
+            function render(canvas, labels, values) {
+                setupCanvas(canvas);
+                state.labels = labels.slice();
+                state.values = values.slice();
+                state.introT = 0;
+                state.fadeT = 0;
+                ensureRAF();
+            }
+
+            return { render };
+        }
+        const seasonHitPie = createHitPie();
+        const opponentHitPie = createHitPie();
+
+
+        function renderSummary() {
+            const mode = currentSeason === "career" ? "career" : "season";
+            // -------- TEAM RECORD STRIP --------
+            const teamStrip = document.getElementById("teamRecordStrip");
+
+            if (teamStrip) {
+                const rec = teamRecords[currentSeason];
+
+                if (!rec === "career") {
+                    teamStrip.innerHTML = `
+            <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
+            <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
+            <div class="stat"><div class="k">Streak</div><div class="v">—</div><div class="s">Current</div></div>
+        `;
+                } else {
+                    teamStrip.innerHTML = `
+            <div class="stat"><div class="k">Overall</div><div class="v">${rec.overall}</div><div class="s">Team record</div></div>
+            <div class="stat"><div class="k">Conference</div><div class="v">${rec.conf}</div><div class="s">Ivy League</div></div>
+            <div class="stat"><div class="k">Streak</div><div class="v">${rec.streak}</div><div class="s">Current</div></div>
+            <div class="stat"><div class="k">Home</div><div class="v">${rec.home}</div><div class="s">Home</div></div>
+            <div class="stat"><div class="k">Away</div><div class="v">${rec.away}</div><div class="s">Away</div></div>
+            <div class="stat"><div class="k">Neutral</div><div class="v">${rec.neutral}</div><div class="s">Neutral</div></div>
+        `;
+                }
+            }
+            $("#heroSeasonText").textContent = (mode === "career") ? "Career" : currentSeason;
+
+            const batGames = (mode === "career") ? careerBattingLog : battingLog;
+            const fldGames = (mode === "career") ? careerFieldingLog : fieldingLog;
+
+            // ✅ Hit type breakdown pie (season/career)
+            const ht = computeHitTypeTotals(batGames);
+            seasonHitPie.render(
+                document.getElementById("hitTypeChart"),
+                ["1B", "2B", "3B", "HR"],
+                [ht.singles, ht.doubles, ht.triples, ht.hrs]
+            );
+
+            const logBatTotals = computeBattingTotals(batGames);
+            const logAdv = computeAdvancedFromLog(logBatTotals);
+            const fldTotals = computeFieldingTotals(fldGames);
+
+            // hero tiles: official totals for 2024/2025; career uses official combined
+            const offSeason = (currentSeason !== "career") ? officialTotals[currentSeason] : null;
+
+            const careerOffTotals = (currentSeason === "career")
+                ? sumOfficialTotals(["2024", "2025", "2026"])
+                : null;
+
+            const careerRates = careerOffTotals
+                ? computeRateStatsFromOfficial(careerOffTotals)
+                : null;
+
+            $("#heroAVG").textContent = fmt3(offSeason ? offSeason.AVG : (careerRates ? careerRates.AVG : logAdv.AVG));
+            $("#heroOBP").textContent = fmt3(offSeason ? offSeason.OBP : (careerRates ? careerRates.OBP : NaN));
+            $("#heroOPS").textContent = fmt3(offSeason ? offSeason.OPS : (careerRates ? careerRates.OPS : NaN));
+
+            // Season Summary batting
+            let topBlock;
+
+            if (offSeason) {
+                topBlock = [
+                    { k: "AVG", v: fmt3(offSeason.AVG), s: "Official" },
+                    { k: "OBP", v: fmt3(offSeason.OBP), s: "Official" },
+                    { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
+                    { k: "OPS", v: fmt3(offSeason.OPS), s: "Official" },
+                    { k: "BB", v: offSeason.BB, s: "Official" },
+                    { k: "SO", v: offSeason.SO, s: "Official" },
+                ];
+            } else if (careerRates && careerOffTotals) {
+                topBlock = [
+                    { k: "AVG", v: fmt3(careerRates.AVG), s: "Official (2024+2025+2026)" },
+                    { k: "OBP", v: fmt3(careerRates.OBP), s: "Official (2024+2025+2026)" },
+                    { k: "SLG", v: fmt3(careerRates.SLG), s: "Official (2024+2025+2026)" },
+                    { k: "OPS", v: fmt3(careerRates.OPS), s: "Official ((2024+2025+2026)" },
+                    { k: "BB", v: careerOffTotals.BB, s: "Official (2024+2025+2026)" },
+                    { k: "SO", v: careerOffTotals.SO, s: "Official (2024+2025+2026)" },
+                ];
+            } else {
+                topBlock = [
+                    { k: "AVG", v: fmt3(logAdv.AVG), s: "From logs" },
+                    { k: "SLG", v: fmt3(logAdv.SLG), s: "From logs" },
+                    { k: "OBP", v: "—", s: "Need BB/HBP/SF" },
+                    { k: "OPS", v: "—", s: "Need OBP + SLG" },
+                    { k: "BB", v: "—", s: "Need BB" },
+                    { k: "SO", v: "—", s: "Need SO" },
+                ];
+            }
+
+            const base = [
+                { k: "Games", v: batGames.length, s: mode === "career" ? "Combined logs" : "Season logs" },
+                { k: "H / AB", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "From logs" },
+                { k: "R", v: logBatTotals.R, s: "From logs" },
+                { k: "RBI", v: logBatTotals.RBI, s: "From logs" },
+                { k: "HR", v: logBatTotals.HR, s: "From logs" },
+                { k: "TB", v: logBatTotals.TB, s: "From logs" },
+            ];
+
+            const strip = $("#summaryStrip");
+            strip.innerHTML = [...topBlock, ...base].map(x => `
+    <div class="stat">
+      <div class="k">${x.k}</div>
+      <div class="v">${x.v}</div>
+      <div class="s">${x.s}</div>
+    </div>
+  `).join("");
+
+            // Season Summary fielding
+            const fstrip = $("#fieldingStrip");
+            fstrip.innerHTML = [
+                { k: "TC", v: fldTotals.TC, s: "Total chances" },
+                { k: "PO", v: fldTotals.PO, s: "Putouts" },
+                { k: "A", v: fldTotals.A, s: "Assists" },
+                { k: "E", v: fldTotals.E, s: "Errors" },
+                { k: "FPCT", v: fmt3(fldTotals.FPCT), s: "(PO + A) / (PO + A + E)" },
+            ].map(x => `
+    <div class="stat">
+      <div class="k">${x.k}</div>
+      <div class="v">${x.v}</div>
+      <div class="s">${x.s}</div>
+    </div>
+  `).join("");
+        }
+
+        /* ------------ TABS / SEASON DROPDOWN ------------ */
+        function setTab(tabName) {
+            document.querySelectorAll(".tab").forEach(t => {
+                t.classList.toggle("active", t.dataset.tab === tabName);
+            });
+            document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+
+            if (tabName === "batting") {
+                $("#section-batting").classList.add("active");
+                $("#panelTitle").textContent = "Batting • Game Log";
+                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+                refreshBatting();
+            } else if (tabName === "fielding") {
+                $("#section-fielding").classList.add("active");
+                $("#panelTitle").textContent = "Fielding • Game Log";
+                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+                refreshFielding();
+            }
+        }
+
+        function applySeason(seasonKey) {
+            currentSeason = seasonKey;
+
+            if (currentSeason === "career") {
+                battingLog = [...careerBattingLog];
+                fieldingLog = [...careerFieldingLog];
+            } else {
+                const { bat, fld } = buildSeasonLogs(currentSeason);
+                battingLog = bat;
+                fieldingLog = fld;
+            }
+
+            resetState(battingState);
+            resetState(fieldingState);
+
+            $("#searchBat").value = "";
+            $("#searchFld").value = "";
+
+            renderOpponentSelect($("#oppBat"), battingLog);
+            renderOpponentSelect($("#oppFld"), fieldingLog);
+
+            $("#oppBat").value = "";
+            $("#oppFld").value = "";
+            setSharedOpponent(""); // best single line to ensure sync + hide strips
+            // Reset vs Opponent section when season changes
+            renderVsOpponentAllTime("");
+            renderVsOpponentFieldingAllTime("");
+
+            renderSummary();
+
+            const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
+            setTab(activeTab);
+
+        }
+        function computeOPSFromTotals(t) {
+            const avg = safeDiv(t.H, t.AB);
+            const slg = safeDiv(t.TB, t.AB);
+            const ops = (isFinite(avg) && isFinite(slg)) ? (avg + slg) : NaN;
+            return { avg, slg, ops };
+        }
+
+        function renderVsOpponentAllTime(opponent) {
+            const wrap = $("#vsOppWrap");
+            const nameEl = $("#vsOppName");
+            const strip = $("#vsOppStrip");
+            if (!wrap || !nameEl || !strip) return;
+
+            // If no opponent filter, hide the section
+            if (!opponent) {
+                wrap.style.display = "none";
+                nameEl.textContent = "—";
+                strip.innerHTML = "";
+                return;
+            }
+
+            // All-time = use CAREER logs, not the currently selected season logs
+            const rows = careerBattingLog.filter(r => r.opponent === opponent);
+            nameEl.textContent = opponent;
+            wrap.style.display = "block"; // show first so canvas has width/height
+
+            // Update opponent chart title
+            const name2 = document.getElementById("vsOppName2");
+            if (name2) name2.textContent = opponent;
+
+            // Render the opponent pie on the next frame (after it becomes visible)
+            requestAnimationFrame(() => {
+                const ht = computeHitTypeTotals(rows);
+                const oppCanvas = document.getElementById("vsOppHitTypeChart");
+                if (oppCanvas) {
+                    opponentHitPie.render(
+                        oppCanvas,
+                        ["1B", "2B", "3B", "HR"],
+                        [ht.singles, ht.doubles, ht.triples, ht.hrs]
+                    );
+                }
+            });
+            // Update opponent chart title
+
+
+            // Hit-type pie vs opponent
+
+            const t = computeBattingTotals(rows);
+            const { avg, slg, ops } = computeOPSFromTotals(t);
+
+            nameEl.textContent = opponent;
+            wrap.style.display = "block";
+
+            // Build a nice stat strip
+            const items = [
+                { k: "G", v: rows.length, s: "Games vs opponent" },
+                { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
+                { k: "AVG", v: fmt3(avg), s: "H / AB" },
+                { k: "SLG", v: fmt3(slg), s: "TB / AB" },
+                { k: "OPS", v: fmt3(ops), s: "AVG + SLG (from logs)" },
+                { k: "HR", v: t.HR, s: "From logs" },
+                { k: "RBI", v: t.RBI, s: "From logs" },
+                { k: "TB", v: t.TB, s: "From logs" },
+            ];
+
+            strip.innerHTML = items.map(x => `
+    <div class="stat">
+      <div class="k">${x.k}</div>
+      <div class="v">${x.v}</div>
+      <div class="s">${x.s}</div>
+    </div>
+  `).join("");
+        }
+
+
+        /* ------------ INIT ------------ */
+        (function init() {
+            buildCareer();
+            applySeason("2025");
+
+            document.querySelectorAll(".tab").forEach(t => {
+                t.addEventListener("click", () => setTab(t.dataset.tab));
+            });
+
+            $("#searchBat").addEventListener("input", (e) => { battingState.search = e.target.value; refreshBatting(); });
+            $("#oppBat").addEventListener("change", (e) => setSharedOpponent(e.target.value));
+            $("#resetBat").addEventListener("click", () => {
+                resetState(battingState);
+                $("#searchBat").value = "";
+                setSharedOpponent("");
+            });
+
+            $("#searchFld").addEventListener("input", (e) => { fieldingState.search = e.target.value; refreshFielding(); });
+            $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
+            $("#resetFld").addEventListener("click", () => {
+                resetState(fieldingState);
+                $("#searchFld").value = "";
+                setSharedOpponent("");
+            });
+
+            hookTableSort("#battingTable", battingState, refreshBatting);
+            hookTableSort("#fieldingTable", fieldingState, refreshFielding);
+
+            $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
+
+
+            setTab("batting");
+        })();
+    </script>
+</body>
+
+</html>
