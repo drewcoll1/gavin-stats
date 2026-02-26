@@ -541,6 +541,52 @@ select option {
   }
 }
 
+        /* Keep the real table on mobile and allow sideways scroll */
+@media (max-width: 860px) {
+  /* 2.1: Ensure the scroll container actually scrolls and is visible */
+  .table-wrap {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto !important;         /* must be auto (not hidden) */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;   /* iOS momentum scrolling */
+  }
+
+  /* 2.2: Make sure nothing turns into blocks or is hidden */
+  thead { display: table-header-group !important; }
+  tbody { display: table-row-group !important; }
+  tr    { display: table-row !important; }
+  th, td{ display: table-cell !important; }
+
+  /* 2.3: Keep cells on one straight line (no wrapping) */
+  thead th,
+  tbody td {
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 2.4: Opponent name – keep single line on small too (change to 'normal'
+          if you prefer wrapping the school name instead of scroll) */
+  td[data-label="Opponent"] .opp span:last-child {
+    white-space: nowrap !important;
+  }
+}
+
+        @media (max-width: 860px) {
+  .panel {
+    overflow: visible;    /* allow the table-wrap to show its overflow-x scroll */
+  }
+}
+
+        /* A sensible minimum total width so row stays one line and can scroll */
+#battingTable,
+#fieldingTable {
+  min-width: 640px;  /* adjust to your column set; 640–760px usually feels right */
+}
+
+
+
        
 
         table {
