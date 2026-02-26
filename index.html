@@ -816,6 +816,11 @@ td[data-label="Opponent"] .logo {
                         <div class="value" id="heroOPS">—</div>
                         <div class="hint">OBP + SLG</div>
                     </div>
+                    <div class="quick-card">
+  <div class="label">IVY AVG</div>
+  <div class="value" id="heroIvyAVG">—</div>
+  <div class="hint">AVG vs Ivy League</div>
+</div>
                 </div>
             </div>
 
@@ -1028,6 +1033,27 @@ td[data-label="Opponent"] .logo {
         };
 
         /* ------------ RAW DATA ------------ */
+        // Ivy League opponents (edit names to match exactly what your logs use)
+const ivyTeams = new Set([
+  "Brown",
+  "Columbia",
+  "Cornell",
+  "Dartmouth",
+  "Harvard",
+  "Penn",       // include only if it ever appears in your logs
+  "Princeton",
+  "Yale"
+]);
+
+function computeIvyAvg(rows) {
+  let H = 0, AB = 0;
+  for (const g of rows) {
+    if (!ivyTeams.has(g.opponent)) continue;
+    H += (g.H || 0);
+    AB += (g.AB || 0);
+  }
+  return safeDiv(H, AB); // returns NaN if AB=0
+}
         const seasonsRaw = {
             "2024": {
                 batting: [
@@ -2141,6 +2167,9 @@ td[data-label="Opponent"] .logo {
             $("#heroSeasonText").textContent = (mode === "career") ? "Career" : currentSeason;
 
             const batGames = (mode === "career") ? careerBattingLog : battingLog;
+            const ivyAVG = computeIvyAvg(batGames);
+const ivyEl = document.getElementById("heroIvyAVG");
+if (ivyEl) ivyEl.textContent = fmt3(ivyAVG);
             const fldGames = (mode === "career") ? careerFieldingLog : fieldingLog;
 
             // ✅ Hit type breakdown pie (season/career)
