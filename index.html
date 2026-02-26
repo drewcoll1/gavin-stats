@@ -259,7 +259,7 @@
             padding: 10px 12px;
             border-radius: 12px;
             cursor: pointer;
-            user-select: none;
+            user-: none;
             font-weight: 700;
             font-size: 13px;
         }
@@ -811,11 +811,6 @@ td[data-label="Opponent"] .logo {
                         <div class="value" id="heroOBP">—</div>
                         <div class="hint">On-base percentage</div>
                     </div>
-                    <div class="quick-card">
-  <div class="label">IVY OPS</div>
-  <div class="value" id="heroIvyOPS">—</div>
-  <div class="hint">Ivy League avg (season)</div>
-</div>
                     <div class="quick-card">
                         <div class="label">OPS</div>
                         <div class="value" id="heroOPS">—</div>
@@ -2119,17 +2114,6 @@ td[data-label="Opponent"] .logo {
 
 
         function renderSummary() {
-
-            // Existing hero tiles...
-$("#heroAVG").textContent = fmt3(offSeason ? offSeason.AVG : (careerRates ? careerRates.AVG : logAdv.AVG));
-$("#heroOBP").textContent = fmt3(offSeason ? offSeason.OBP : (careerRates ? careerRates.OBP : NaN));
-$("#heroOPS").textContent = fmt3(offSeason ? offSeason.OPS : (careerRates ? careerRates.OPS : NaN));
-
-// NEW: Ivy League OPS (season or career)
-const ivyOPS = getIvyOPSFor(currentSeason);
-const ivyOPSLabelEl = document.querySelector('.quick-card .label'); // not necessary, but you can adjust text if needed
-document.getElementById("heroIvyOPS").textContent = fmt3(ivyOPS);
-            
             const mode = currentSeason === "career" ? "career" : "season";
             // -------- TEAM RECORD STRIP --------
             const teamStrip = document.getElementById("teamRecordStrip");
@@ -2137,7 +2121,7 @@ document.getElementById("heroIvyOPS").textContent = fmt3(ivyOPS);
             if (teamStrip) {
                 const rec = teamRecords[currentSeason];
 
-                if (!rec) { {
+                if (!rec === "career") {
                     teamStrip.innerHTML = `
             <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
             <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
@@ -2158,31 +2142,6 @@ document.getElementById("heroIvyOPS").textContent = fmt3(ivyOPS);
 
             const batGames = (mode === "career") ? careerBattingLog : battingLog;
             const fldGames = (mode === "career") ? careerFieldingLog : fieldingLog;
-
-            // Ivy League average benchmarks (fill in when available)
-// Use decimal numbers (e.g., 0.760). Leave null to display "—".
-const ivyLeagueAvg = {
-  "2024": { OPS: null },
-  "2025": { OPS: null },
-  "2026": { OPS: null },
-  "career": { OPS: null } // if omitted or null, we'll compute a simple mean of provided seasons
-};
-
-// Helper: ivy OPS for current season/career
-function getIvyOPSFor(season) {
-  const val = ivyLeagueAvg[season]?.OPS;
-  if (typeof val === "number" && isFinite(val)) return val;
-
-  // If "career" isn't provided, average the seasons that have values
-  if (season === "career") {
-    const vals = ["2024", "2025", "2026"]
-      .map(s => ivyLeagueAvg[s]?.OPS)
-      .filter(v => typeof v === "number" && isFinite(v));
-    if (vals.length) return vals.reduce((a, b) => a + b, 0) / vals.length;
-  }
-  return NaN;
-}
-
 
             // ✅ Hit type breakdown pie (season/career)
             const ht = computeHitTypeTotals(batGames);
