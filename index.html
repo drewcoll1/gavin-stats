@@ -150,8 +150,8 @@
         }
 
         .player-photo {
-            width: 92px;
-            height: 92px;
+            width: 200px;
+            height: 250px;
             border-radius: 12px;
             border: 2px solid rgba(255, 255, 255, .65);
             object-fit: cover;
@@ -159,23 +159,38 @@
             /* or center */
         }
 
-        .player-meta h1 {
+        /* --- Name + School grouped, logo to the right --- */
+        .hero-identity {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .identity-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .player-name {
             margin: 0;
             font-size: 30px;
             letter-spacing: .2px;
             line-height: 1.05;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        }
+
+        .identity-school {
+            margin: 0;
+            color: rgba(255, 255, 255, .78);
+            font-size: 14px;
         }
 
         .penn-logo {
-            width: 100px;
-            height: 100px;
+            width: 92px;
+            /* matches player-photo size */
+            height: 92px;
+            /* matches player-photo size */
             object-fit: contain;
-            background: transparent;
-            border: none;
-            padding: 0;
             flex: 0 0 auto;
         }
 
@@ -863,7 +878,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-top: 20px;
+            margin-top: 0;
             margin-bottom: 20px;
         }
 
@@ -899,16 +914,17 @@
                 <div class="hero-left">
                     <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
                     <div class="player-meta">
-                        <h1>
-                            Gavin Collins
+                        <div class="hero-identity">
+                            <div class="identity-text">
+                                <h1 class="player-name">Gavin Collins</h1>
+                                <div class="identity-school">
+                                    <strong><em>University of Pennsylvania Quakers</em></strong>
+                                </div>
+                            </div>
+
                             <img class="penn-logo" src="logo.png" alt="Penn logo" />
-
-                        </h1>
-
-
-                        <div class="sub">
-                            <strong><em>University of Pennsylvania Quakers</em></strong>
                         </div>
+
                         <div class="hero-awards">
                             <span class="award">
                                 <img class="award-logo" src="ivy.png" alt="Ivy">
