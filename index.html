@@ -26,7 +26,16 @@
         body {
             margin: 0;
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-            background: radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
+            background:
+                /* Subtle noise layer */
+                repeating-linear-gradient(45deg,
+                    rgba(255, 255, 255, 0.015) 0px,
+                    rgba(255, 255, 255, 0.015) 1px,
+                    transparent 1px,
+                    transparent 3px),
+
+                /* Your existing gradients */
+                radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
                 radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
                 var(--bg);
             color: var(--text);
@@ -950,7 +959,9 @@
                         </div>
                         <!-- All-time vs filtered opponent -->
                         <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
-                            <div class="tag" style="margin-bottom:10px;">All-time vs <b id="vsOppName">—</b></div>
+                            <div class="tag" style="margin-bottom:10px;">
+                                <span id="vsOppLabel">—</span>
+                            </div>
 
                             <div class="stat-strip" id="vsOppStrip"></div>
 
@@ -1016,7 +1027,8 @@
                             </div>
                         </div>
                         <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
-                            <div class="tag" style="margin-bottom:10px;">All-time fielding vs <b id="vsOppNameFld">—</b>
+                            <div class="tag" style="margin-bottom:10px;">
+                                <span id="vsOppLabelFld">—</span>
                             </div>
                             <div class="stat-strip" id="vsOppStripFld"></div>
 
@@ -1617,24 +1629,31 @@
         }
         function renderVsOpponentFieldingAllTime(opponent) {
             const wrap = $("#vsOppWrapFld");
-            const nameEl = $("#vsOppNameFld");
+
             const strip = $("#vsOppStripFld");
-            if (!wrap || !nameEl || !strip) return;
+            if (!wrap || !strip) return;
 
             if (!opponent) {
                 wrap.style.display = "none";
-                nameEl.textContent = "—";
+                const label = $("#vsOppLabelFld");
+                if (label) label.textContent = "—";
                 strip.innerHTML = "";
                 return;
             }
 
             // All-time = CAREER fielding logs
-            const rows = careerFieldingLog.filter(r => r.opponent === opponent);
+            // ✅ Use current season logs (or career logs if in Career mode)
+            const baseLog = (currentSeason === "career") ? careerFieldingLog : fieldingLog;
+            const rows = baseLog.filter(r => r.opponent === opponent);
 
             // Totals + FPCT using your existing helper
             const t = computeFieldingTotals(rows);
 
-            nameEl.textContent = opponent;
+            const label = $("#vsOppLabelFld");
+            if (label) {
+                const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
+                label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+            }
             wrap.style.display = "block";
 
             const items = [
@@ -2178,7 +2197,7 @@
             if (teamStrip) {
                 const rec = teamRecords[currentSeason];
 
-                if (!rec === "career") {
+                if (!rec) {
                     teamStrip.innerHTML = `
             <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
             <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
@@ -2360,28 +2379,33 @@
 
         function renderVsOpponentAllTime(opponent) {
             const wrap = $("#vsOppWrap");
-            const nameEl = $("#vsOppName");
-            const strip = $("#vsOppStrip");
-            if (!wrap || !nameEl || !strip) return;
 
-            // If no opponent filter, hide the section
+            const strip = $("#vsOppStrip");
+            if (!wrap || !strip) return;
+
             if (!opponent) {
                 wrap.style.display = "none";
-                nameEl.textContent = "—";
+                const label = $("#vsOppLabel");
+                if (label) label.textContent = "—";
                 strip.innerHTML = "";
                 return;
             }
 
-            // All-time = use CAREER logs, not the currently selected season logs
-            const rows = careerBattingLog.filter(r => r.opponent === opponent);
-            nameEl.textContent = opponent;
-            wrap.style.display = "block"; // show first so canvas has width/height
+            // ✅ Use current season logs (or career logs if in Career mode)
+            const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
+            const rows = baseLog.filter(r => r.opponent === opponent);
 
-            // Update opponent chart title
+            const label = $("#vsOppLabel");
+            if (label) {
+                const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
+                label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+            }
+            wrap.style.display = "block";
+
             const name2 = document.getElementById("vsOppName2");
             if (name2) name2.textContent = opponent;
 
-            // Render the opponent pie on the next frame (after it becomes visible)
+            // Render the opponent pie after visible
             requestAnimationFrame(() => {
                 const ht = computeHitTypeTotals(rows);
                 const oppCanvas = document.getElementById("vsOppHitTypeChart");
@@ -2393,20 +2417,12 @@
                     );
                 }
             });
-            // Update opponent chart title
-
-
-            // Hit-type pie vs opponent
 
             const t = computeBattingTotals(rows);
             const { avg, slg, ops } = computeOPSFromTotals(t);
 
-            nameEl.textContent = opponent;
-            wrap.style.display = "block";
-
-            // Build a nice stat strip
             const items = [
-                { k: "G", v: rows.length, s: "Games vs opponent" },
+                { k: "G", v: rows.length, s: "Games vs opponent (filtered)" },
                 { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
                 { k: "AVG", v: fmt3(avg), s: "H / AB" },
                 { k: "SLG", v: fmt3(slg), s: "TB / AB" },
