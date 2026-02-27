@@ -447,36 +447,36 @@
 
         /* ---------- SEARCH + FILTER INPUTS (THEMED) ---------- */
 
-input[type="text"],
-select {
-  background: rgba(255,255,255,.05);
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  outline: none;
-  transition: all .2s ease;
-}
+        input[type="text"],
+        select {
+            background: rgba(255, 255, 255, .05);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 13px;
+            outline: none;
+            transition: all .2s ease;
+        }
 
-/* Subtle focus glow */
-input[type="text"]:focus,
-select:focus {
-  border-color: rgba(204,0,0,.6);
-  box-shadow: 0 0 0 2px rgba(204,0,0,.25);
-  background: rgba(255,255,255,.08);
-}
+        /* Subtle focus glow */
+        input[type="text"]:focus,
+        select:focus {
+            border-color: rgba(204, 0, 0, .6);
+            box-shadow: 0 0 0 2px rgba(204, 0, 0, .25);
+            background: rgba(255, 255, 255, .08);
+        }
 
-/* Dropdown list (dark theme) */
-select option {
-  background-color: #171922;
-  color: white;
-}
+        /* Dropdown list (dark theme) */
+        select option {
+            background-color: #171922;
+            color: white;
+        }
 
-/* Make search placeholder softer */
-input::placeholder {
-  color: rgba(255,255,255,.45);
-}
+        /* Make search placeholder softer */
+        input::placeholder {
+            color: rgba(255, 255, 255, .45);
+        }
 
 
         select {
@@ -518,151 +518,232 @@ input::placeholder {
         }
 
 
-        
-       
 
-@media (max-width: 860px) {
-  td[data-label="Opponent"],
-  th[data-key="opponent"] {
-    min-width: 0 !important;
-    white-space: normal !important;
-  }
-}
-      
+
+
+        @media (max-width: 860px) {
+
+            td[data-label="Opponent"],
+            th[data-key="opponent"] {
+                min-width: 0 !important;
+                white-space: normal !important;
+            }
+        }
+
 
 
         /* Keep the table layout on mobile; allow sideways scroll */
-@media (max-width: 860px) {
-  .table-wrap {
-    overflow-x: auto !important;        /* enable horizontal scrolling */
-    -webkit-overflow-scrolling: touch;  /* smooth scrolling on iOS */
-  }
+        @media (max-width: 860px) {
+            .table-wrap {
+                overflow-x: auto !important;
+                /* enable horizontal scrolling */
+                -webkit-overflow-scrolling: touch;
+                /* smooth scrolling on iOS */
+            }
 
-  /* Ensure we did NOT convert any table parts into blocks */
-  thead { display: table-header-group !important; }
-  tbody { display: table-row-group !important; }
-  tr    { display: table-row !important; }
-  td,
-  th    { display: table-cell !important; }
+            /* Ensure we did NOT convert any table parts into blocks */
+            thead {
+                display: table-header-group !important;
+            }
 
-  /* Keep everything in a single line per cell (prevents per-cell wrapping) */
-  thead th,
-  tbody td {
-    white-space: nowrap !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+            tbody {
+                display: table-row-group !important;
+            }
 
-  /* Opponent cell: keep on one line too (or switch to normal if you want name wrapping) */
-  td[data-label="Opponent"] .opp span:last-child {
-    white-space: nowrap;  /* change to 'normal' if you want the school to wrap instead of scrolling */
-  }
-}
+            tr {
+                display: table-row !important;
+            }
+
+            td,
+            th {
+                display: table-cell !important;
+            }
+
+            /* Keep everything in a single line per cell (prevents per-cell wrapping) */
+            thead th,
+            tbody td {
+                white-space: nowrap !important;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* Opponent cell: keep on one line too (or switch to normal if you want name wrapping) */
+            td[data-label="Opponent"] .opp span:last-child {
+                white-space: nowrap;
+                /* change to 'normal' if you want the school to wrap instead of scrolling */
+            }
+        }
 
         /* Keep the real table on mobile and allow sideways scroll */
-@media (max-width: 860px) {
-  /* 2.1: Ensure the scroll container actually scrolls and is visible */
-  .table-wrap {
-    display: block;
-    max-width: 100%;
-    overflow-x: auto !important;         /* must be auto (not hidden) */
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;   /* iOS momentum scrolling */
-  }
+        @media (max-width: 860px) {
 
-  /* 2.2: Make sure nothing turns into blocks or is hidden */
-  thead { display: table-header-group !important; }
-  tbody { display: table-row-group !important; }
-  tr    { display: table-row !important; }
-  th, td{ display: table-cell !important; }
+            /* 2.1: Ensure the scroll container actually scrolls and is visible */
+            .table-wrap {
+                display: block;
+                max-width: 100%;
+                overflow-x: auto !important;
+                /* must be auto (not hidden) */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                /* iOS momentum scrolling */
+            }
 
-  /* 2.3: Keep cells on one straight line (no wrapping) */
-  thead th,
-  tbody td {
-    white-space: nowrap !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+            /* 2.2: Make sure nothing turns into blocks or is hidden */
+            thead {
+                display: table-header-group !important;
+            }
 
-  /* 2.4: Opponent name – keep single line on small too (change to 'normal'
+            tbody {
+                display: table-row-group !important;
+            }
+
+            tr {
+                display: table-row !important;
+            }
+
+            th,
+            td {
+                display: table-cell !important;
+            }
+
+            /* 2.3: Keep cells on one straight line (no wrapping) */
+            thead th,
+            tbody td {
+                white-space: nowrap !important;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* 2.4: Opponent name – keep single line on small too (change to 'normal'
           if you prefer wrapping the school name instead of scroll) */
-  td[data-label="Opponent"] .opp span:last-child {
-    white-space: nowrap !important;
-  }
-}
+            td[data-label="Opponent"] .opp span:last-child {
+                white-space: nowrap !important;
+            }
+        }
 
         @media (max-width: 860px) {
-  .panel {
-    overflow: visible;    /* allow the table-wrap to show its overflow-x scroll */
-  }
-}
+            .panel {
+                overflow: visible;
+                /* allow the table-wrap to show its overflow-x scroll */
+            }
+        }
 
         /* A sensible minimum total width so row stays one line and can scroll */
-#battingTable,
-#fieldingTable {
-  min-width: 640px;  /* adjust to your column set; 640–760px usually feels right */
-}
+        #battingTable,
+        #fieldingTable {
+            min-width: 640px;
+            /* adjust to your column set; 640–760px usually feels right */
+        }
 
         /* Opponent cell layout: left cluster (logo+name) + right emoji */
-td[data-label="Opponent"] .opp {
-  display: flex;
-  align-items: center;
-  gap: 10px;         /* gap between left cluster and emoji */
-  min-width: 0;      /* allow inner ellipsis */
-}
+        td[data-label="Opponent"] .opp {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* gap between left cluster and emoji */
+            min-width: 0;
+            /* allow inner ellipsis */
+        }
 
-/* Left cluster: logo + name should not push the emoji off line */
-td[data-label="Opponent"] .opp-main {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;      /* critical so the name can ellipsis */
-  flex: 1 1 auto;    /* take available space; lets emoji sit at far right */
-}
+        /* Left cluster: logo + name should not push the emoji off line */
+        td[data-label="Opponent"] .opp-main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            /* critical so the name can ellipsis */
+            flex: 1 1 auto;
+            /* take available space; lets emoji sit at far right */
+        }
 
-/* Team name truncates nicely if space is tight */
-td[data-label="Opponent"] .opp-name {
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+        /* Team name truncates nicely if space is tight */
+        td[data-label="Opponent"] .opp-name {
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-/* Emoji badge stays on the far right and never wraps */
-td[data-label="Opponent"] .opp-emoji {
-  margin-left: auto;     /* push to the far right edge */
-  flex: 0 0 auto;
-  white-space: nowrap;
-  line-height: 1;
-}
+        /* Emoji badge stays on the far right and never wraps */
+        td[data-label="Opponent"] .opp-emoji {
+            margin-left: auto;
+            /* push to the far right edge */
+            flex: 0 0 auto;
+            white-space: nowrap;
+            line-height: 1;
+        }
 
-/* Keep your logo sizes consistent */
-td[data-label="Opponent"] .logo {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  object-fit: contain;
-  background: rgba(255, 255, 255, .06);
-  border: 1px solid rgba(255, 255, 255, .10);
-  flex: 0 0 auto;
-}
+        /* Keep your logo sizes consistent */
+        td[data-label="Opponent"] .logo {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+            flex: 0 0 auto;
+        }
 
-/* Mobile: same behavior; keep the one-line layout you opted for */
-@media (max-width: 860px) {
-  td[data-label="Opponent"] .opp-emoji {
-    white-space: nowrap;
-  }
-}
+        /* Mobile: same behavior; keep the one-line layout you opted for */
+        @media (max-width: 860px) {
+            td[data-label="Opponent"] .opp-emoji {
+                white-space: nowrap;
+            }
+        }
 
 
 
-       
+
 
         table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            table-layout: fixed;
+
+        }
+
+        /* Desktop: let columns size naturally so Opponent can expand */
+        @media (min-width: 861px) {
+
+            #battingTable,
+            #fieldingTable {
+                table-layout: auto;
+            }
+        }
+
+        /* Desktop: do NOT ellipsis the Opponent column */
+        @media (min-width: 861px) {
+            td[data-label="Opponent"] {
+                overflow: visible;
+                /* undo the td overflow:hidden */
+                text-overflow: clip;
+                /* undo ellipsis */
+                white-space: normal;
+                /* allow wrapping */
+            }
+
+            td[data-label="Opponent"] .opp span:last-child {
+                white-space: normal;
+                /* allow the school name to wrap */
+                overflow: visible;
+                text-overflow: clip;
+            }
+        }
+
+        @media (min-width: 861px) {
+
+            th[data-key="opponent"],
+            td[data-label="Opponent"] {
+                width: 26ch;
+                /* tweak: 22ch–34ch */
+            }
+
+            td[data-label="Opponent"] {
+                overflow: visible;
+                text-overflow: clip;
+                white-space: nowrap;
+                /* keep it one line */
+            }
         }
 
         thead th {
@@ -794,8 +875,9 @@ td[data-label="Opponent"] .logo {
                             Gavin Collins
                             <img class="penn-logo" src="logo.png" alt="Penn logo" />
                         </h1>
-<div class="sub">
-                            <strong>University of Pennsylvania Quakers</strong></div>
+                        <div class="sub">
+                            <strong>University of Pennsylvania Quakers</strong>
+                        </div>
                         <div class="sub">
                             <strong>#16</strong> • RF • B/T: R/L
                         </div>
@@ -834,10 +916,10 @@ td[data-label="Opponent"] .logo {
                         <div class="hint">OBP + SLG</div>
                     </div>
                     <div class="quick-card">
-  <div class="label">IVY AVG</div>
-  <div class="value" id="heroIvyAVG">—</div>
-  <div class="hint">AVG vs Ivy League</div>
-</div>
+                        <div class="label">IVY AVG</div>
+                        <div class="value" id="heroIvyAVG">—</div>
+                        <div class="hint">AVG vs Ivy League</div>
+                    </div>
                 </div>
             </div>
 
@@ -969,7 +1051,8 @@ td[data-label="Opponent"] .logo {
                                         </th>
                                         <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span
                                                 class="sort">↕</span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="fieldingBody"></tbody>
@@ -1052,26 +1135,26 @@ td[data-label="Opponent"] .logo {
 
         /* ------------ RAW DATA ------------ */
         // Ivy League opponents (edit names to match exactly what your logs use)
-const ivyTeams = new Set([
-  "Brown",
-  "Columbia",
-  "Cornell",
-  "Dartmouth",
-  "Harvard",
-  "Penn",       // include only if it ever appears in your logs
-  "Princeton",
-  "Yale"
-]);
+        const ivyTeams = new Set([
+            "Brown",
+            "Columbia",
+            "Cornell",
+            "Dartmouth",
+            "Harvard",
+            "Penn",       // include only if it ever appears in your logs
+            "Princeton",
+            "Yale"
+        ]);
 
-function computeIvyAvg(rows) {
-  let H = 0, AB = 0;
-  for (const g of rows) {
-    if (!ivyTeams.has(g.opponent)) continue;
-    H += (g.H || 0);
-    AB += (g.AB || 0);
-  }
-  return safeDiv(H, AB); // returns NaN if AB=0
-}
+        function computeIvyAvg(rows) {
+            let H = 0, AB = 0;
+            for (const g of rows) {
+                if (!ivyTeams.has(g.opponent)) continue;
+                H += (g.H || 0);
+                AB += (g.AB || 0);
+            }
+            return safeDiv(H, AB); // returns NaN if AB=0
+        }
         const seasonsRaw = {
             "2024": {
                 batting: [
@@ -1336,14 +1419,14 @@ function computeIvyAvg(rows) {
             },
             "2026": {
                 batting: [
-                    ["2/20/2026", "Texas A&M", "0-4", 0, 0, 0, 0, 0,"L, 0-1"],
-                    ["2/21/2026", "Texas A&M", "3-5", 0, 1, 0, 0, 1,"L, 1-2"],
-                    ["2/22/2026", "Texas A&M", "0-4", 0, 0, 0, 0, 0,"L, 1-7"],
+                    ["2/20/2026", "Texas A&M", "0-4", 0, 0, 0, 0, 0, "L, 0-1"],
+                    ["2/21/2026", "Texas A&M", "3-5", 0, 1, 0, 0, 1, "L, 1-2"],
+                    ["2/22/2026", "Texas A&M", "0-4", 0, 0, 0, 0, 0, "L, 1-7"],
                 ],
                 fielding: [
-                    ["2/20/2026", "Texas A&M", 2, 1, 0, 1,"L, 0-1"],
-                    ["2/21/2026", "Texas A&M", 0, 0, 0, 0,"L, 1-2"],
-                    ["2/22/2026", "Texas A&M", 0, 0, 0, 0,"L, 1-7"],
+                    ["2/20/2026", "Texas A&M", 2, 1, 0, 1, "L, 0-1"],
+                    ["2/21/2026", "Texas A&M", 0, 0, 0, 0, "L, 1-2"],
+                    ["2/22/2026", "Texas A&M", 0, 0, 0, 0, "L, 1-7"],
                 ]
             }
         };
@@ -2186,8 +2269,8 @@ function computeIvyAvg(rows) {
 
             const batGames = (mode === "career") ? careerBattingLog : battingLog;
             const ivyAVG = computeIvyAvg(batGames);
-const ivyEl = document.getElementById("heroIvyAVG");
-if (ivyEl) ivyEl.textContent = fmt3(ivyAVG);
+            const ivyEl = document.getElementById("heroIvyAVG");
+            if (ivyEl) ivyEl.textContent = fmt3(ivyAVG);
             const fldGames = (mode === "career") ? careerFieldingLog : fieldingLog;
 
             // ✅ Hit type breakdown pie (season/career)
