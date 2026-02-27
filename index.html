@@ -517,6 +517,7 @@
             /* smoother on iOS */
         }
 
+
         /* ---------- CUSTOM SCROLLBAR (Webkit browsers) ---------- */
 
         .table-wrap::-webkit-scrollbar {
@@ -720,6 +721,17 @@
                 white-space: nowrap;
                 /* keep it one line */
             }
+        }
+
+
+        /* Subtle zebra striping */
+        tbody tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Keep hover stronger than zebra */
+        tbody tr:hover td {
+            background: rgba(255, 255, 255, 0.04);
         }
 
         thead th {
