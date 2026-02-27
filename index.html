@@ -417,10 +417,6 @@
             pointer-events: none;
         }
 
-        #hitTypeChart {
-            position: relative;
-        }
-
         .left-controls,
         .right-controls {
             display: flex;
@@ -515,64 +511,44 @@
             overflow-x: auto;
             /* allow horizontal scroll */
             overflow-y: hidden;
+            scrollbar-gutter: stable;
+            /* keeps space for scrollbar when it appears */
+            -webkit-overflow-scrolling: touch;
+            /* smoother on iOS */
+        }
+
+        /* ---------- CUSTOM SCROLLBAR (Webkit browsers) ---------- */
+
+        .table-wrap::-webkit-scrollbar {
+            height: 10px;
+            /* horizontal scrollbar thickness */
+        }
+
+        .table-wrap::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, .05);
+            border-radius: 10px;
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg,
+                    rgba(204, 0, 0, .85),
+                    rgba(204, 0, 0, .55));
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, .25);
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg,
+                    rgba(204, 0, 0, 1),
+                    rgba(204, 0, 0, .7));
         }
 
 
 
 
 
-        @media (max-width: 860px) {
-
-            td[data-label="Opponent"],
-            th[data-key="opponent"] {
-                min-width: 0 !important;
-                white-space: normal !important;
-            }
-        }
 
 
-
-        /* Keep the table layout on mobile; allow sideways scroll */
-        @media (max-width: 860px) {
-            .table-wrap {
-                overflow-x: auto !important;
-                /* enable horizontal scrolling */
-                -webkit-overflow-scrolling: touch;
-                /* smooth scrolling on iOS */
-            }
-
-            /* Ensure we did NOT convert any table parts into blocks */
-            thead {
-                display: table-header-group !important;
-            }
-
-            tbody {
-                display: table-row-group !important;
-            }
-
-            tr {
-                display: table-row !important;
-            }
-
-            td,
-            th {
-                display: table-cell !important;
-            }
-
-            /* Keep everything in a single line per cell (prevents per-cell wrapping) */
-            thead th,
-            tbody td {
-                white-space: nowrap !important;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            /* Opponent cell: keep on one line too (or switch to normal if you want name wrapping) */
-            td[data-label="Opponent"] .opp span:last-child {
-                white-space: nowrap;
-                /* change to 'normal' if you want the school to wrap instead of scrolling */
-            }
-        }
 
         /* Keep the real table on mobile and allow sideways scroll */
         @media (max-width: 860px) {
@@ -1087,12 +1063,12 @@
                     <div class="stat-strip" id="summaryStrip"></div>
 
                     <div class="divider"></div>
-                    <div class="divider"></div>
+
                     <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
                     <div class="chart-wrap">
                         <canvas id="hitTypeChart" width="600" height="220"></canvas>
                     </div>
-
+                    <div class="divider"></div>
 
                     <div class="tag" style="margin-bottom:10px;">Fielding</div>
                     <div class="stat-strip" id="fieldingStrip"></div>
@@ -1551,65 +1527,7 @@
             return { singles, doubles, triples, hrs };
         }
 
-        function drawBarChart(canvas, labels, values) {
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            const dpr = window.devicePixelRatio || 1;
 
-            // Make it crisp on retina
-            const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
-            const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 220;
-            canvas.width = Math.round(cssW * dpr);
-            canvas.height = Math.round(cssH * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            const w = cssW, h = cssH;
-            ctx.clearRect(0, 0, w, h);
-
-            // chart area
-            const pad = 26;
-            const bottom = h - 34;
-            const top = 14;
-            const left = 20;
-            const right = w - 14;
-
-            // axis line
-            ctx.strokeStyle = "rgba(255,255,255,.18)";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(left, bottom);
-            ctx.lineTo(right, bottom);
-            ctx.stroke();
-
-            const maxV = Math.max(1, ...values);
-            const barCount = values.length;
-            const gap = 14;
-            const barW = Math.max(26, ((right - left) - gap * (barCount - 1)) / barCount);
-
-            // bars
-            for (let i = 0; i < barCount; i++) {
-                const v = values[i];
-                const x = left + i * (barW + gap);
-                const barH = ((bottom - top) * v) / maxV;
-                const y = bottom - barH;
-
-                // bar fill
-                ctx.fillStyle = "rgba(204,0,0,.75)";
-                ctx.fillRect(x, y, barW, barH);
-
-                // top value
-                ctx.fillStyle = "rgba(255,255,255,.92)";
-                ctx.font = "12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
-                ctx.textAlign = "center";
-                ctx.fillText(String(v), x + barW / 2, y - 6);
-
-                // label
-                ctx.fillStyle = "rgba(255,255,255,.72)";
-                ctx.font = "12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
-                ctx.textAlign = "center";
-                ctx.fillText(labels[i], x + barW / 2, bottom + 18);
-            }
-        }
 
         function computeAdvancedFromLog(t) {
             return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
