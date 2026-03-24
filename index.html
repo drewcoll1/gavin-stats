@@ -8,6 +8,43 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
+        .player-first {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.player-last {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.player-team-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+}
+
+.team-logo {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.dot {
+    opacity: 0.6;
+}
+
+.player-detail {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+}
         :root {
             --bg: #0e0f12;
             --panel: #171922;
@@ -616,6 +653,21 @@
 }
 
 @media (max-width: 768px) {
+    .player-first {
+    font-size: 16px;
+}
+
+.player-last {
+    font-size: 22px;
+}
+
+.player-team-row {
+    font-size: 12px;
+}
+
+.player-detail {
+    font-size: 11px;
+}
     .container {
         width: min(100%, calc(100% - 20px));
         padding: 10px 0 20px;
@@ -1198,11 +1250,29 @@
                     <div class="player-meta">
                         <div class="hero-identity">
                             <div class="identity-text">
-                                <h1 class="player-name">Gavin Collins</h1>
-                                <div class="identity-school">
-                                    <strong><em>University of Pennsylvania Quakers</em></strong>
-                                </div>
-                            </div>
+
+    <!-- FIRST NAME -->
+    <div class="player-first">Gavin</div>
+
+    <!-- LAST NAME (BOLD + BIGGER) -->
+    <div class="player-last">Collins</div>
+
+    <!-- TEAM / NUMBER / POSITION ROW -->
+    <div class="player-team-row">
+        <img src="penn_logo.png" class="team-logo" />
+        <span>Quakers</span>
+        <span class="dot">•</span>
+        <span>#16</span>
+        <span class="dot">•</span>
+        <span>LF</span>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="player-detail">6'1" / 195 lbs</div>
+    <div class="player-detail">Born: March 12, 2004</div>
+    <div class="player-detail">Bats: R • Throws: L</div>
+
+</div>
 
                             <img class="penn-logo" src="logo.png" alt="Penn logo" />
                         </div>
