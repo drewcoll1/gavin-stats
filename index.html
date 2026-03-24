@@ -47,6 +47,48 @@
             padding: 18px 0 34px;
             position: relative;
         }
+        .hero-stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+
+    padding: 14px 18px;
+    margin-top: 10px;
+
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .35);
+    border: 1px solid rgba(255, 255, 255, .12);
+
+    backdrop-filter: blur(6px);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 70px;
+}
+
+.stat-label {
+    font-size: 11px;
+    letter-spacing: .4px;
+    color: rgba(255, 255, 255, .65);
+}
+
+.stat-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: white;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, .15);
+}
 
         /* Tooltip */
         .tooltip {
@@ -287,20 +329,8 @@
     color: white;
 }
 
-.hero-right {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-    gap: 12px;
-    align-items: stretch;
-}
 
-.quick-card {
-    max-width: none;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, .28);
-    border: 1px solid rgba(255, 255, 255, .10);
-    padding: 12px;
-}
+
 
 @media (max-width: 1100px) {
     .hero-row {
@@ -403,32 +433,8 @@
             max-width: 100%;
         }
 
-        .quick-card {
-            flex: 1 1 140px;
-            max-width: 180px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, .28);
-            border: 1px solid rgba(255, 255, 255, .10);
-            padding: 10px 12px;
-        }
+        
 
-        .quick-card .label {
-            color: rgba(255, 255, 255, .72);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .quick-card .value {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: .4px;
-        }
-
-        .quick-card .hint {
-            margin-top: 4px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .60);
-        }
 
         /* TABS */
         .tabs {
@@ -469,14 +475,18 @@
                 grid-template-columns: 1fr;
             }
 
-            .hero-right {
-                justify-content: flex-start;
-            }
-
-            .quick-card {
-                max-width: none;
-            }
+            
         }
+        @media (max-width: 700px) {
+    .hero-stats-bar {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+
+    .stat-item {
+        min-width: 80px;
+    }
+}
 
         .panel {
             background: linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
@@ -1209,31 +1219,35 @@
             </div>
 
             <!-- 4. STATS -->
-            <div class="hero-right">
-                <div class="quick-card">
-                    <div class="label">AVG</div>
-                    <div class="value" id="heroAVG">—</div>
-                    <div class="hint">Batting average</div>
-                </div>
+            <div class="hero-stats-bar">
 
-                <div class="quick-card">
-                    <div class="label">OBP</div>
-                    <div class="value" id="heroOBP">—</div>
-                    <div class="hint">On-base percentage</div>
-                </div>
+    <div class="stat-item">
+        <div class="stat-label">AVG</div>
+        <div class="stat-value" id="heroAVG">—</div>
+    </div>
 
-                <div class="quick-card">
-                    <div class="label">OPS</div>
-                    <div class="value" id="heroOPS">—</div>
-                    <div class="hint">OBP + SLG</div>
-                </div>
+    <div class="stat-divider"></div>
 
-                <div class="quick-card">
-                    <div class="label">IVY AVG</div>
-                    <div class="value" id="heroIvyAVG">—</div>
-                    <div class="hint">AVG vs Ivy League</div>
-                </div>
-            </div>
+    <div class="stat-item">
+        <div class="stat-label">OBP</div>
+        <div class="stat-value" id="heroOBP">—</div>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat-item">
+        <div class="stat-label">OPS</div>
+        <div class="stat-value" id="heroOPS">—</div>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat-item">
+        <div class="stat-label">IVY AVG</div>
+        <div class="stat-value" id="heroIvyAVG">—</div>
+    </div>
+
+</div>
 
         </div>
 
