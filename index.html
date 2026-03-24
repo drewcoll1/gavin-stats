@@ -116,11 +116,21 @@
                 linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
             border: 1px solid rgba(255, 255, 255, .06);
             box-shadow: var(--shadow);
-            border-radius: var(--radius);
             padding: 18px;
             overflow: hidden;
             position: relative;
         }
+        .hero {
+    width: 100%;
+    padding: 20px 0;
+    border-radius: 0;
+}
+
+.hero-inner {
+    width: min(1150px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 0 16px;
+}
 
         .hero:before {
             content: "";
@@ -973,9 +983,13 @@
 </head>
 
 <body>
-    <div class="container">
-        <div id="tooltip" class="tooltip"></div>
 
+    <!-- FULL WIDTH HERO -->
+    <div class="hero">
+        <div class="hero-inner">
+
+            <div id="tooltip" class="tooltip"></div>
+    
         <div class="hero">
             <div class="hero-row">
                 <div class="hero-left">
@@ -1235,9 +1249,11 @@
                 </div>
             </div>
         </div>
+            </div>
+        </div>
 
         <!-- (Removed) ANALYTICS panel -->
-    </div>
+    
 
     <script>
         /* ------------ LOGO LOCATIONS ------------ */
