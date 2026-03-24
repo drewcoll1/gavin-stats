@@ -46,298 +46,352 @@
     margin-top: 2px;
 }
         :root {
-            --bg: #0e0f12;
-            --panel: #171922;
-            --panel2: #1f2230;
-            --text: #ffffff;
-            --muted: #a8adbd;
-            --accent: #cc0000;
-            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-            --radius: 14px;
-        }
+    --bg: #f4f4f4;
+    --panel: #ffffff;
+    --text: #111111;
+    --muted: #6b7280;
+    --accent: #c8102e;
+    --border: #d9d9d9;
+}
 
-        * {
-            box-sizing: border-box
-        }
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
 
-        body {
-            margin: 0;
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-            background:
-                /* Subtle noise layer */
-                repeating-linear-gradient(45deg,
-                    rgba(255, 255, 255, 0.015) 0px,
-                    rgba(255, 255, 255, 0.015) 1px,
-                    transparent 1px,
-                    transparent 3px),
+.container {
+    width: min(1280px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 0 0 30px;
+}
 
-                /* Your existing gradients */
-                radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
-                radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
-                var(--bg);
-            color: var(--text);
-        }
+.hero {
+    background:
+        linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(40,40,40,.55) 50%, rgba(0,0,0,.72) 100%);
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding: 28px 30px 18px;
+    overflow: hidden;
+    position: relative;
+}
 
-        .container {
-            width: min(1150px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 18px 0 34px;
-            position: relative;
-        }
+.hero:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0) 45%);
+    pointer-events: none;
+}
 
-        /* Tooltip */
-        .tooltip {
-            position: absolute;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity .08s ease, transform .08s ease;
-            max-width: 360px;
-            padding: 10px 10px;
-            border-radius: 12px;
-            background: rgba(10, 11, 14, .92);
-            border: 1px solid rgba(255, 255, 255, .10);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
-            backdrop-filter: blur(10px);
-            color: rgba(255, 255, 255, .92);
-            font-size: 12px;
-            line-height: 1.35;
-        }
+.hero-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 170px minmax(260px, 1fr) minmax(320px, 420px);
+    gap: 24px;
+    align-items: end;
+}
 
-        .tooltip.show {
-            opacity: 1;
-            transform: translateY(0px);
-        }
+.hero-left {
+    display: contents;
+}
 
-        .tip-title {
-            font-weight: 900;
-            letter-spacing: .25px;
-            margin-bottom: 6px;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, .92);
-        }
+.player-photo {
+    width: 170px;
+    height: 220px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 0;
+    border: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
 
-        .tip-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            margin: 3px 0;
-        }
+.player-meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: 0;
+}
 
-        .tip-row .k {
-            color: rgba(255, 255, 255, .68);
-        }
+.hero-identity {
+    display: block;
+}
 
-        .tip-row .v {
-            font-weight: 800;
-            color: rgba(255, 255, 255, .95);
-        }
+.identity-text {
+    display: block;
+}
 
-        #vsOppHitTypeChart {
-            width: 100%;
-            height: 220px;
-            display: block;
-        }
+.player-first {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+    color: white;
+    margin-bottom: 2px;
+}
 
-        .tip-sub {
-            margin-top: 8px;
-            color: rgba(255, 255, 255, .65);
-            font-size: 11px;
-        }
+.player-last {
+    font-size: 46px;
+    font-weight: 800;
+    line-height: .95;
+    color: white;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
 
-        /* HERO */
-        .hero {
-            background: linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
-                linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
-            border: 1px solid rgba(255, 255, 255, .06);
-            box-shadow: var(--shadow);
-            border-radius: var(--radius);
-            padding: 18px;
-            overflow: hidden;
-            position: relative;
-        }
+.player-team-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 15px;
+    color: rgba(255,255,255,.92);
+    margin-bottom: 10px;
+}
 
-        .hero:before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            background:
-                radial-gradient(900px 300px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
-                radial-gradient(600px 240px at 60% 0%, rgba(255, 255, 255, .05), transparent 55%),
-                radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .35), transparent 60%);
-            pointer-events: none;
-        }
+.team-logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
 
-        .hero-row {
-            position: relative;
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+.dot {
+    opacity: .7;
+}
 
-        .hero-left {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            min-width: 280px;
-        }
+.player-detail {
+    font-size: 13px;
+    color: rgba(255,255,255,.82);
+    margin-top: 4px;
+}
 
-        .player-photo {
-            width: 200px;
-            height: 250px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, .65);
-            object-fit: cover;
-            object-position: center top;
-            /* or center */
-        }
+.penn-logo,
+.hero-awards,
+.player-meta .sub {
+    display: none;
+}
 
-        /* --- Name + School grouped, logo to the right --- */
-        .hero-identity {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+.pill-row {
+    margin-top: 14px;
+}
 
-        .identity-text {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+.pill {
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    color: rgba(255,255,255,.9);
+    font-size: 13px;
+}
 
-        .player-name {
-            margin: 0;
-            font-size: 30px;
-            letter-spacing: .2px;
-            line-height: 1.05;
-        }
+.pill select {
+    background: rgba(255,255,255,.08);
+    color: white;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
 
-        .identity-school {
-            margin: 0;
-            color: rgba(255, 255, 255, .78);
-            font-size: 14px;
-        }
+.hero-right {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    align-self: stretch;
+    border-left: 1px solid rgba(255,255,255,.18);
+    min-width: 0;
+}
 
-        .penn-logo {
-            width: 92px;
-            /* matches player-photo size */
-            height: 92px;
-            /* matches player-photo size */
-            object-fit: contain;
-            flex: 0 0 auto;
-        }
+.quick-card {
+    background: transparent;
+    border: none;
+    border-right: 1px solid rgba(255,255,255,.18);
+    border-radius: 0;
+    padding: 10px 14px;
+    max-width: none;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        .player-meta .sub {
-            margin: 6px 0 0;
-            color: rgba(255, 255, 255, .78);
-            font-size: 14px;
-        }
+.quick-card:last-child {
+    border-right: none;
+}
 
-        .pill-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+.quick-card .label {
+    color: rgba(255,255,255,.72);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 6px;
+}
 
-        .pill {
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .25);
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .85);
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.quick-card .value {
+    color: white;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1;
+}
 
-        .pill select {
-            background: rgba(0, 0, 0, .18);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, .12);
-            border-radius: 999px;
-            padding: 4px 10px;
-            outline: none;
-            cursor: pointer;
-            font-size: 12px;
-        }
+.quick-card .hint {
+    margin-top: 6px;
+    font-size: 11px;
+    color: rgba(255,255,255,.62);
+}
 
-        .hero-right {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            justify-content: flex-end;
-            max-width: 100%;
-        }
+.tabs {
+    margin-top: 18px;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,.18);
+}
 
-        .quick-card {
-            flex: 1 1 140px;
-            max-width: 180px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, .28);
-            border: 1px solid rgba(255, 255, 255, .10);
-            padding: 10px 12px;
-        }
+.tab {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: rgba(255,255,255,.82);
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
 
-        .quick-card .label {
-            color: rgba(255, 255, 255, .72);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
+.tab.active {
+    color: white;
+    border-bottom: 3px solid var(--accent);
+    background: transparent;
+}
 
-        .quick-card .value {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: .4px;
-        }
+.grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1.7fr .9fr;
+    gap: 18px;
+}
 
-        .quick-card .hint {
-            margin-top: 4px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .60);
-        }
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
 
-        /* TABS */
-        .tabs {
-            margin-top: 14px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+.panel-head {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+    background: #fafafa;
+}
 
-        .tab {
-            border: 1px solid rgba(255, 255, 255, .10);
-            background: rgba(255, 255, 255, .04);
-            color: rgba(255, 255, 255, .85);
-            padding: 10px 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            user-select: none;
-            font-weight: 700;
-            font-size: 13px;
-        }
+.panel-title {
+    color: #111;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0;
+}
 
-        .tab.active {
-            background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
-            border-color: rgba(204, 0, 0, .45);
-        }
+.panel-sub {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+}
 
-        /* GRID */
-        .grid {
-            margin-top: 14px;
-            display: grid;
-            grid-template-columns: 1.25fr .75fr;
-            gap: 14px;
-            min-width: 0;
-        }
+.panel-body {
+    padding: 14px 16px;
+    background: white;
+}
+
+.tag,
+.stat,
+.chart-wrap,
+.input {
+    border-radius: 0;
+}
+
+.stat {
+    background: #fafafa;
+    border: 1px solid var(--border);
+}
+
+.stat .k {
+    color: var(--muted);
+}
+
+.stat .v {
+    color: #111;
+}
+
+.stat .s {
+    color: var(--muted);
+}
+
+.table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background: white;
+}
+
+thead th {
+    background: #f7f7f7;
+    color: #444;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody td {
+    color: #111;
+    border-bottom: 1px solid #ececec;
+}
+
+tbody tr:nth-child(even) td {
+    background: #fcfcfc;
+}
+
+tbody tr:hover td {
+    background: #f3f4f6;
+}
+
+@media (max-width: 900px) {
+    .hero-row {
+        grid-template-columns: 110px 1fr;
+        gap: 14px;
+        align-items: start;
+    }
+
+    .hero-right {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(2, 1fr);
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,.18);
+        margin-top: 14px;
+    }
+
+    .quick-card {
+        border-right: 1px solid rgba(255,255,255,.18);
+        border-bottom: 1px solid rgba(255,255,255,.18);
+    }
+
+    .player-photo {
+        width: 110px;
+        height: 140px;
+    }
+
+    .player-first {
+        font-size: 16px;
+    }
+
+    .player-last {
+        font-size: 30px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
 
         @media (max-width: 980px) {
             .grid {
@@ -1259,12 +1313,10 @@
 
     <!-- TEAM / NUMBER / POSITION ROW -->
     <div class="player-team-row">
-        <img src="penn_logo.png" class="team-logo" />
-        <span>Quakers</span>
-        <span class="dot">•</span>
-        <span>#16</span>
-        <span class="dot">•</span>
-        <span>LF</span>
+       <div class="player-detail">HT/WT: 6'1" / 195 lbs</div>
+<div class="player-detail">Birthdate: March 12, 2004</div>
+<div class="player-detail">Bats/Throws: R / L</div>
+<div class="player-detail">Status: Active</div>
     </div>
 
     <!-- DETAILS -->
