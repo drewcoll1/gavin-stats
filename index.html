@@ -42,11 +42,11 @@
         }
 
         .container {
-    width: 100%;
-    margin: 0;
-    padding: 0 0 34px;
-    position: relative;
-}
+            width: min(1150px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 18px 0 34px;
+            position: relative;
+        }
 
         /* Tooltip */
         .tooltip {
@@ -112,17 +112,15 @@
 
         /* HERO */
         .hero {
-    width: 100%;
-    background:
-        linear-gradient(90deg, rgba(10, 10, 14, .92) 0%, rgba(35, 0, 0, .88) 45%, rgba(120, 0, 0, .78) 100%),
-        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent);
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 28px 36px;
-    overflow: hidden;
-    position: relative;
-}
+            background: linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+                linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+            border: 1px solid rgba(255, 255, 255, .06);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 18px;
+            overflow: hidden;
+            position: relative;
+        }
 
         .hero:before {
             content: "";
@@ -144,7 +142,12 @@
             flex-wrap: wrap;
         }
 
-       
+        .hero-left {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            min-width: 280px;
+        }
 
         .player-photo {
             width: 200px;
@@ -181,121 +184,15 @@
             color: rgba(255, 255, 255, .78);
             font-size: 14px;
         }
-.hero-row {
-    position: relative;
-    display: grid;
-    grid-template-columns: 220px minmax(260px, 1.2fr) minmax(180px, .8fr) minmax(320px, 1fr);
-    gap: 24px;
-    align-items: center;
-}
 
-.hero-photo-block {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.player-photo {
-    width: 200px;
-    height: 250px;
-    border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, .65);
-    object-fit: cover;
-    object-position: center top;
-}
-
-.hero-info-block {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 12px;
-    min-width: 0;
-}
-
-.hero-identity {
-    display: block;
-}
-
-.identity-text {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.player-name {
-    margin: 0;
-    font-size: 42px;
-    line-height: 1;
-    font-weight: 900;
-    letter-spacing: .2px;
-}
-
-.identity-school-line {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: rgba(255, 255, 255, .82);
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.penn-logo-small {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-    flex: 0 0 auto;
-}
-
-.hero-personal-block {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-left: 10px;
-    border-left: 1px solid rgba(255, 255, 255, .12);
-}
-
-.personal-line {
-    font-size: 14px;
-    color: rgba(255, 255, 255, .86);
-}
-
-.hero-stats-block {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-    gap: 12px;
-    align-self: stretch;
-}
-
-.quick-card {
-    max-width: none;
-    min-height: 96px;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, .28);
-    border: 1px solid rgba(255, 255, 255, .10);
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.quick-card .label {
-    color: rgba(255, 255, 255, .72);
-    font-size: 12px;
-    margin-bottom: 6px;
-}
-
-.quick-card .value {
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: .4px;
-}
-
-.quick-card .hint {
-    margin-top: 4px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, .60);
-}
-        
+        .penn-logo {
+            width: 92px;
+            /* matches player-photo size */
+            height: 92px;
+            /* matches player-photo size */
+            object-fit: contain;
+            flex: 0 0 auto;
+        }
 
         .player-meta .sub {
             margin: 6px 0 0;
@@ -335,7 +232,14 @@
             font-size: 12px;
         }
 
-       
+        .hero-right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: flex-end;
+            max-width: 100%;
+        }
 
         .quick-card {
             flex: 1 1 140px;
@@ -1074,81 +978,83 @@
 
         <div class="hero">
             <div class="hero-row">
-    <div class="hero-left">
-        <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
-        <div class="player-meta">
-            <div class="hero-identity">
-                <div class="identity-text">
-                    <h1 class="player-name">Gavin Collins</h1>
-                    <div class="identity-school">
-                        <strong><em>University of Pennsylvania Quakers</em></strong>
+                <div class="hero-left">
+                    <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
+                    <div class="player-meta">
+                        <div class="hero-identity">
+                            <div class="identity-text">
+                                <h1 class="player-name">Gavin Collins</h1>
+                                <div class="identity-school">
+                                    <strong><em>University of Pennsylvania Quakers</em></strong>
+                                </div>
+                            </div>
+
+                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
+                        </div>
+
+                        <div class="hero-awards">
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                2025 First-team All-Ivy (OF)
+                            </span>
+
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                Ivy League Player of the Week (4/15/25)
+                            </span>
+
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                Ivy League Rookie of the Week (3/25/24)
+                            </span>
+                        </div>
+                        <div class="sub">
+                            <strong>#16</strong> • RF • B/T: R/L
+                        </div>
+                        <div class="sub" style="margin-top:4px;">
+                            <span id="heroSeasonText">2025</span> • Game Log • Batting + Fielding
+                        </div>
+
+                        <div class="pill-row">
+                            <div class="pill">
+                                Season:
+                                <select id="seasonSelect" aria-label="Select season">
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026" selected>2026</option>
+                                    <option value="career">Career</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <img class="penn-logo" src="logo.png" alt="Penn logo" />
-            </div>
+                <div class="hero-right">
+                    <div class="quick-card">
+                        <div class="label">AVG</div>
+                        <div class="value" id="heroAVG">—</div>
+                        <div class="hint">Batting average</div>
+                    </div>
+                    <div class="quick-card">
+                        <div class="label">OBP</div>
+                        <div class="value" id="heroOBP">—</div>
+                        <div class="hint">On-base percentage</div>
+                    </div>
+                    <div class="quick-card">
+                        <div class="label">OPS</div>
+                        <div class="value" id="heroOPS">—</div>
+                        <div class="hint">OBP + SLG</div>
+                    </div>
 
-            <div class="hero-awards">
-                <span class="award">
-                    <img class="award-logo" src="ivy.png" alt="Ivy">
-                    2025 First-team All-Ivy (OF)
-                </span>
+                    <div class="quick-card">
+                        <div class="label">IVY AVG</div>
+                        <div class="value" id="heroIvyAVG">—</div>
+                        <div class="hint">AVG vs Ivy League</div>
+                    </div>
 
-                <span class="award">
-                    <img class="award-logo" src="ivy.png" alt="Ivy">
-                    Ivy League Player of the Week (4/15/25)
-                </span>
 
-                <span class="award">
-                    <img class="award-logo" src="ivy.png" alt="Ivy">
-                    Ivy League Rookie of the Week (3/25/24)
-                </span>
-            </div>
-            <div class="sub">
-                <strong>#16</strong> • RF • B/T: R/L
-            </div>
-            <div class="sub" style="margin-top:4px;">
-                <span id="heroSeasonText">2025</span> • Game Log • Batting + Fielding
-            </div>
-
-            <div class="pill-row">
-                <div class="pill">
-                    Season:
-                    <select id="seasonSelect" aria-label="Select season">
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                        <option value="2026" selected>2026</option>
-                        <option value="career">Career</option>
-                    </select>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="hero-right">
-        <div class="quick-card">
-            <div class="label">AVG</div>
-            <div class="value" id="heroAVG">—</div>
-            <div class="hint">Batting average</div>
-        </div>
-        <div class="quick-card">
-            <div class="label">OBP</div>
-            <div class="value" id="heroOBP">—</div>
-            <div class="hint">On-base percentage</div>
-        </div>
-        <div class="quick-card">
-            <div class="label">OPS</div>
-            <div class="value" id="heroOPS">—</div>
-            <div class="hint">OBP + SLG</div>
-        </div>
-
-        <div class="quick-card">
-            <div class="label">IVY AVG</div>
-            <div class="value" id="heroIvyAVG">—</div>
-            <div class="hint">AVG vs Ivy League</div>
-        </div>
-    </div>
-</div>
 
             <div class="tabs" role="tablist" aria-label="Stat sections">
                 <div class="tab active" data-tab="batting">Batting</div>
