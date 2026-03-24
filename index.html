@@ -841,6 +841,20 @@
                 white-space: nowrap !important;
             }
         }
+        .hero-stats-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hero-stats-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .82);
+    padding-left: 2px;
+}
 
         @media (max-width: 860px) {
             .panel {
@@ -1219,34 +1233,36 @@
             </div>
 
             <!-- 4. STATS -->
-            <div class="hero-stats-bar">
+            <div class="hero-stats-wrap">
+    <div class="hero-stats-title" id="heroStatsTitle">2026 Stats</div>
 
-    <div class="stat-item">
-        <div class="stat-label">AVG</div>
-        <div class="stat-value" id="heroAVG">—</div>
+    <div class="hero-stats-bar">
+        <div class="stat-item">
+            <div class="stat-label">AVG</div>
+            <div class="stat-value" id="heroAVG">—</div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-item">
+            <div class="stat-label">OBP</div>
+            <div class="stat-value" id="heroOBP">—</div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-item">
+            <div class="stat-label">OPS</div>
+            <div class="stat-value" id="heroOPS">—</div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-item">
+            <div class="stat-label">IVY AVG</div>
+            <div class="stat-value" id="heroIvyAVG">—</div>
+        </div>
     </div>
-
-    <div class="stat-divider"></div>
-
-    <div class="stat-item">
-        <div class="stat-label">OBP</div>
-        <div class="stat-value" id="heroOBP">—</div>
-    </div>
-
-    <div class="stat-divider"></div>
-
-    <div class="stat-item">
-        <div class="stat-label">OPS</div>
-        <div class="stat-value" id="heroOPS">—</div>
-    </div>
-
-    <div class="stat-divider"></div>
-
-    <div class="stat-item">
-        <div class="stat-label">IVY AVG</div>
-        <div class="stat-value" id="heroIvyAVG">—</div>
-    </div>
-
 </div>
 
         </div>
@@ -1493,6 +1509,12 @@
             }
             return safeDiv(H, AB); // returns NaN if AB=0
         }
+        function updateHeroStatsTitle(season) {
+    const title = document.getElementById("heroStatsTitle");
+    if (!title) return;
+
+    title.textContent = season === "career" ? "Career Stats" : `${season} Stats`;
+}
         const seasonsRaw = {
             "2024": {
                 batting: [
