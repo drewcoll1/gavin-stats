@@ -676,10 +676,11 @@
               <div class="pill">
                 Season
                 <select id="seasonSelect" aria-label="Select season">
-                  <option value="2024">2024</option>
-                  <option value="2025" selected>2025</option>
-                  <option value="career">Career</option>
-                </select>
+  <option value="2024">2024</option>
+  <option value="2025" selected>2025</option>
+  <option value="2026">2026</option>
+  <option value="career">Career</option>
+</select>
               </div>
             </div>
           </div>
@@ -1309,28 +1310,47 @@
     }
 
     function sumOfficialTotals(keys){
-      const t = { AB:0, H:0, TB:0, BB:0, HBP:0, SF:0, SO:0 };
-      for(const key of keys){
-        const s = officialTotals[key];
-        if(!s) continue;
-        t.AB += s.AB || 0;
-        t.H += s.H || 0;
-        t.TB += s.TB || 0;
-        t.BB += s.BB || 0;
-        t.HBP += s.HBP || 0;
-        t.SF += s.SF || 0;
-        t.SO += s.SO || 0;
-      }
-      return t;
-    }
+  const t = {
+    GP: 0, GS: 0, AB: 0, R: 0, H: 0,
+    "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0,
+    BB: 0, HBP: 0, SO: 0, GDP: 0,
+    SF: 0, SH: 0, SB: 0, SBAtt: 0
+  };
+
+  for (const key of keys) {
+    const s = officialTotals[key];
+    if (!s) continue;
+
+    t.GP += s.GP || 0;
+    t.GS += s.GS || 0;
+    t.AB += s.AB || 0;
+    t.R += s.R || 0;
+    t.H += s.H || 0;
+    t["2B"] += s["2B"] || 0;
+    t["3B"] += s["3B"] || 0;
+    t.HR += s.HR || 0;
+    t.RBI += s.RBI || 0;
+    t.TB += s.TB || 0;
+    t.BB += s.BB || 0;
+    t.HBP += s.HBP || 0;
+    t.SO += s.SO || 0;
+    t.GDP += s.GDP || 0;
+    t.SF += s.SF || 0;
+    t.SH += s.SH || 0;
+    t.SB += s.SB || 0;
+    t.SBAtt += s.SBAtt || 0;
+  }
+
+  return t;
+}
 
     function computeRateStatsFromOfficial(t){
-      const AVG = safeDiv(t.H, t.AB);
-      const SLG = safeDiv(t.TB, t.AB);
-      const OBP = safeDiv(t.H + t.BB + t.HBP, t.AB + t.BB + t.HBP + t.SF);
-      const OPS = (Number.isFinite(OBP) && Number.isFinite(SLG)) ? OBP + SLG : NaN;
-      return { AVG, OBP, SLG, OPS };
-    }
+  const AVG = safeDiv(t.H, t.AB);
+  const SLG = safeDiv(t.TB, t.AB);
+  const OBP = safeDiv(t.H + t.BB + t.HBP, t.AB + t.BB + t.HBP + t.SF);
+  const OPS = (Number.isFinite(OBP) && Number.isFinite(SLG)) ? OBP + SLG : NaN;
+  return { AVG, OBP, SLG, OPS };
+}
 
     function computeIvyAvg(rows){
       let H = 0, AB = 0;
@@ -1471,15 +1491,15 @@
       $("#heroIvyAVG").textContent = fmtRate(ivyAvg);
 
       renderStats($("#summaryStrip"), [
-        { k:"AVG", v:fmtRate(rates.AVG), s:"Official batting average" },
-        { k:"OBP", v:fmtRate(rates.OBP), s:"Official on-base %" },
-        { k:"OPS", v:fmtRate(rates.OPS), s:"Official OPS" },
-        { k:"H", v:String(battingTotals.H), s:"Hits from game log" },
-        { k:"HR", v:String(battingTotals.HR), s:"Home runs" },
-        { k:"RBI", v:String(battingTotals.RBI), s:"Runs batted in" },
-        { k:"TB", v:String(battingTotals.TB), s:"Total bases" },
-        { k:"AB", v:String(battingTotals.AB), s:"At bats from log" }
-      ]);
+  { k:"AVG", v:fmtRate(rates.AVG), s:"Official batting average" },
+  { k:"OBP", v:fmtRate(rates.OBP), s:"Official on-base %" },
+  { k:"OPS", v:fmtRate(rates.OPS), s:"Official OPS" },
+  { k:"H", v:String(official.H), s:"Official hits" },
+  { k:"HR", v:String(official.HR), s:"Official home runs" },
+  { k:"RBI", v:String(official.RBI), s:"Official RBIs" },
+  { k:"TB", v:String(official.TB), s:"Official total bases" },
+  { k:"AB", v:String(official.AB), s:"Official at bats" }
+]);
 
       renderStats($("#fieldingStrip"), [
         { k:"TC", v:String(fieldingTotals.TC), s:"Total chances" },
