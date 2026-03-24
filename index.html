@@ -111,18 +111,14 @@
         }
 
         /* HERO */
-        .hero {
-            background: linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
-                linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
-            border: 1px solid rgba(255, 255, 255, .06);
-            box-shadow: var(--shadow);
-            padding: 18px;
-            overflow: hidden;
-            position: relative;
-        }
-        .hero {
+       .hero {
     width: 100%;
+    background: linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+                linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    border-top: 1px solid rgba(255, 255, 255, .06);
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
     padding: 20px 0;
+    position: relative;
     border-radius: 0;
 }
 
@@ -131,6 +127,13 @@
     margin: 0 auto;
     padding: 0 16px;
 }
+        .hero {
+    width: 100%;
+    padding: 20px 0;
+    border-radius: 0;
+}
+
+
 
         .hero:before {
             content: "";
@@ -985,97 +988,112 @@
 <body>
 
     <!-- FULL WIDTH HERO -->
-    <div class="hero">
-        <div class="hero-inner">
+<div id="tooltip" class="tooltip"></div>
 
-            <div id="tooltip" class="tooltip"></div>
-    
-        <div class="hero">
-            <div class="hero-row">
-                <div class="hero-left">
-                    <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
-                    <div class="player-meta">
-                        <div class="hero-identity">
-                            <div class="identity-text">
-                                <h1 class="player-name">Gavin Collins</h1>
-                                <div class="identity-school">
-                                    <strong><em>University of Pennsylvania Quakers</em></strong>
-                                </div>
-                            </div>
+<div class="hero">
+    <div class="hero-inner">
 
-                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
-                        </div>
+        <div class="hero-row">
 
-                        <div class="hero-awards">
-                            <span class="award">
-                                <img class="award-logo" src="ivy.png" alt="Ivy">
-                                2025 First-team All-Ivy (OF)
-                            </span>
+            <!-- LEFT SIDE -->
+            <div class="hero-left">
+                <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
 
-                            <span class="award">
-                                <img class="award-logo" src="ivy.png" alt="Ivy">
-                                Ivy League Player of the Week (4/15/25)
-                            </span>
+                <div class="player-meta">
 
-                            <span class="award">
-                                <img class="award-logo" src="ivy.png" alt="Ivy">
-                                Ivy League Rookie of the Week (3/25/24)
-                            </span>
-                        </div>
-                        <div class="sub">
-                            <strong>#16</strong> • RF • B/T: R/L
-                        </div>
-                        <div class="sub" style="margin-top:4px;">
-                            <span id="heroSeasonText">2025</span> • Game Log • Batting + Fielding
-                        </div>
-
-                        <div class="pill-row">
-                            <div class="pill">
-                                Season:
-                                <select id="seasonSelect" aria-label="Select season">
-                                    <option value="2024">2024</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2026" selected>2026</option>
-                                    <option value="career">Career</option>
-                                </select>
+                    <!-- NAME + TEAM -->
+                    <div class="hero-identity">
+                        <div class="identity-text">
+                            <h1 class="player-name">Gavin Collins</h1>
+                            <div class="identity-school">
+                                <strong><em>University of Pennsylvania Quakers</em></strong>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="hero-right">
-                    <div class="quick-card">
-                        <div class="label">AVG</div>
-                        <div class="value" id="heroAVG">—</div>
-                        <div class="hint">Batting average</div>
-                    </div>
-                    <div class="quick-card">
-                        <div class="label">OBP</div>
-                        <div class="value" id="heroOBP">—</div>
-                        <div class="hint">On-base percentage</div>
-                    </div>
-                    <div class="quick-card">
-                        <div class="label">OPS</div>
-                        <div class="value" id="heroOPS">—</div>
-                        <div class="hint">OBP + SLG</div>
+                        <img class="penn-logo" src="logo.png" alt="Penn logo" />
                     </div>
 
-                    <div class="quick-card">
-                        <div class="label">IVY AVG</div>
-                        <div class="value" id="heroIvyAVG">—</div>
-                        <div class="hint">AVG vs Ivy League</div>
+                    <!-- AWARDS -->
+                    <div class="hero-awards">
+                        <span class="award">
+                            <img class="award-logo" src="ivy.png" alt="Ivy">
+                            2025 First-team All-Ivy (OF)
+                        </span>
+
+                        <span class="award">
+                            <img class="award-logo" src="ivy.png" alt="Ivy">
+                            Ivy League Player of the Week (4/15/25)
+                        </span>
+
+                        <span class="award">
+                            <img class="award-logo" src="ivy.png" alt="Ivy">
+                            Ivy League Rookie of the Week (3/25/24)
+                        </span>
                     </div>
 
+                    <!-- META -->
+                    <div class="sub">
+                        <strong>#16</strong> • RF • B/T: R/L
+                    </div>
+
+                    <div class="sub" style="margin-top:4px;">
+                        <span id="heroSeasonText">2025</span> • Game Log • Batting + Fielding
+                    </div>
+
+                    <!-- SEASON SELECT -->
+                    <div class="pill-row">
+                        <div class="pill">
+                            Season:
+                            <select id="seasonSelect">
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="career">Career</option>
+                            </select>
+                        </div>
+                    </div>
 
                 </div>
             </div>
 
-            <div class="tabs" role="tablist" aria-label="Stat sections">
-                <div class="tab active" data-tab="batting">Batting</div>
-                <div class="tab" data-tab="fielding">Fielding</div>
-                <!-- removed Analytics tab -->
+            <!-- RIGHT SIDE (STATS) -->
+            <div class="hero-right">
+
+                <div class="quick-card">
+                    <div class="label">AVG</div>
+                    <div class="value" id="heroAVG">—</div>
+                    <div class="hint">Batting average</div>
+                </div>
+
+                <div class="quick-card">
+                    <div class="label">OBP</div>
+                    <div class="value" id="heroOBP">—</div>
+                    <div class="hint">On-base percentage</div>
+                </div>
+
+                <div class="quick-card">
+                    <div class="label">OPS</div>
+                    <div class="value" id="heroOPS">—</div>
+                    <div class="hint">OBP + SLG</div>
+                </div>
+
+                <div class="quick-card">
+                    <div class="label">IVY AVG</div>
+                    <div class="value" id="heroIvyAVG">—</div>
+                    <div class="hint">AVG vs Ivy League</div>
+                </div>
+
             </div>
         </div>
+
+        <!-- TABS -->
+        <div class="tabs" role="tablist">
+            <div class="tab active" data-tab="batting">Batting</div>
+            <div class="tab" data-tab="fielding">Fielding</div>
+        </div>
+
+    </div>
+</div>
 
         <div class="grid">
             <!-- LEFT -->
