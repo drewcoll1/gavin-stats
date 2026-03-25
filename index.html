@@ -988,7 +988,20 @@
 }
 
         /* (Removed) ANALYTICS chart styles */
-    </style>
+    
+.stats-header {
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#fff;
+    background:linear-gradient(135deg, rgba(204,0,0,.95), rgba(120,0,0,.85));
+    margin-bottom:6px;
+}
+</style>
 </head>
 
 <body>
@@ -1049,6 +1062,7 @@
                 </div>
 
                 <div class="hero-right">
+    <div id="stats-header" class="stats-header">Season Stats</div>
                     <div class="stats-header">2026 Stats</div>
                     <div class="stats-bubble">
                     <div class="quick-card">
@@ -2634,6 +2648,7 @@
         (function init() {
             buildCareer();
             applySeason("2026");
+updateStatsHeader(year);
 
             document.querySelectorAll(".tab").forEach(t => {
                 t.addEventListener("click", () => setTab(t.dataset.tab));
@@ -2663,7 +2678,18 @@
 
             setTab("batting");
         })();
-    </script>
+    
+// update stats header
+function updateStatsHeader(year){
+    const el = document.getElementById('stats-header');
+    if(!el) return;
+    if(year === 'career'){
+        el.textContent = 'Career Stats';
+    } else {
+        el.textContent = year + ' Season Stats';
+    }
+}
+</script>
 </body>
 
 </html>
