@@ -228,6 +228,11 @@
     padding: 0 0 34px;
     position: relative;
 }
+        .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
 
 .hero {
     background: linear-gradient(90deg, rgba(0, 0, 0, .82), rgba(204, 0, 0, .58)),
@@ -238,7 +243,7 @@
     border-right: none;
     box-shadow: var(--shadow);
     border-radius: 0;
-    padding: 24px 32px;
+    padding: 20px 24px;
     overflow: hidden;
     position: relative;
     width: 100%;
@@ -248,14 +253,14 @@
     position: relative;
     display: grid;
     grid-template-columns: 220px minmax(260px, 1.15fr) minmax(180px, .8fr) minmax(260px, 1fr);
-    gap: 22px;
+    gap: 14px;
     align-items: center;
     width: 100%;
 }
 
 .player-photo {
-    width: 200px;
-    height: 250px;
+    width: 180px;
+    height: 230px;
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, .65);
     object-fit: cover;
@@ -266,7 +271,7 @@
 .hero-name-block {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     min-width: 0;
 }
 
@@ -334,10 +339,10 @@
     background: rgba(0, 0, 0, .30);
     border: 1px solid rgba(255, 255, 255, .12);
     backdrop-filter: blur(8px);
-    padding: 16px 18px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     min-width: 0;
 }
 
@@ -361,7 +366,7 @@
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(70px, 1fr));
-    gap: 12px;
+    gap: 8px;
 }
 
 .stat-chip {
@@ -1111,6 +1116,7 @@
         <div id="tooltip" class="tooltip"></div>
 
         <div class="hero">
+            <div class="hero-inner">
             <div class="hero-row">
     <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
 
@@ -1199,7 +1205,7 @@
         </div>
     </div>
 </div>
-
+</div>
             <div class="tabs" role="tablist" aria-label="Stat sections">
                 <div class="tab active" data-tab="batting">Batting</div>
                 <div class="tab" data-tab="fielding">Fielding</div>
