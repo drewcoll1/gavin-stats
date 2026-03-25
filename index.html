@@ -134,13 +134,11 @@
         }
 
         .hero-row {
-            position: relative;
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+    display: flex;
+    align-items: center;
+    gap: 24px; /* smaller gap */
+    justify-content: flex-start; /* key fix */
+}
 
         .hero-left {
             display: flex;
@@ -238,13 +236,15 @@
             flex-wrap: wrap;
             align-items: flex-end;
             justify-content: flex-end;
-            max-width: 100%;
+            max-width: 500px;
         }
         .stats-bubble {
     display: flex;
     gap: 16px;
     align-items: center;
     justify-content: space-between;
+            justify-content: flex-start;
+    gap: 20px;
 
     background: rgba(0, 0, 0, .35);
     border: 1px solid rgba(255, 255, 255, .12);
@@ -979,6 +979,13 @@
             height: 20px;
             object-fit: contain;
         }
+        .stats-header {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    color: rgba(255,255,255,.75);
+}
 
         /* (Removed) ANALYTICS chart styles */
     </style>
@@ -1042,6 +1049,7 @@
                 </div>
 
                 <div class="hero-right">
+                    <div class="stats-header">2026 Stats</div>
                     <div class="stats-bubble">
                     <div class="quick-card">
                         <div class="label">AVG</div>
