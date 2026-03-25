@@ -134,11 +134,13 @@
         }
 
         .hero-row {
-    display: flex;
-    align-items: center;
-    gap: 24px; /* smaller gap */
-    justify-content: flex-start; /* key fix */
-}
+            position: relative;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
 
         .hero-left {
             display: flex;
@@ -236,43 +238,29 @@
             flex-wrap: wrap;
             align-items: flex-end;
             justify-content: flex-end;
-            max-width: 500px;
+            max-width: 100%;
         }
-        .stats-bubble {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    justify-content: space-between;
-            justify-content: flex-start;
-    gap: 20px;
-
-    background: rgba(0, 0, 0, .35);
-    border: 1px solid rgba(255, 255, 255, .12);
-    border-radius: 16px;
-    padding: 14px 18px;
-
-    backdrop-filter: blur(8px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.35);
-
-    flex-wrap: wrap;
-}
 
         .quick-card {
-    flex: 1;
-    min-width: 80px;
-    text-align: center;
-}
+            flex: 1 1 140px;
+            max-width: 180px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, .28);
+            border: 1px solid rgba(255, 255, 255, .10);
+            padding: 10px 12px;
+        }
 
         .quick-card .label {
-    font-size: 11px;
-    color: rgba(255,255,255,.65);
-    margin-bottom: 4px;
-}
+            color: rgba(255, 255, 255, .72);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
 
-.quick-card .value {
-    font-size: 24px;
-    font-weight: 900;
-}
+        .quick-card .value {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: .4px;
+        }
 
         .quick-card .hint {
             margin-top: 4px;
@@ -979,29 +967,9 @@
             height: 20px;
             object-fit: contain;
         }
-        .stats-header {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    color: rgba(255,255,255,.75);
-}
 
         /* (Removed) ANALYTICS chart styles */
-    
-.stats-header {
-    display:inline-block;
-    padding:8px 14px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:800;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    color:#fff;
-    background:linear-gradient(135deg, rgba(204,0,0,.95), rgba(120,0,0,.85));
-    margin-bottom:6px;
-}
-</style>
+    </style>
 </head>
 
 <body>
@@ -1062,9 +1030,6 @@
                 </div>
 
                 <div class="hero-right">
-    <div id="stats-header" class="stats-header">Season Stats</div>
-                    <div class="stats-header">2026 Stats</div>
-                    <div class="stats-bubble">
                     <div class="quick-card">
                         <div class="label">AVG</div>
                         <div class="value" id="heroAVG">—</div>
@@ -1087,7 +1052,7 @@
                         <div class="hint">AVG vs Ivy League</div>
                     </div>
 
-</div>
+
                 </div>
             </div>
 
@@ -2648,7 +2613,6 @@
         (function init() {
             buildCareer();
             applySeason("2026");
-updateStatsHeader(year);
 
             document.querySelectorAll(".tab").forEach(t => {
                 t.addEventListener("click", () => setTab(t.dataset.tab));
@@ -2678,18 +2642,7 @@ updateStatsHeader(year);
 
             setTab("batting");
         })();
-    
-// update stats header
-function updateStatsHeader(year){
-    const el = document.getElementById('stats-header');
-    if(!el) return;
-    if(year === 'career'){
-        el.textContent = 'Career Stats';
-    } else {
-        el.textContent = year + ' Season Stats';
-    }
-}
-</script>
+    </script>
 </body>
 
 </html>
