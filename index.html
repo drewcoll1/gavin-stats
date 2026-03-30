@@ -1011,23 +1011,19 @@
         justify-content: center;
     }
 }
-        @media (max-width: 1100px) {
+   @media (max-width: 1100px) {
+
+    .table-wrap {
+        background: var(--surface);
+        scrollbar-gutter: auto;
+    }
 
     #battingTable,
     #fieldingTable {
-        min-width: 100%;
         width: max-content;
+        min-width: 640px;
     }
-
-    .table-wrap {
-        background: transparent;
-    }
-
-    /* Force rows to visually extend */
-    tbody tr td:last-child {
-        border-right: none;
-    }
-}
+}    
 </style>
 </head>
 
