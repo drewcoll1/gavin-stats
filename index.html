@@ -937,6 +937,44 @@
         justify-content: center;
     }
 }
+        @media (max-width: 600px) {
+
+    /* Put logo + awards side by side */
+    .hero-identity {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Make Penn logo larger */
+    .penn-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* Move awards to the right of logo */
+    .hero-awards {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        margin: 0;
+        gap: 6px;
+    }
+
+    /* Match visual scale of logo */
+    .award {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .award-logo {
+        width: 18px;
+        height: 18px;
+    }
+
+}
 </style>
 </head>
 
