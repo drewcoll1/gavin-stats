@@ -45,11 +45,11 @@
     }
 
     .container {
-        width: min(1150px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 18px 0 34px;
-        position: relative;
-    }
+    width: min(1500px, calc(100% - 20px));
+    margin: 0 auto;
+    padding: 18px 0 34px;
+    position: relative;
+}
 
     /* Tooltip */
     .tooltip {
@@ -311,12 +311,11 @@
     /* Layout */
     .summary-row {
     display: grid;
-    grid-template-columns: 1fr 1.6fr 1fr;
-    gap: 14px;
-    margin-top: 14px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 18px;
     align-items: start;
 }
-
 @media (max-width: 1100px) {
     .summary-row {
         grid-template-columns: 1fr;
@@ -333,29 +332,28 @@
     margin-bottom: 10px;
 }
 
-    
     .panel {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
-            var(--panel);
-    }
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+   
 
     .panel-head {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 14px 14px 10px;
-        border-bottom: 1px solid var(--border);
-    }
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 0 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    margin-bottom: 10px;
+}
 
     .panel-title {
         margin: 0;
@@ -373,12 +371,12 @@
     }
 
     .panel-body {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        min-height: 0;
-        padding: 14px;
-    }
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+}
 
     #rowCountTag {
         display: none !important;
