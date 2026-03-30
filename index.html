@@ -2619,51 +2619,35 @@
         }
 
         /* ------------ TABS / SEASON DROPDOWN ------------ */
-     function setTab(tabName) {
-
-    // Toggle active tab button
+   /* ------------ TABS / SEASON DROPDOWN ------------ */
+function setTab(tabName) {
     document.querySelectorAll(".tab").forEach(t => {
         t.classList.toggle("active", t.dataset.tab === tabName);
     });
 
-    // Hide all sections
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    // LEFT ONLY
+    document.getElementById("section-batting").classList.remove("active");
+    document.getElementById("section-fielding").classList.remove("active");
 
-    // LEFT SIDE
+    // RIGHT ONLY
+    document.getElementById("summary-batting").classList.remove("active");
+    document.getElementById("summary-fielding").classList.remove("active");
+
     if (tabName === "batting") {
-        $("#section-batting").classList.add("active");
+        document.getElementById("section-batting").classList.add("active");
+        document.getElementById("summary-batting").classList.add("active");
         $("#panelTitle").textContent = "Batting • Game Log";
         $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
         refreshBatting();
     } else {
-        $("#section-fielding").classList.add("active");
+        document.getElementById("section-fielding").classList.add("active");
+        document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
         refreshFielding();
     }
-
-    // ✅ RIGHT SIDE (this is all you needed)
-    document.getElementById("summary-batting").classList.toggle("active", tabName === "batting");
-    document.getElementById("summary-fielding").classList.toggle("active", tabName === "fielding");
 }
-        document.querySelectorAll(".tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-        setTab(tab.dataset.tab);
-    });
-});
-  
-            if (tabName === "batting") {
-                $("#section-batting").classList.add("active");
-                $("#panelTitle").textContent = "Batting • Game Log";
-                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
-                refreshBatting();
-            } else if (tabName === "fielding") {
-                $("#section-fielding").classList.add("active");
-                $("#panelTitle").textContent = "Fielding • Game Log";
-                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
-                refreshFielding();
-            }
-        }
+         
                             
 
         function applySeason(seasonKey) {
