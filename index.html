@@ -1338,23 +1338,24 @@
                     </div>
                 </div>
 
-                <div class="panel-body">
-                    <!-- TEAM RECORD -->
-                   
-                    <div class="tag" style="margin-bottom:10px;">Batting</div>
-                    <div class="stat-strip" id="summaryStrip"></div>
+                <div id="battingSummary">
+    <div class="tag" style="margin-bottom:10px;">Batting</div>
+    <div class="stat-strip" id="summaryStrip"></div>
 
-                    <div class="divider"></div>
+    <div class="divider"></div>
 
-                    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-                    <div class="chart-wrap">
-                        <canvas id="hitTypeChart" width="600" height="220"></canvas>
-                    </div>
-                    <div class="divider"></div>
+    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+    <div class="chart-wrap">
+        <canvas id="hitTypeChart" width="600" height="220"></canvas>
+    </div>
+</div>
 
-                    <div class="tag" style="margin-bottom:10px;">Fielding</div>
-                    <div class="stat-strip" id="fieldingStrip"></div>
-                </div>
+<div id="fieldingSummary" style="display:none;">
+    <div class="divider"></div>
+
+    <div class="tag" style="margin-bottom:10px;">Fielding</div>
+    <div class="stat-strip" id="fieldingStrip"></div>
+</div>
             </div>
         </div>
 
@@ -1797,6 +1798,18 @@
         };
 
         /* ------------ HELPERS ------------ */
+        const battingSummary = document.getElementById("battingSummary");
+const fieldingSummary = document.getElementById("fieldingSummary");
+
+function toggleSummary(tab) {
+    if (tab === "batting") {
+        battingSummary.style.display = "block";
+        fieldingSummary.style.display = "none";
+    } else if (tab === "fielding") {
+        battingSummary.style.display = "none";
+        fieldingSummary.style.display = "block";
+    }
+}
         const $ = (sel) => document.querySelector(sel);
 
         function parseHAB(hab) {
@@ -2610,27 +2623,42 @@
     </div>
   `).join("");
         }
+const battingSummary = document.getElementById("battingSummary");
+const fieldingSummary = document.getElementById("fieldingSummary");
 
+function toggleSummary(tabName) {
+    if (!battingSummary || !fieldingSummary) return;
+
+    if (tabName === "batting") {
+        battingSummary.style.display = "block";
+        fieldingSummary.style.display = "none";
+    } else if (tabName === "fielding") {
+        battingSummary.style.display = "none";
+        fieldingSummary.style.display = "block";
+    }
+}
         /* ------------ TABS / SEASON DROPDOWN ------------ */
-        function setTab(tabName) {
-            document.querySelectorAll(".tab").forEach(t => {
-                t.classList.toggle("active", t.dataset.tab === tabName);
-            });
-            document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      function setTab(tabName) {
+    toggleSummary(tabName);
 
-            if (tabName === "batting") {
-                $("#section-batting").classList.add("active");
-                $("#panelTitle").textContent = "Batting • Game Log";
-                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
-                refreshBatting();
-            } else if (tabName === "fielding") {
-                $("#section-fielding").classList.add("active");
-                $("#panelTitle").textContent = "Fielding • Game Log";
-                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
-                refreshFielding();
-            }
-        }
+    document.querySelectorAll(".tab").forEach(t => {
+        t.classList.toggle("active", t.dataset.tab === tabName);
+    });
 
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+
+    if (tabName === "batting") {
+        $("#section-batting").classList.add("active");
+        $("#panelTitle").textContent = "Batting • Game Log";
+        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+        refreshBatting();
+    } else if (tabName === "fielding") {
+        $("#section-fielding").classList.add("active");
+        $("#panelTitle").textContent = "Fielding • Game Log";
+        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+        refreshFielding();
+    }
+}
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
 
