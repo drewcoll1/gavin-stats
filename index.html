@@ -813,6 +813,65 @@
         }
     }
 
+    @media (max-width: 860px) {
+
+    /* Let sticky cells sit above the scrolling cells */
+    #battingTable,
+    #fieldingTable {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* Date column */
+    #battingTable th:first-child,
+    #battingTable td:first-child,
+    #fieldingTable th:first-child,
+    #fieldingTable td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 3;
+        background: #171922;
+    }
+
+    /* Opponent column */
+    #battingTable th:nth-child(2),
+    #battingTable td:nth-child(2),
+    #fieldingTable th:nth-child(2),
+    #fieldingTable td:nth-child(2) {
+        position: sticky;
+        left: 72px; /* adjust if your Date column width changes */
+        z-index: 3;
+        background: #171922;
+    }
+
+    /* Header cells should sit above body cells */
+    #battingTable thead th:first-child,
+    #battingTable thead th:nth-child(2),
+    #fieldingTable thead th:first-child,
+    #fieldingTable thead th:nth-child(2) {
+        z-index: 5;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
+            rgba(20, 22, 32, .98);
+    }
+
+    /* Slight divider so pinned columns look separated */
+    #battingTable td:first-child,
+    #battingTable th:first-child,
+    #fieldingTable td:first-child,
+    #fieldingTable th:first-child,
+    #battingTable td:nth-child(2),
+    #battingTable th:nth-child(2),
+    #fieldingTable td:nth-child(2),
+    #fieldingTable th:nth-child(2) {
+        box-shadow: 1px 0 0 rgba(255, 255, 255, .08);
+    }
+
+    /* Keep opponent cell content aligned nicely */
+    td[data-label="Opponent"] .opp {
+        min-width: 140px;
+    }
+}
     @media (max-width: 600px) {
         .player-photo {
             width: 120px;
