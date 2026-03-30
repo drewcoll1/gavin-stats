@@ -290,6 +290,58 @@
         gap: 10px;
         margin-top: 14px;
     }
+        .summary-bar {
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
+        var(--panel);
+}
+
+.summary-bar-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.summary-bar-title {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .9);
+}
+
+.summary-bar-sub {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.team-record-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+@media (max-width: 860px) {
+    .team-record-strip {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .team-record-strip {
+        grid-template-columns: 1fr;
+    }
+}
 
     .tab {
         padding: 10px 12px;
@@ -1118,6 +1170,16 @@
                 <!-- removed Analytics tab -->
             </div>
         </div>
+        <div class="summary-bar">
+    <div class="summary-bar-head">
+        <div>
+            <h2 class="summary-bar-title">Season Team Summary</h2>
+            <p class="summary-bar-sub">Team record for selected season</p>
+        </div>
+    </div>
+
+    <div class="team-record-strip" id="teamRecordStrip"></div>
+</div>
 
         <div class="grid">
             <!-- LEFT -->
@@ -1271,10 +1333,7 @@
 
                 <div class="panel-body">
                     <!-- TEAM RECORD -->
-                    <div class="tag" style="margin-bottom:10px;">Team Record</div>
-                    <div class="stat-strip" id="teamRecordStrip"></div>
-
-                    <div class="divider"></div>
+                   
                     <div class="tag" style="margin-bottom:10px;">Batting</div>
                     <div class="stat-strip" id="summaryStrip"></div>
 
