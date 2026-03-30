@@ -309,11 +309,18 @@
     }
 
     /* Layout */
-        .summary-row {
+    .summary-row {
     display: grid;
-    grid-template-columns: 1.2fr .8fr;
+    grid-template-columns: 1fr 1.6fr 1fr;
     gap: 14px;
     margin-top: 14px;
+    align-items: start;
+}
+
+@media (max-width: 1100px) {
+    .summary-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 .hero-team-summary {
@@ -326,15 +333,6 @@
     margin-bottom: 10px;
 }
 
-.game-log-wrap {
-    margin-top: 14px;
-}
-
-@media (max-width: 980px) {
-    .summary-row {
-        grid-template-columns: 1fr;
-    }
-}
     
     .panel {
         display: flex;
@@ -1137,7 +1135,11 @@
                 <!-- removed Analytics tab -->
             </div>
         </div>
-<div class="summary-row">
+
+       
+        <div class="summary-row">
+
+    <!-- LEFT: BATTING SUMMARY -->
     <div class="panel">
         <div class="panel-head">
             <div>
@@ -1159,6 +1161,121 @@
         </div>
     </div>
 
+    <!-- CENTER: GAME LOG -->
+    <div class="panel">
+        <div class="panel-head">
+            <div>
+                <h2 class="panel-title" id="panelTitle">Batting • Game Log</h2>
+                <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter to narrow the log.</p>
+            </div>
+            <div class="tag" id="rowCountTag"><b>—</b> rows</div>
+        </div>
+
+        <div class="panel-body">
+            <!-- Batting -->
+            <div class="section active" id="section-batting">
+                <div class="controls">
+                    <div class="left-controls">
+                        <div class="input">
+                            <label for="searchBat">Search</label>
+                            <input id="searchBat" type="text" placeholder="opponent, etc." />
+                        </div>
+                        <div class="input">
+                            <label for="oppBat">Opponent</label>
+                            <select id="oppBat"></select>
+                        </div>
+                    </div>
+                    <div class="right-controls">
+                        <button class="btn secondary" id="resetBat">Reset</button>
+                    </div>
+                </div>
+
+                <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
+                    <div class="tag" style="margin-bottom:10px;">
+                        <span id="vsOppLabel">—</span>
+                    </div>
+
+                    <div class="stat-strip" id="vsOppStrip"></div>
+
+                    <div class="divider"></div>
+
+                    <div class="tag" style="margin-bottom:10px;">Hit Type vs <b id="vsOppName2">—</b></div>
+                    <div class="chart-wrap">
+                        <canvas id="vsOppHitTypeChart" width="600" height="220"></canvas>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table id="battingTable">
+                        <thead>
+                            <tr>
+                                <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
+                                <th data-key="opponent">Opponent <span class="sort"></span></th>
+                                <th class="right" data-key="H" style="width: 5ch;">H <span class="sort">↕</span></th>
+                                <th class="right" data-key="AB" style="width: 5ch;">AB <span class="sort">↕</span></th>
+                                <th class="right" data-key="R" style="width: 5ch;">R <span class="sort">↕</span></th>
+                                <th class="right" data-key="2B" style="width: 6ch;">2B <span class="sort">↕</span></th>
+                                <th class="right" data-key="3B" style="width: 6ch;">3B <span class="sort">↕</span></th>
+                                <th class="right" data-key="HR" style="width: 6ch;">HR <span class="sort">↕</span></th>
+                                <th class="right" data-key="RBI" style="width: 6ch;">RBI <span class="sort">↕</span></th>
+                                <th class="right" data-key="TB" style="width: 6ch;">TB <span class="sort">↕</span></th>
+                                <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="battingBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fielding -->
+            <div class="section" id="section-fielding">
+                <div class="controls">
+                    <div class="left-controls">
+                        <div class="input">
+                            <label for="searchFld">Search</label>
+                            <input id="searchFld" type="text" placeholder="opponent, etc." />
+                        </div>
+                        <div class="input">
+                            <label for="oppFld">Opponent</label>
+                            <select id="oppFld"></select>
+                        </div>
+                    </div>
+                    <div class="right-controls">
+                        <button class="btn secondary" id="resetFld">Reset</button>
+                    </div>
+                </div>
+
+                <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
+                    <div class="tag" style="margin-bottom:10px;">
+                        <span id="vsOppLabelFld">—</span>
+                    </div>
+                    <div class="stat-strip" id="vsOppStripFld"></div>
+                </div>
+
+                <div class="table-wrap">
+                    <table id="fieldingTable">
+                        <thead>
+                            <tr>
+                                <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
+                                <th data-key="opponent">Opponent <span class="sort"></span></th>
+                                <th class="right" data-key="TC" style="width: 6ch;">TC <span class="sort">↕</span></th>
+                                <th class="right" data-key="PO" style="width: 6ch;">PO <span class="sort">↕</span></th>
+                                <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span></th>
+                                <th class="right" data-key="E" style="width: 6ch;">E <span class="sort">↕</span></th>
+                                <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span class="sort">↕</span></th>
+                                <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fieldingBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="note">Fielding % = (PO + A) / (PO + A + E). If a row has 0 chances, FPCT shows “—”.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: FIELDING SUMMARY -->
     <div class="panel">
         <div class="panel-head">
             <div>
@@ -1172,150 +1289,8 @@
             <div class="stat-strip" id="fieldingStrip"></div>
         </div>
     </div>
+
 </div>
-       
-            <!-- LEFT -->
-        <div class="game-log-wrap">
-            <div class="panel">
-                <div class="panel-head">
-                    <div>
-                        <h2 class="panel-title" id="panelTitle">Batting • Game Log</h2>
-                        <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter
-                            to narrow the log.</p>
-                    </div>
-                    <div class="tag" id="rowCountTag"><b>—</b> rows</div>
-                </div>
-
-                <div class="panel-body">
-                    <!-- Batting -->
-                    <div class="section active" id="section-batting">
-                        <div class="controls">
-                            <div class="left-controls">
-                                <div class="input">
-                                    <label for="searchBat">Search</label>
-                                    <input id="searchBat" type="text" placeholder="opponent, etc." />
-                                </div>
-                                <div class="input">
-                                    <label for="oppBat">Opponent</label>
-                                    <select id="oppBat"></select>
-                                </div>
-                            </div>
-                            <div class="right-controls">
-                                <button class="btn secondary" id="resetBat">Reset</button>
-                            </div>
-                        </div>
-                        <!-- All-time vs filtered opponent -->
-                        <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
-                            <div class="tag" style="margin-bottom:10px;">
-                                <span id="vsOppLabel">—</span>
-                            </div>
-
-                            <div class="stat-strip" id="vsOppStrip"></div>
-
-                            <div class="divider"></div>
-
-                            <div class="tag" style="margin-bottom:10px;">Hit Type vs <b id="vsOppName2">—</b></div>
-                            <div class="chart-wrap">
-                                <canvas id="vsOppHitTypeChart" width="600" height="220"></canvas>
-                            </div>
-
-                        </div>
-
-                        <!-- All-time fielding vs filtered opponent -->
-
-                        <div class="table-wrap">
-
-                            <table id="battingTable">
-                                <thead>
-                                    <tr>
-                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
-                                        </th>
-                                        <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                        <th class="right" data-key="H" style="width: 5ch;">H <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="AB" style="width: 5ch;">AB <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="R" style="width: 5ch;">R <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="2B" style="width: 6ch;">2B <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="3B" style="width: 6ch;">3B <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="HR" style="width: 6ch;">HR <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="RBI" style="width: 6ch;">RBI <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="TB" style="width: 6ch;">TB <span
-                                                class="sort">↕</span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="battingBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Fielding -->
-                    <div class="section" id="section-fielding">
-                        <div class="controls">
-                            <div class="left-controls">
-                                <div class="input">
-                                    <label for="searchFld">Search</label>
-                                    <input id="searchFld" type="text" placeholder="opponent, etc." />
-                                </div>
-                                <div class="input">
-                                    <label for="oppFld">Opponent</label>
-                                    <select id="oppFld"></select>
-                                </div>
-                            </div>
-                            <div class="right-controls">
-                                <button class="btn secondary" id="resetFld">Reset</button>
-                            </div>
-                        </div>
-                        <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
-                            <div class="tag" style="margin-bottom:10px;">
-                                <span id="vsOppLabelFld">—</span>
-                            </div>
-                            <div class="stat-strip" id="vsOppStripFld"></div>
-
-                        </div>
-
-                        <div class="table-wrap">
-                            <table id="fieldingTable">
-                                <thead>
-                                    <tr>
-                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
-                                        </th>
-                                        <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                        <th class="right" data-key="TC" style="width: 6ch;">TC <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="PO" style="width: 6ch;">PO <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="E" style="width: 6ch;">E <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span
-                                                class="sort">↕</span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="fieldingBody"></tbody>
-                            </table>
-                        </div>
-
-                        <div class="note">Fielding % = (PO + A) / (PO + A + E). If a row has 0 chances, FPCT shows “—”.
-                        </div>
-                    </div>
-
-            
-        
-                    <!-- (Removed) Analytics section -->
-                </div>
-            </div>
-        </div>
 
     <script>
         /* ------------ LOGO LOCATIONS ------------ */
