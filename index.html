@@ -2552,27 +2552,18 @@
 
             if (offSeason) {
                 topBlock = [
-                    { k: "AVG", v: fmt3(offSeason.AVG), s: "Official" },
-                    { k: "OBP", v: fmt3(offSeason.OBP), s: "Official" },
-                    { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
                     { k: "OPS", v: fmt3(offSeason.OPS), s: "Official" },
                     { k: "BB", v: offSeason.BB, s: "Official" },
                     { k: "SO", v: offSeason.SO, s: "Official" },
                 ];
             } else if (careerRates && careerOffTotals) {
                 topBlock = [
-                    { k: "AVG", v: fmt3(careerRates.AVG), s: "Official (2024+2025+2026)" },
-                    { k: "OBP", v: fmt3(careerRates.OBP), s: "Official (2024+2025+2026)" },
-                    { k: "SLG", v: fmt3(careerRates.SLG), s: "Official (2024+2025+2026)" },
                     { k: "OPS", v: fmt3(careerRates.OPS), s: "Official ((2024+2025+2026)" },
                     { k: "BB", v: careerOffTotals.BB, s: "Official (2024+2025+2026)" },
                     { k: "SO", v: careerOffTotals.SO, s: "Official (2024+2025+2026)" },
                 ];
             } else {
                 topBlock = [
-                    { k: "AVG", v: fmt3(logAdv.AVG), s: "From logs" },
-                    { k: "SLG", v: fmt3(logAdv.SLG), s: "From logs" },
-                    { k: "OBP", v: "—", s: "Need BB/HBP/SF" },
                     { k: "OPS", v: "—", s: "Need OBP + SLG" },
                     { k: "BB", v: "—", s: "Need BB" },
                     { k: "SO", v: "—", s: "Need SO" },
