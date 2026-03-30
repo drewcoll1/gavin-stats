@@ -8,964 +8,840 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
-        :root {
-            --bg: #0e0f12;
-            --panel: #171922;
-            --panel2: #1f2230;
-            --text: #ffffff;
-            --muted: #a8adbd;
-            --accent: #cc0000;
-            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-            --radius: 14px;
+    :root {
+        --bg: #0e0f12;
+        --panel: #171922;
+        --panel2: #1f2230;
+        --text: #ffffff;
+        --muted: #a8adbd;
+        --accent: #cc0000;
+        --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        --radius: 14px;
+        --border: rgba(255, 255, 255, .08);
+        --border-soft: rgba(255, 255, 255, .10);
+        --surface: rgba(0, 0, 0, .18);
+        --surface-2: rgba(255, 255, 255, .05);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        color: var(--text);
+        background:
+            repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.015) 0px,
+                rgba(255, 255, 255, 0.015) 1px,
+                transparent 1px,
+                transparent 3px
+            ),
+            radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
+            radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
+            var(--bg);
+    }
+
+    .container {
+        width: min(1150px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 18px 0 34px;
+        position: relative;
+    }
+
+    /* Tooltip */
+    .tooltip {
+        position: absolute;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity .08s ease, transform .08s ease;
+        max-width: 360px;
+        padding: 10px;
+        border-radius: 12px;
+        background: rgba(10, 11, 14, .92);
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+        backdrop-filter: blur(10px);
+        color: rgba(255, 255, 255, .92);
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .tooltip.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .tip-title {
+        margin-bottom: 6px;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .25px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .92);
+    }
+
+    .tip-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin: 3px 0;
+    }
+
+    .tip-row .k {
+        color: rgba(255, 255, 255, .68);
+    }
+
+    .tip-row .v {
+        font-weight: 800;
+        color: rgba(255, 255, 255, .95);
+    }
+
+    .tip-sub {
+        margin-top: 8px;
+        color: rgba(255, 255, 255, .65);
+        font-size: 11px;
+    }
+
+    /* Hero */
+    .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 18px;
+        border: 1px solid rgba(255, 255, 255, .06);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        background:
+            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    }
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        pointer-events: none;
+        background:
+            radial-gradient(900px 300px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
+            radial-gradient(600px 240px at 60% 0%, rgba(255, 255, 255, .05), transparent 55%),
+            radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .35), transparent 60%);
+    }
+
+    .hero-row {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+    }
+
+    .hero-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 280px;
+    }
+
+    .player-photo {
+        width: 200px;
+        height: 250px;
+        border: 2px solid rgba(255, 255, 255, .65);
+        border-radius: 12px;
+        object-fit: cover;
+        object-position: center top;
+        flex: 0 0 auto;
+    }
+
+    .hero-identity {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .identity-text {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .player-name {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.05;
+        letter-spacing: .2px;
+    }
+
+    .identity-school {
+        margin: 0;
+        font-size: 14px;
+        color: rgba(255, 255, 255, .78);
+    }
+
+    .penn-logo {
+        width: 92px;
+        height: 92px;
+        object-fit: contain;
+        flex: 0 0 auto;
+    }
+
+    .player-meta .sub {
+        margin: 6px 0 0;
+        font-size: 14px;
+        color: rgba(255, 255, 255, .78);
+    }
+
+    .player-meta .sub strong {
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .hero-awards {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: 0 0 20px;
+    }
+
+    .award {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: fit-content;
+        padding: 4px 8px;
+        border: 1px solid rgba(255, 255, 255, .12);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, .25);
+        color: #fff;
+        font-size: 11px;
+    }
+
+    .award-logo {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+    }
+
+    .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, .25);
+        color: rgba(255, 255, 255, .85);
+        font-size: 12px;
+        backdrop-filter: blur(6px);
+    }
+
+    .hero-right {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: flex-end;
+        gap: 10px;
+        max-width: 100%;
+    }
+
+    .quick-card {
+        flex: 1 1 140px;
+        max-width: 180px;
+        padding: 10px 12px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, .28);
+    }
+
+    .quick-card .label {
+        margin-bottom: 6px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, .72);
+    }
+
+    .quick-card .value {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: .4px;
+    }
+
+    .quick-card .hint {
+        margin-top: 4px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, .60);
+    }
+
+    /* Tabs */
+    .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .tab {
+        padding: 10px 12px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .04);
+        color: rgba(255, 255, 255, .85);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .tab.active {
+        border-color: rgba(204, 0, 0, .45);
+        background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
+    }
+
+    /* Layout */
+    .grid {
+        display: grid;
+        grid-template-columns: 1.25fr .75fr;
+        gap: 14px;
+        min-width: 0;
+        margin-top: 14px;
+    }
+
+    .panel {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
+            var(--panel);
+    }
+
+    .panel-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 14px 10px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+        margin: 0;
+        font-size: 15px;
+        letter-spacing: .3px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .9);
+    }
+
+    .panel-sub {
+        margin: 6px 0 0;
+        max-width: 70ch;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .panel-body {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        padding: 14px;
+    }
+
+    #rowCountTag {
+        display: none !important;
+    }
+
+    /* Shared UI */
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        border: 1px solid var(--border-soft);
+        border-radius: 999px;
+        background: var(--surface-2);
+        color: rgba(255, 255, 255, .82);
+        font-size: 11px;
+    }
+
+    .tag b {
+        color: #fff;
+    }
+
+    .stat-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .stat {
+        min-width: 0;
+        min-height: 68px;
+        padding: 10px 10px 9px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, 0)),
+            var(--panel2);
+    }
+
+    .stat .k {
+        font-size: 11px;
+        letter-spacing: .35px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .68);
+    }
+
+    .stat .v {
+        margin-top: 6px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: .2px;
+    }
+
+    .stat .s {
+        margin-top: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        color: rgba(255, 255, 255, .60);
+    }
+
+    .divider {
+        height: 1px;
+        margin: 12px 0;
+        background: rgba(255, 255, 255, .08);
+        flex: 0 0 auto;
+    }
+
+    .note {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, .62);
+        font-size: 12px;
+        line-height: 1.35;
+        flex: 0 0 auto;
+    }
+
+    .muted {
+        color: rgba(255, 255, 255, .65);
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    /* Controls */
+    .controls {
+        display: flex;
+        flex: 0 0 auto;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .left-controls,
+    .right-controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 10px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, .25);
+    }
+
+    .input label {
+        white-space: nowrap;
+        font-size: 12px;
+        color: rgba(255, 255, 255, .75);
+    }
+
+    input[type="text"],
+    select {
+        padding: 6px 12px;
+        border: 1px solid rgba(255, 255, 255, .12);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .05);
+        color: var(--text);
+        font-size: 13px;
+        outline: none;
+        transition: all .2s ease;
+    }
+
+    .pill select {
+        padding: 4px 10px;
+        font-size: 12px;
+        background: rgba(0, 0, 0, .18);
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+        background: rgba(255, 255, 255, .08);
+        border-color: rgba(204, 0, 0, .6);
+        box-shadow: 0 0 0 2px rgba(204, 0, 0, .25);
+    }
+
+    input::placeholder {
+        color: rgba(255, 255, 255, .45);
+    }
+
+    select {
+        cursor: pointer;
+    }
+
+    select option {
+        background-color: #171922;
+        color: #fff;
+    }
+
+    .btn {
+        padding: 10px 12px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(180deg, rgba(204, 0, 0, .95), rgba(204, 0, 0, .65));
+        box-shadow: 0 10px 20px rgba(204, 0, 0, .18);
+    }
+
+    .btn.secondary {
+        border: 1px solid var(--border-soft);
+        background: rgba(255, 255, 255, .06);
+        box-shadow: none;
+        color: rgba(255, 255, 255, .9);
+    }
+
+    /* Sections */
+    .section {
+        display: none;
+    }
+
+    .section.active {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    /* Charts */
+    .chart-wrap {
+        position: relative;
+        overflow: hidden;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        flex: 0 0 auto;
+    }
+
+    .chart-wrap::before {
+        content: "";
+        position: absolute;
+        inset: -18px;
+        pointer-events: none;
+        filter: blur(10px);
+        background:
+            radial-gradient(420px 220px at 35% 55%, rgba(255, 80, 80, .20), transparent 60%),
+            radial-gradient(320px 220px at 35% 55%, rgba(120, 180, 255, .12), transparent 55%),
+            radial-gradient(320px 220px at 80% 45%, rgba(155, 89, 255, .10), transparent 55%);
+    }
+
+    #hitTypeChart,
+    #vsOppHitTypeChart {
+        display: block;
+        width: 100%;
+        height: 220px;
+    }
+
+    /* Table */
+    .table-wrap {
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        scrollbar-gutter: stable;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-wrap::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    .table-wrap::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: rgba(255, 255, 255, .05);
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb {
+        border: 2px solid rgba(0, 0, 0, .25);
+        border-radius: 10px;
+        background: linear-gradient(90deg, rgba(204, 0, 0, .85), rgba(204, 0, 0, .55));
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, rgba(204, 0, 0, 1), rgba(204, 0, 0, .7));
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    #battingTable,
+    #fieldingTable {
+        min-width: 640px;
+    }
+
+    thead th {
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
+            rgba(20, 22, 32, .95);
+        color: rgba(255, 255, 255, .75);
+        font-size: 12px;
+        text-align: left;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    thead th .sort {
+        margin-left: 6px;
+        font-size: 11px;
+        opacity: .7;
+    }
+
+    tbody td {
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, .06);
+        color: rgba(255, 255, 255, .92);
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    tbody tr:nth-child(even) td {
+        background: rgba(255, 255, 255, .02);
+    }
+
+    tbody tr:hover td {
+        background: rgba(255, 255, 255, .04);
+    }
+
+    /* Opponent / logo */
+    .opp {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .logo,
+    td[data-label="Opponent"] .logo {
+        width: 22px;
+        height: 22px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, .06);
+        object-fit: contain;
+        flex: 0 0 auto;
+    }
+
+    .logo.fallback {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: rgba(255, 255, 255, .8);
+    }
+
+    td[data-label="Opponent"] .opp {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    td[data-label="Opponent"] .opp-main {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    td[data-label="Opponent"] .opp-name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    td[data-label="Opponent"] .opp-emoji {
+        margin-left: auto;
+        white-space: nowrap;
+        line-height: 1;
+        flex: 0 0 auto;
+    }
+
+    .opp span:last-child {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+
+    /* Desktop table behavior */
+    @media (min-width: 861px) {
+        #battingTable,
+        #fieldingTable {
+            table-layout: auto;
         }
 
-        * {
-            box-sizing: border-box
+        th[data-key="opponent"],
+        td[data-label="Opponent"] {
+            width: 26ch;
         }
 
-        body {
-            margin: 0;
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-            background:
-                /* Subtle noise layer */
-                repeating-linear-gradient(45deg,
-                    rgba(255, 255, 255, 0.015) 0px,
-                    rgba(255, 255, 255, 0.015) 1px,
-                    transparent 1px,
-                    transparent 3px),
-
-                /* Your existing gradients */
-                radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
-                radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
-                var(--bg);
-            color: var(--text);
+        td[data-label="Opponent"] {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: nowrap;
         }
 
-        .container {
-            width: min(1150px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 18px 0 34px;
-            position: relative;
+        td[data-label="Opponent"] .opp span:last-child {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
         }
+    }
 
-        /* Tooltip */
-        .tooltip {
-            position: absolute;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity .08s ease, transform .08s ease;
-            max-width: 360px;
-            padding: 10px 10px;
-            border-radius: 12px;
-            background: rgba(10, 11, 14, .92);
-            border: 1px solid rgba(255, 255, 255, .10);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
-            backdrop-filter: blur(10px);
-            color: rgba(255, 255, 255, .92);
-            font-size: 12px;
-            line-height: 1.35;
-        }
-
-        .tooltip.show {
-            opacity: 1;
-            transform: translateY(0px);
-        }
-
-        .tip-title {
-            font-weight: 900;
-            letter-spacing: .25px;
-            margin-bottom: 6px;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, .92);
-        }
-
-        .tip-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            margin: 3px 0;
-        }
-
-        .tip-row .k {
-            color: rgba(255, 255, 255, .68);
-        }
-
-        .tip-row .v {
-            font-weight: 800;
-            color: rgba(255, 255, 255, .95);
-        }
-
-        #vsOppHitTypeChart {
-            width: 100%;
-            height: 220px;
-            display: block;
-        }
-
-        .tip-sub {
-            margin-top: 8px;
-            color: rgba(255, 255, 255, .65);
-            font-size: 11px;
-        }
-
-        /* HERO */
-        .hero {
-            background: linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
-                linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
-            border: 1px solid rgba(255, 255, 255, .06);
-            box-shadow: var(--shadow);
-            border-radius: var(--radius);
-            padding: 18px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .hero:before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            background:
-                radial-gradient(900px 300px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
-                radial-gradient(600px 240px at 60% 0%, rgba(255, 255, 255, .05), transparent 55%),
-                radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .35), transparent 60%);
-            pointer-events: none;
-        }
-
-        .hero-row {
-            position: relative;
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .hero-left {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            min-width: 280px;
-        }
-
-        .player-photo {
-            width: 200px;
-            height: 250px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, .65);
-            object-fit: cover;
-            object-position: center top;
-            /* or center */
-        }
-
-        /* --- Name + School grouped, logo to the right --- */
-        .hero-identity {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .identity-text {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .player-name {
-            margin: 0;
-            font-size: 30px;
-            letter-spacing: .2px;
-            line-height: 1.05;
-        }
-
-        .identity-school {
-            margin: 0;
-            color: rgba(255, 255, 255, .78);
-            font-size: 14px;
-        }
-
-        .penn-logo {
-            width: 92px;
-            /* matches player-photo size */
-            height: 92px;
-            /* matches player-photo size */
-            object-fit: contain;
-            flex: 0 0 auto;
-        }
-
-        .player-meta .sub {
-            margin: 6px 0 0;
-            color: rgba(255, 255, 255, .78);
-            font-size: 14px;
-        }
-
-        .pill-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .pill {
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(0, 0, 0, .25);
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .85);
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .pill select {
-            background: rgba(0, 0, 0, .18);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, .12);
-            border-radius: 999px;
-            padding: 4px 10px;
-            outline: none;
-            cursor: pointer;
-            font-size: 12px;
+    /* Tablet / mobile */
+    @media (max-width: 980px) {
+        .grid {
+            grid-template-columns: 1fr;
         }
 
         .hero-right {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            justify-content: flex-end;
-            max-width: 100%;
+            justify-content: flex-start;
         }
 
         .quick-card {
-            flex: 1 1 140px;
-            max-width: 180px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, .28);
-            border: 1px solid rgba(255, 255, 255, .10);
-            padding: 10px 12px;
+            max-width: none;
         }
+    }
 
-        .quick-card .label {
-            color: rgba(255, 255, 255, .72);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .quick-card .value {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: .4px;
-        }
-
-        .quick-card .hint {
-            margin-top: 4px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .60);
-        }
-
-        /* TABS */
-        .tabs {
-            margin-top: 14px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            border: 1px solid rgba(255, 255, 255, .10);
-            background: rgba(255, 255, 255, .04);
-            color: rgba(255, 255, 255, .85);
-            padding: 10px 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            user-select: none;
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .tab.active {
-            background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
-            border-color: rgba(204, 0, 0, .45);
-        }
-
-        /* GRID */
-        .grid {
-            margin-top: 14px;
-            display: grid;
-            grid-template-columns: 1.25fr .75fr;
-            gap: 14px;
-            min-width: 0;
-        }
-
-        @media (max-width: 980px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-right {
-                justify-content: flex-start;
-            }
-
-            .quick-card {
-                max-width: none;
-            }
-        }
-
+    @media (max-width: 860px) {
         .panel {
-            background: linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
-                var(--panel);
-            border: 1px solid rgba(255, 255, 255, .08);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            min-width: 0;
+            overflow: visible;
         }
-
-        .panel-head {
-            padding: 14px 14px 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .panel-title {
-            margin: 0;
-            font-size: 15px;
-            letter-spacing: .3px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, .9);
-        }
-
-        #rowCountTag {
-            display: none !important;
-        }
-
-        .panel-sub {
-            margin: 6px 0 0;
-            font-size: 12px;
-            color: var(--muted);
-            max-width: 70ch;
-        }
-
-        .panel-body {
-            padding: 14px;
-        }
-
-        .tag {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, .10);
-            background: rgba(255, 255, 255, .05);
-            color: rgba(255, 255, 255, .82);
-            display: inline-flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .tag b {
-            color: white;
-        }
-
-        .stat-strip {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            width: 100%;
-            min-width: 0;
-        }
-
-        .stat {
-            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, .0)),
-                var(--panel2);
-            border: 1px solid rgba(255, 255, 255, .08);
-            border-radius: 12px;
-            padding: 10px 10px 9px;
-            min-height: 68px;
-            min-width: 0;
-        }
-
-        .stat .k {
-            font-size: 11px;
-            letter-spacing: .35px;
-            color: rgba(255, 255, 255, .68);
-            text-transform: uppercase;
-        }
-
-        .stat .v {
-            margin-top: 6px;
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: .2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .stat .s {
-            margin-top: 4px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .60);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .chart-wrap {
-            position: relative;
-            min-height: 240px;
-        }
-
-        .chart-wrap::before {
-            content: "";
-            position: absolute;
-            inset: -18px;
-            background:
-                radial-gradient(420px 220px at 35% 55%, rgba(255, 80, 80, .20), transparent 60%),
-                radial-gradient(320px 220px at 35% 55%, rgba(120, 180, 255, .12), transparent 55%),
-                radial-gradient(320px 220px at 80% 45%, rgba(155, 89, 255, .10), transparent 55%);
-            filter: blur(10px);
-            pointer-events: none;
-        }
-
-        .left-controls,
-        .right-controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .input {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, .25);
-            border: 1px solid rgba(255, 255, 255, .10);
-            border-radius: 12px;
-            padding: 9px 10px;
-        }
-
-        .input label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, .75);
-            white-space: nowrap;
-        }
-
-        /* ---------- SEARCH + FILTER INPUTS (THEMED) ---------- */
-
-        input[type="text"],
-        select {
-            background: rgba(255, 255, 255, .05);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, .12);
-            border-radius: 999px;
-            padding: 6px 12px;
-            font-size: 13px;
-            outline: none;
-            transition: all .2s ease;
-        }
-
-        /* Subtle focus glow */
-        input[type="text"]:focus,
-        select:focus {
-            border-color: rgba(204, 0, 0, .6);
-            box-shadow: 0 0 0 2px rgba(204, 0, 0, .25);
-            background: rgba(255, 255, 255, .08);
-        }
-
-        /* Dropdown list (dark theme) */
-        select option {
-            background-color: #171922;
-            color: white;
-        }
-
-        /* Make search placeholder softer */
-        input::placeholder {
-            color: rgba(255, 255, 255, .45);
-        }
-
-
-        select {
-            cursor: pointer;
-        }
-
-        .btn {
-            border: none;
-            cursor: pointer;
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-weight: 800;
-            color: white;
-            background: linear-gradient(180deg, rgba(204, 0, 0, .95), rgba(204, 0, 0, .65));
-            box-shadow: 0 10px 20px rgba(204, 0, 0, .18);
-        }
-
-        .player-meta .sub strong {
-            font-weight: 900;
-            color: white;
-        }
-
-        .btn.secondary {
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .10);
-            box-shadow: none;
-            color: rgba(255, 255, 255, .9);
-        }
-
-        /* TABLE */
 
         .table-wrap {
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, .08);
-            background: rgba(0, 0, 0, .18);
-            overflow-x: auto;
-            /* allow horizontal scroll */
+            display: block;
+            max-width: 100%;
+            overflow-x: auto !important;
             overflow-y: hidden;
-            scrollbar-gutter: stable;
-            /* keeps space for scrollbar when it appears */
-            -webkit-overflow-scrolling: touch;
-            /* smoother on iOS */
         }
 
-
-        /* ---------- CUSTOM SCROLLBAR (Webkit browsers) ---------- */
-
-        .table-wrap::-webkit-scrollbar {
-            height: 10px;
-            /* horizontal scrollbar thickness */
+        thead {
+            display: table-header-group !important;
         }
 
-        .table-wrap::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, .05);
-            border-radius: 10px;
+        tbody {
+            display: table-row-group !important;
         }
 
-        .table-wrap::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg,
-                    rgba(204, 0, 0, .85),
-                    rgba(204, 0, 0, .55));
-            border-radius: 10px;
-            border: 2px solid rgba(0, 0, 0, .25);
+        tr {
+            display: table-row !important;
         }
 
-        .table-wrap::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(90deg,
-                    rgba(204, 0, 0, 1),
-                    rgba(204, 0, 0, .7));
+        th,
+        td {
+            display: table-cell !important;
         }
 
-        /* Make the panel a flex column so body can stretch */
-.panel {
-  display: flex;
-  flex-direction: column;
-  /* keep your background/border/overflow as-is */
-}
-
-/* Let the panel body consume vertical space and allow its children to flex */
-.panel-body {
-  flex: 1 1 auto;
-  min-height: 0;           /* critical for nested flex scroll areas */
-  display: flex;
-  flex-direction: column;
-}
-
-/* The visible section (Batting/Fielding) should also be flex to pass height down */
-.section.active {
-  display: flex;           /* replaces display:block for active sections */
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* Make the table container fill the remaining space within the section */
-.table-wrap {
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  /* You already had horizontal scroll — keep it */
-  overflow-x: auto;
-  overflow-y: auto;        /* allow vertical scroll if content exceeds */
-}
-
-/* Optional (but helps keep controls visible and the table area stretching) */
-.controls {
-  flex: 0 0 auto;  /* controls take natural height at top of section */
-}
-
-/* Keep notes and other blocks from stealing flex height */
-.note, .divider, .chart-wrap, #vsOppWrap, #vsOppWrapFld {
-  flex: 0 0 auto;
-}
-
-
-
-
-
-        /* Keep the real table on mobile and allow sideways scroll */
-        @media (max-width: 860px) {
-
-            /* 2.1: Ensure the scroll container actually scrolls and is visible */
-            .table-wrap {
-                display: block;
-                max-width: 100%;
-                overflow-x: auto !important;
-                /* must be auto (not hidden) */
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                /* iOS momentum scrolling */
-            }
-
-            /* 2.2: Make sure nothing turns into blocks or is hidden */
-            thead {
-                display: table-header-group !important;
-            }
-
-            tbody {
-                display: table-row-group !important;
-            }
-
-            tr {
-                display: table-row !important;
-            }
-
-            th,
-            td {
-                display: table-cell !important;
-            }
-
-            /* 2.3: Keep cells on one straight line (no wrapping) */
-            thead th,
-            tbody td {
-                white-space: nowrap !important;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            /* 2.4: Opponent name – keep single line on small too (change to 'normal'
-          if you prefer wrapping the school name instead of scroll) */
-            td[data-label="Opponent"] .opp span:last-child {
-                white-space: nowrap !important;
-            }
-        }
-
-        @media (max-width: 860px) {
-            .panel {
-                overflow: visible;
-                /* allow the table-wrap to show its overflow-x scroll */
-            }
-        }
-
-        @media (max-width: 600px) {
-
-            .player-photo {
-                width: 120px;
-                height: 160px;
-            }
-
-            .penn-logo {
-                width: 60px;
-                height: 60px;
-            }
-
-            .player-name {
-                font-size: 22px;
-            }
-
-            .hero-awards {
-                padding-top: 8px;
-                /* space above awards on mobile */
-            }
-
-        }
-
-        /* A sensible minimum total width so row stays one line and can scroll */
-        #battingTable,
-        #fieldingTable {
-            min-width: 640px;
-            /* adjust to your column set; 640–760px usually feels right */
-        }
-
-        /* Opponent cell layout: left cluster (logo+name) + right emoji */
-        td[data-label="Opponent"] .opp {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            /* gap between left cluster and emoji */
-            min-width: 0;
-            /* allow inner ellipsis */
-        }
-
-        /* Left cluster: logo + name should not push the emoji off line */
-        td[data-label="Opponent"] .opp-main {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-            /* critical so the name can ellipsis */
-            flex: 1 1 auto;
-            /* take available space; lets emoji sit at far right */
-        }
-
-        /* Team name truncates nicely if space is tight */
-        td[data-label="Opponent"] .opp-name {
-            min-width: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Emoji badge stays on the far right and never wraps */
-        td[data-label="Opponent"] .opp-emoji {
-            margin-left: auto;
-            /* push to the far right edge */
-            flex: 0 0 auto;
-            white-space: nowrap;
-            line-height: 1;
-        }
-
-        /* Keep your logo sizes consistent */
-        td[data-label="Opponent"] .logo {
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            object-fit: contain;
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .10);
-            flex: 0 0 auto;
-        }
-
-        /* Mobile: same behavior; keep the one-line layout you opted for */
-        @media (max-width: 860px) {
-            td[data-label="Opponent"] .opp-emoji {
-                white-space: nowrap;
-            }
-        }
-
-
-
-
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-
-        }
-
-        /* Desktop: let columns size naturally so Opponent can expand */
-        @media (min-width: 861px) {
-
-            #battingTable,
-            #fieldingTable {
-                table-layout: auto;
-            }
-        }
-
-        /* Desktop: do NOT ellipsis the Opponent column */
-        @media (min-width: 861px) {
-            td[data-label="Opponent"] {
-                overflow: visible;
-                /* undo the td overflow:hidden */
-                text-overflow: clip;
-                /* undo ellipsis */
-                white-space: normal;
-                /* allow wrapping */
-            }
-
-            td[data-label="Opponent"] .opp span:last-child {
-                white-space: normal;
-                /* allow the school name to wrap */
-                overflow: visible;
-                text-overflow: clip;
-            }
-        }
-
-        @media (min-width: 861px) {
-
-            th[data-key="opponent"],
-            td[data-label="Opponent"] {
-                width: 26ch;
-                /* tweak: 22ch–34ch */
-            }
-
-            td[data-label="Opponent"] {
-                overflow: visible;
-                text-overflow: clip;
-                white-space: nowrap;
-                /* keep it one line */
-            }
-        }
-
-
-        /* Subtle zebra striping */
-        tbody tr:nth-child(even) td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Keep hover stronger than zebra */
-        tbody tr:hover td {
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        thead th {
-            text-align: left;
-            font-size: 12px;
-            color: rgba(255, 255, 255, .75);
-            background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, .0)),
-                rgba(20, 22, 32, .95);
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-            padding: 10px 10px;
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-            overflow: visible;
-            text-overflow: clip;
-        }
-
-
-        thead th .sort {
-            opacity: .7;
-            font-size: 11px;
-            margin-left: 6px;
-        }
-
+        thead th,
         tbody td {
-            padding: 10px 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, .06);
-            font-size: 13px;
-            color: rgba(255, 255, 255, .92);
-            white-space: nowrap;
+            white-space: nowrap !important;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
+        td[data-label="Opponent"] .opp span:last-child,
+        td[data-label="Opponent"] .opp-emoji {
+            white-space: nowrap !important;
+        }
+    }
 
-        tbody tr:hover td {
-            background: rgba(255, 255, 255, .04);
+    @media (max-width: 600px) {
+        .player-photo {
+            width: 120px;
+            height: 160px;
         }
 
-        .muted {
-            color: rgba(255, 255, 255, .65);
+        .penn-logo {
+            width: 60px;
+            height: 60px;
         }
 
-        .note {
-            margin-top: 10px;
-            color: rgba(255, 255, 255, .62);
-            font-size: 12px;
-            line-height: 1.35;
-        }
-
-        .divider {
-            height: 1px;
-            background: rgba(255, 255, 255, .08);
-            margin: 12px 0;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .right {
-            text-align: right;
-        }
-
-        /* Opponent with logo */
-        .opp {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-        }
-
-        .logo {
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            object-fit: contain;
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .10);
-            flex: 0 0 auto;
-        }
-
-        .logo.fallback {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: rgba(255, 255, 255, .8);
-        }
-
-        .opp span:last-child {
-            white-space: nowrap;
-            overflow: visible;
-            text-overflow: clip;
-        }
-
-        .chart-wrap {
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, .08);
-            background: rgba(0, 0, 0, .18);
-            padding: 10px;
-            overflow: hidden;
-        }
-
-        #hitTypeChart {
-            width: 100%;
-            height: 220px;
-            display: block;
+        .player-name {
+            font-size: 22px;
         }
 
         .hero-awards {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 0;
-            margin-bottom: 20px;
+            padding-top: 8px;
         }
+    }
 
-        .award {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, .25);
-            border: 1px solid rgba(255, 255, 255, .12);
-            color: white;
-            width: fit-content;
-        }
-
-        .award-logo {
-            width: 20px;
-            height: 20px;
-            object-fit: contain;
-        }
-
-        /* (Removed) ANALYTICS chart styles */
-    </style>
+    #rowCountTag,
+    .note,
+    .divider,
+    .chart-wrap,
+    #vsOppWrap,
+    #vsOppWrapFld {
+        flex: 0 0 auto;
+    }
+</style>
 </head>
 
 <body>
