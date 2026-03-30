@@ -264,6 +264,19 @@
     border-radius: 12px;
     background: rgba(0, 0, 0, .28);
 }
+        @media (max-width: 600px) {
+    .hero-right {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        justify-content: flex-start;
+    }
+
+    .quick-card {
+        flex: 1 1 140px;
+        min-width: 0;
+        max-width: none;
+    }
+}
     .quick-card .label {
         margin-bottom: 6px;
         font-size: 12px;
