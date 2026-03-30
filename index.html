@@ -1151,11 +1151,6 @@
                         <div class="value" id="heroOBP">—</div>
                         <div class="hint">On-base percentage</div>
                     </div>
-                    <div class="quick-card">
-                        <div class="label">OPS</div>
-                        <div class="value" id="heroOPS">—</div>
-                        <div class="hint">OBP + SLG</div>
-                    </div>
 
                     <div class="quick-card">
                         <div class="label">IVY AVG</div>
@@ -2545,25 +2540,28 @@
 
             $("#heroAVG").textContent = fmt3(offSeason ? offSeason.AVG : (careerRates ? careerRates.AVG : logAdv.AVG));
             $("#heroOBP").textContent = fmt3(offSeason ? offSeason.OBP : (careerRates ? careerRates.OBP : NaN));
-            $("#heroOPS").textContent = fmt3(offSeason ? offSeason.OPS : (careerRates ? careerRates.OPS : NaN));
+            
 
             // Season Summary batting
             let topBlock;
 
             if (offSeason) {
                 topBlock = [
+                    { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
                     { k: "OPS", v: fmt3(offSeason.OPS), s: "Official" },
                     { k: "BB", v: offSeason.BB, s: "Official" },
                     { k: "SO", v: offSeason.SO, s: "Official" },
                 ];
             } else if (careerRates && careerOffTotals) {
                 topBlock = [
+                    { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
                     { k: "OPS", v: fmt3(careerRates.OPS), s: "Official ((2024+2025+2026)" },
                     { k: "BB", v: careerOffTotals.BB, s: "Official (2024+2025+2026)" },
                     { k: "SO", v: careerOffTotals.SO, s: "Official (2024+2025+2026)" },
                 ];
             } else {
                 topBlock = [
+                    { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
                     { k: "OPS", v: "—", s: "Need OBP + SLG" },
                     { k: "BB", v: "—", s: "Need BB" },
                     { k: "SO", v: "—", s: "Need SO" },
