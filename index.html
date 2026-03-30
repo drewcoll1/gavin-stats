@@ -326,29 +326,18 @@
 
 .team-record-strip {
     display: flex;
-    flex-wrap: nowrap;              /* 🔑 prevents wrapping */
+    justify-content: center;
     gap: 10px;
-    overflow-x: auto;               /* 🔑 allows scroll instead */
+    overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 4px;
+    width: 100%;
 }
 
-/* each stat bubble */
 .team-record-strip .stat {
-    flex: 0 0 160px;                /* fixed width so they stay in one row */
+    flex: 0 0 160px;
 }
 
-@media (max-width: 860px) {
-    .team-record-strip {
-        grid-template-columns: repeat(2, minmax(140px, 1fr));
-    }
-}
-
-@media (max-width: 520px) {
-    .team-record-strip {
-        grid-template-columns: 1fr;
-    }
-}
 
     .tab {
         padding: 10px 12px;
