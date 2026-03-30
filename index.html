@@ -2637,8 +2637,7 @@
         } else {
             document.getElementById("summary-fielding").classList.add("active");
         }
-    });
-});
+  
             if (tabName === "batting") {
                 $("#section-batting").classList.add("active");
                 $("#panelTitle").textContent = "Batting • Game Log";
@@ -2651,6 +2650,8 @@
                 refreshFielding();
             }
         }
+                             });
+});
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
