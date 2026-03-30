@@ -290,55 +290,6 @@
         gap: 10px;
         margin-top: 14px;
     }
-        .summary-bar {
-    margin-top: 14px;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
-        var(--panel);
-}
-
-.summary-bar-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.summary-bar-title {
-    margin: 0;
-    font-size: 15px;
-    letter-spacing: .3px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, .9);
-}
-
-.summary-bar-sub {
-    margin: 6px 0 0;
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.team-record-strip {
-    display: flex;
-    flex-wrap: nowrap;              /* 🔑 prevents wrapping */
-    gap: 10px;
-    overflow-x: auto;               /* 🔑 allows scroll instead */
-    overflow-y: hidden;
-    padding-bottom: 4px;
-}
-
-/* each stat bubble */
-.team-record-strip .stat {
-    flex: 0 0 160px;                /* fixed width so they stay in one row */
-}
-
-
 
     .tab {
         padding: 10px 12px;
@@ -1167,16 +1118,6 @@
                 <!-- removed Analytics tab -->
             </div>
         </div>
-        <div class="summary-bar">
-    <div class="summary-bar-head">
-        <div>
-            <h2 class="summary-bar-title">Season Team Summary</h2>
-            <p class="summary-bar-sub">Team record for selected season</p>
-        </div>
-    </div>
-
-    <div class="team-record-strip" id="teamRecordStrip"></div>
-</div>
 
         <div class="grid">
             <!-- LEFT -->
@@ -1327,25 +1268,27 @@
                         </p>
                     </div>
                 </div>
-<div class="panel-body">
-    <div id="battingSummary">
-        <div class="tag" style="margin-bottom:10px;">Batting</div>
-        <div class="stat-strip" id="summaryStrip"></div>
 
-        <div class="divider"></div>
+                <div class="panel-body">
+                    <!-- TEAM RECORD -->
+                    <div class="tag" style="margin-bottom:10px;">Team Record</div>
+                    <div class="stat-strip" id="teamRecordStrip"></div>
 
-        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-        <div class="chart-wrap">
-            <canvas id="hitTypeChart" width="600" height="220"></canvas>
-        </div>
-    </div>
+                    <div class="divider"></div>
+                    <div class="tag" style="margin-bottom:10px;">Batting</div>
+                    <div class="stat-strip" id="summaryStrip"></div>
 
-    <div id="fieldingSummary" style="display:none;">
-        <div class="tag" style="margin-bottom:10px;">Fielding</div>
-        <div class="stat-strip" id="fieldingStrip"></div>
-    </div>
-</div>
-                
+                    <div class="divider"></div>
+
+                    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+                    <div class="chart-wrap">
+                        <canvas id="hitTypeChart" width="600" height="220"></canvas>
+                    </div>
+                    <div class="divider"></div>
+
+                    <div class="tag" style="margin-bottom:10px;">Fielding</div>
+                    <div class="stat-strip" id="fieldingStrip"></div>
+                </div>
             </div>
         </div>
 
@@ -1788,18 +1731,6 @@
         };
 
         /* ------------ HELPERS ------------ */
-        const battingSummary = document.getElementById("battingSummary");
-const fieldingSummary = document.getElementById("fieldingSummary");
-
-function toggleSummary(tab) {
-    if (tab === "batting") {
-        battingSummary.style.display = "block";
-        fieldingSummary.style.display = "none";
-    } else if (tab === "fielding") {
-        battingSummary.style.display = "none";
-        fieldingSummary.style.display = "block";
-    }
-}
         const $ = (sel) => document.querySelector(sel);
 
         function parseHAB(hab) {
@@ -1877,19 +1808,16 @@ function toggleSummary(tab) {
             renderVsOpponentAllTime(battingState.opp);
             renderVsOpponentFieldingAllTime(fieldingState.opp);
         }
-function computeFieldingTotals(rows) {
-    const t = { TC: 0, PO: 0, A: 0, E: 0 };
-    for (const g of rows) {
-        t.TC += g.TC;
-        t.PO += g.PO;
-        t.A += g.A;
-        t.E += g.E;
-    }
-    const denom = (t.PO + t.A + t.E);
-    const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
-    return { ...t, FPCT };
-}
-        
+
+        function computeFieldingTotals(rows) {
+            const t = { TC: 0, PO: 0, A: 0, E: 0 };
+            for (const g of rows) {
+                t.TC += g.TC; t.PO += g.PO; t.A += g.A; t.E += g.E;
+            }
+            const denom = (t.PO + t.A + t.E);
+            const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
+            return { ...t, FPCT };
+        }
         function sumOfficialTotals(keys) {
             const tot = { AB: 0, H: 0, TB: 0, BB: 0, HBP: 0, SF: 0, SO: 0 };
             for (const k of keys) {
@@ -2592,13 +2520,13 @@ function computeFieldingTotals(rows) {
             ];
 
             const strip = $("#summaryStrip");
-strip.innerHTML = [...topBlock, ...base].map(x => `
+            strip.innerHTML = [...topBlock, ...base].map(x => `
     <div class="stat">
       <div class="k">${x.k}</div>
       <div class="v">${x.v}</div>
       <div class="s">${x.s}</div>
     </div>
-`).join("");
+  `).join("");
 
             // Season Summary fielding
             const fstrip = $("#fieldingStrip");
@@ -2616,53 +2544,38 @@ strip.innerHTML = [...topBlock, ...base].map(x => `
     </div>
   `).join("");
         }
-const battingSummary = document.getElementById("battingSummary");
-const fieldingSummary = document.getElementById("fieldingSummary");
 
-function toggleSummary(tabName) {
-    if (!battingSummary || !fieldingSummary) return;
-
-    if (tabName === "batting") {
-        battingSummary.style.display = "block";
-        fieldingSummary.style.display = "none";
-    } else if (tabName === "fielding") {
-        battingSummary.style.display = "none";
-        fieldingSummary.style.display = "block";
-    }
-}
         /* ------------ TABS / SEASON DROPDOWN ------------ */
-      function setTab(tabName) {
-    toggleSummary(tabName);
+        function setTab(tabName) {
+            document.querySelectorAll(".tab").forEach(t => {
+                t.classList.toggle("active", t.dataset.tab === tabName);
+            });
+            document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
 
-    document.querySelectorAll(".tab").forEach(t => {
-        t.classList.toggle("active", t.dataset.tab === tabName);
-    });
+            if (tabName === "batting") {
+                $("#section-batting").classList.add("active");
+                $("#panelTitle").textContent = "Batting • Game Log";
+                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+                refreshBatting();
+            } else if (tabName === "fielding") {
+                $("#section-fielding").classList.add("active");
+                $("#panelTitle").textContent = "Fielding • Game Log";
+                $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+                refreshFielding();
+            }
+        }
 
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-
-    if (tabName === "batting") {
-        $("#section-batting").classList.add("active");
-        $("#panelTitle").textContent = "Batting • Game Log";
-        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
-        refreshBatting();
-    } else if (tabName === "fielding") {
-        $("#section-fielding").classList.add("active");
-        $("#panelTitle").textContent = "Fielding • Game Log";
-        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
-        refreshFielding();
-    }
-}
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
-if (currentSeason === "career") {
-    battingLog = [...careerBattingLog];
-    fieldingLog = [...careerFieldingLog];
-} else {
-    const { bat, fld } = buildSeasonLogs(currentSeason);
-    battingLog = bat;
-    fieldingLog = fld;
-}
-          
+
+            if (currentSeason === "career") {
+                battingLog = [...careerBattingLog];
+                fieldingLog = [...careerFieldingLog];
+            } else {
+                const { bat, fld } = buildSeasonLogs(currentSeason);
+                battingLog = bat;
+                fieldingLog = fld;
+            }
 
             resetState(battingState);
             resetState(fieldingState);
