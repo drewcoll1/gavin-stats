@@ -937,12 +937,19 @@
         justify-content: center;
     }
 }
-   @media (max-width: 600px) {
+ @media (max-width: 600px) {
 
     .hero-left {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        width: 100%;
+    }
+
+    .player-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
     }
 
@@ -963,56 +970,33 @@
         align-items: center;
     }
 
-    .player-meta {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    .penn-logo {
+        width: 82px;
+        height: 82px;
+        margin-top: 8px;
+        margin-bottom: 6px;
+    }
+
+    .player-meta .sub {
+        text-align: center;
         width: 100%;
     }
 
-    .penn-logo {
-        width: 88px;
-        height: 88px;
-        margin: 8px 0 0;
-    }
-
+    /* Put awards below the second .sub line (2026 game log...) */
     .hero-awards {
+        order: 4;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 6px;
-        margin: 10px 0 14px;
+        margin: 10px 0 12px;
         padding-top: 0;
-        width: fit-content;
-    }
-
-    .hero-awards::before {
-        content: "";
-        display: inline-block;
-        width: 88px;
-        height: 88px;
-        margin-right: 12px;
-        vertical-align: top;
-        background-image: url("logo.png");
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
-        flex: 0 0 auto;
-    }
-
-    .hero-awards {
-        position: relative;
-        padding-left: 100px;
-        min-height: 88px;
-    }
-
-    .hero-awards::before {
-        position: absolute;
-        left: 0;
-        top: 0;
+        width: 100%;
     }
 
     .award {
+        width: fit-content;
+        max-width: 100%;
         font-size: 12px;
         padding: 6px 10px;
     }
@@ -1022,18 +1006,11 @@
         height: 18px;
     }
 
-    .player-meta .sub {
-        text-align: center;
-    }
-
     .pill-row {
+        order: 5;
         justify-content: center;
     }
-
-    .hero-identity .penn-logo {
-        display: none;
-    }
-}    
+}
 </style>
 </head>
 
