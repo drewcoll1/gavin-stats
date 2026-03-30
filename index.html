@@ -326,16 +326,23 @@
 
 .team-record-strip {
     display: flex;
-    justify-content: center;
     gap: 10px;
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 4px;
     width: 100%;
+
+    justify-content: flex-start; /* ✅ default = left (mobile) */
 }
 
+/* each stat bubble */
 .team-record-strip .stat {
     flex: 0 0 160px;
+}
+        @media (min-width: 900px) {
+    .team-record-strip {
+        justify-content: center; /* ✅ center only on larger screens */
+    }
 }
 
 
