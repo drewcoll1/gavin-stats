@@ -248,23 +248,22 @@
     }
 
     .hero-right {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: flex-end;
-        gap: 10px;
-        max-width: 100%;
-    }
+    display: flex;
+    flex-wrap: nowrap;      /* ❌ prevents wrapping */
+    gap: 12px;
+    align-items: stretch;
+    overflow-x: auto;       /* ✅ allows scroll if needed */
+}
 
-    .quick-card {
-        flex: 1 1 140px;
-        max-width: 180px;
-        padding: 10px 12px;
-        border: 1px solid var(--border-soft);
-        border-radius: 12px;
-        background: rgba(0, 0, 0, .28);
-    }
-
+  .quick-card {
+    flex: 0 0 140px;
+    min-width: 140px;
+    max-width: 140px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .28);
+}
     .quick-card .label {
         margin-bottom: 6px;
         font-size: 12px;
