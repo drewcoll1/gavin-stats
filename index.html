@@ -937,33 +937,81 @@
         justify-content: center;
     }
 }
-        @media (max-width: 600px) {
+   @media (max-width: 600px) {
 
-    /* Put logo + awards side by side */
-    .hero-identity {
-        flex-direction: row;
+    .hero-left {
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 16px;
-        flex-wrap: wrap;
+        text-align: center;
+        width: 100%;
     }
 
-    /* Make Penn logo larger */
+    .player-photo {
+        width: 140px;
+        height: 180px;
+        margin-bottom: 10px;
+    }
+
+    .hero-identity {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .identity-text {
+        align-items: center;
+    }
+
+    .player-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
     .penn-logo {
-        width: 80px;
-        height: 80px;
+        width: 88px;
+        height: 88px;
+        margin: 8px 0 0;
     }
 
-    /* Move awards to the right of logo */
     .hero-awards {
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
-        justify-content: center;
-        margin: 0;
         gap: 6px;
+        margin: 10px 0 14px;
+        padding-top: 0;
+        width: fit-content;
     }
 
-    /* Match visual scale of logo */
+    .hero-awards::before {
+        content: "";
+        display: inline-block;
+        width: 88px;
+        height: 88px;
+        margin-right: 12px;
+        vertical-align: top;
+        background-image: url("logo.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        flex: 0 0 auto;
+    }
+
+    .hero-awards {
+        position: relative;
+        padding-left: 100px;
+        min-height: 88px;
+    }
+
+    .hero-awards::before {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
     .award {
         font-size: 12px;
         padding: 6px 10px;
@@ -974,7 +1022,18 @@
         height: 18px;
     }
 
-}
+    .player-meta .sub {
+        text-align: center;
+    }
+
+    .pill-row {
+        justify-content: center;
+    }
+
+    .hero-identity .penn-logo {
+        display: none;
+    }
+}    
 </style>
 </head>
 
