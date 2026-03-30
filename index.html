@@ -579,31 +579,6 @@
   /* keep your background/border/overflow as-is */
 }
 
-/* Let the panel body consume vertical space and allow its children to flex */
-.panel-body {
-  flex: 1 1 auto;
-  min-height: 0;           /* critical for nested flex scroll areas */
-  display: flex;
-  flex-direction: column;
-}
-
-/* The visible section (Batting/Fielding) should also be flex to pass height down */
-.section.active {
-  display: flex;           /* replaces display:block for active sections */
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* Make the table container fill the remaining space within the section */
-.table-wrap {
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  /* You already had horizontal scroll — keep it */
-  overflow-x: auto;
-  overflow-y: auto;        /* allow vertical scroll if content exceeds */
-}
 
 /* Optional (but helps keep controls visible and the table area stretching) */
 .controls {
@@ -614,7 +589,7 @@
 .note, .divider, .chart-wrap, #vsOppWrap, #vsOppWrapFld {
   flex: 0 0 auto;
 }
-``
+
 
 
 
@@ -1072,7 +1047,6 @@
                         <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter
                             to narrow the log.</p>
                     </div>
-                    <div class="tag" id="rowCountTag"><b>—</b> rows</div>
                 </div>
 
                 <div class="panel-body">
@@ -1250,7 +1224,6 @@
             "Lafayette": "assets/logos/lafayette.png",
             "Lehigh": "assets/logos/lehigh.svg",
             "Brown": "assets/logos/brown.svg",
-            "Delaware": "assets/logos/delaware.svg",
             "Columbia": "assets/logos/columbia.svg",
             "Yale": "assets/logos/yale.svg",
             "Cornell": "assets/logos/corenell.svg.png",
