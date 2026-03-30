@@ -1340,21 +1340,28 @@
                     </div>
                 </div>
 
-                <div class="panel-body">
-                    <div class="tag" style="margin-bottom:10px;">Batting</div>
-                    <div class="stat-strip" id="summaryStrip"></div>
+               <div class="panel-body">
 
-                    <div class="divider"></div>
+    <!-- Batting Summary -->
+    <div class="section active" id="summary-batting">
+        <div class="tag" style="margin-bottom:10px;">Batting</div>
+        <div class="stat-strip" id="summaryStrip"></div>
 
-                    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-                    <div class="chart-wrap">
-                        <canvas id="hitTypeChart" width="600" height="220"></canvas>
-                    </div>
-                    <div class="divider"></div>
+        <div class="divider"></div>
 
-                    <div class="tag" style="margin-bottom:10px;">Fielding</div>
-                    <div class="stat-strip" id="fieldingStrip"></div>
-                </div>
+        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+        <div class="chart-wrap">
+            <canvas id="hitTypeChart" width="600" height="220"></canvas>
+        </div>
+    </div>
+
+    <!-- Fielding Summary -->
+    <div class="section" id="summary-fielding">
+        <div class="tag" style="margin-bottom:10px;">Fielding</div>
+        <div class="stat-strip" id="fieldingStrip"></div>
+    </div>
+
+</div>
             </div>
         </div>
 
@@ -2613,11 +2620,25 @@
 
         /* ------------ TABS / SEASON DROPDOWN ------------ */
         function setTab(tabName) {
-            document.querySelectorAll(".tab").forEach(t => {
-                t.classList.toggle("active", t.dataset.tab === tabName);
-            });
-            document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+            document.querySelectorAll('.tab').forEach(tabEl => {
+    tabEl.addEventListener('click', () => {
+        const tab = tabEl.dataset.tab;
 
+        // LEFT SIDE
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`section-${tab}`).classList.add('active');
+
+        // RIGHT SIDE  ✅ ADD THIS PART
+        document.getElementById("summary-batting").classList.remove("active");
+        document.getElementById("summary-fielding").classList.remove("active");
+
+        if (tab === "batting") {
+            document.getElementById("summary-batting").classList.add("active");
+        } else {
+            document.getElementById("summary-fielding").classList.add("active");
+        }
+    });
+});
             if (tabName === "batting") {
                 $("#section-batting").classList.add("active");
                 $("#panelTitle").textContent = "Batting • Game Log";
