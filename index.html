@@ -325,10 +325,17 @@
 }
 
 .team-record-strip {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    display: flex;
+    flex-wrap: nowrap;              /* 🔑 prevents wrapping */
     gap: 10px;
-    width: 100%;
+    overflow-x: auto;               /* 🔑 allows scroll instead */
+    overflow-y: hidden;
+    padding-bottom: 4px;
+}
+
+/* each stat bubble */
+.team-record-strip .stat {
+    flex: 0 0 160px;                /* fixed width so they stay in one row */
 }
 
 @media (max-width: 860px) {
