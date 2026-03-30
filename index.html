@@ -1328,6 +1328,7 @@
                     </div>
                 </div>
 <div class="panel-body">
+    <div class="panel-body">
     <div id="battingSummary">
         <div class="tag" style="margin-bottom:10px;">Batting</div>
         <div class="stat-strip" id="summaryStrip"></div>
@@ -1344,6 +1345,7 @@
         <div class="tag" style="margin-bottom:10px;">Fielding</div>
         <div class="stat-strip" id="fieldingStrip"></div>
     </div>
+</div>
 </div>
                 
             </div>
@@ -1877,16 +1879,19 @@ function toggleSummary(tab) {
             renderVsOpponentAllTime(battingState.opp);
             renderVsOpponentFieldingAllTime(fieldingState.opp);
         }
-
-        function computeFieldingTotals(rows) {
-            const t = { TC: 0, PO: 0, A: 0, E: 0 };
-            for (const g of rows) {
-                t.TC += g.TC; t.PO += g.PO; t.A += g.A; t.E += g.E;
-            }
-            const denom = (t.PO + t.A + t.E);
-            const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
-            return { ...t, FPCT };
-        }
+function computeFieldingTotals(rows) {
+    const t = { TC: 0, PO: 0, A: 0, E: 0 };
+    for (const g of rows) {
+        t.TC += g.TC;
+        t.PO += g.PO;
+        t.A += g.A;
+        t.E += g.E;
+    }
+    const denom = (t.PO + t.A + t.E);
+    const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
+    return { ...t, FPCT };
+}
+        
         function sumOfficialTotals(keys) {
             const tot = { AB: 0, H: 0, TB: 0, BB: 0, HBP: 0, SF: 0, SO: 0 };
             for (const k of keys) {
@@ -2589,13 +2594,13 @@ function toggleSummary(tab) {
             ];
 
             const strip = $("#summaryStrip");
-            strip.innerHTML = [...topBlock, ...base].map(x => `
+strip.innerHTML = [...topBlock, ...base].map(x => `
     <div class="stat">
       <div class="k">${x.k}</div>
       <div class="v">${x.v}</div>
       <div class="s">${x.s}</div>
     </div>
-  `).join("");
+`).join("");
 
             // Season Summary fielding
             const fstrip = $("#fieldingStrip");
@@ -2651,15 +2656,15 @@ function toggleSummary(tabName) {
 }
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
-
-            if (currentSeason === "career") {
-                battingLog = [...careerBattingLog];
-                fieldingLog = [...careerFieldingLog];
-            } else {
-                const { bat, fld } = buildSeasonLogs(currentSeason);
-                battingLog = bat;
-                fieldingLog = fld;
-            }
+if (currentSeason === "career") {
+    battingLog = [...careerBattingLog];
+    fieldingLog = [...careerFieldingLog];
+} else {
+    const { bat, fld } = buildSeasonLogs(currentSeason);
+    battingLog = bat;
+    fieldingLog = fld;
+}
+          
 
             resetState(battingState);
             resetState(fieldingState);
