@@ -2619,24 +2619,38 @@
         }
 
         /* ------------ TABS / SEASON DROPDOWN ------------ */
-        function setTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tabEl => {
-    tabEl.addEventListener('click', () => {
-        const tab = tabEl.dataset.tab;
+     function setTab(tabName) {
 
-        // LEFT SIDE
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(`section-${tab}`).classList.add('active');
+    // Toggle active tab button
+    document.querySelectorAll(".tab").forEach(t => {
+        t.classList.toggle("active", t.dataset.tab === tabName);
+    });
 
-        // RIGHT SIDE  ✅ ADD THIS PART
-        document.getElementById("summary-batting").classList.remove("active");
-        document.getElementById("summary-fielding").classList.remove("active");
+    // Hide all sections
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
 
-        if (tab === "batting") {
-            document.getElementById("summary-batting").classList.add("active");
-        } else {
-            document.getElementById("summary-fielding").classList.add("active");
-        }
+    // LEFT SIDE
+    if (tabName === "batting") {
+        $("#section-batting").classList.add("active");
+        $("#panelTitle").textContent = "Batting • Game Log";
+        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+        refreshBatting();
+    } else {
+        $("#section-fielding").classList.add("active");
+        $("#panelTitle").textContent = "Fielding • Game Log";
+        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+        refreshFielding();
+    }
+
+    // ✅ RIGHT SIDE (this is all you needed)
+    document.getElementById("summary-batting").classList.toggle("active", tabName === "batting");
+    document.getElementById("summary-fielding").classList.toggle("active", tabName === "fielding");
+}
+        document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+        setTab(tab.dataset.tab);
+    });
+});
   
             if (tabName === "batting") {
                 $("#section-batting").classList.add("active");
@@ -2650,8 +2664,7 @@
                 refreshFielding();
             }
         }
-                             });
-});
+                            
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
