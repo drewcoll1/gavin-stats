@@ -2086,6 +2086,15 @@
             body.innerHTML = "";
             for (const r of rows) {
                 const tr = document.createElement("tr");
+
+tr.onmousemove = (e) => showGameTip(e, tr);
+tr.onmouseleave = () => hideGameTip();
+
+// attach data to the row
+tr.dataset.date = r.date;
+tr.dataset.opp = r.opponent;
+tr.dataset.result = r.result || "";
+tr.dataset.line = `${r.H}-${r.AB}, ${r.R} R, ${r.RBI} RBI, ${r.HR} HR`;
                 tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
@@ -2147,6 +2156,36 @@
                 return String(av).localeCompare(String(bv)) * mult;
             });
         }
+
+        function showGameTip(e, row) {
+    const tip = document.getElementById("tooltip");
+
+    const date = row.dataset.date;
+    const opp = row.dataset.opp;
+    const result = row.dataset.result;
+    const line = row.dataset.line;
+
+    tip.innerHTML = `
+        <div class="tip-title">${date} vs ${opp}</div>
+        <div class="tip-row">
+            <span class="k">Result</span>
+            <span class="v">${result}</span>
+        </div>
+        <div class="tip-row">
+            <span class="k">Line</span>
+            <span class="v">${line}</span>
+        </div>
+    `;
+
+    tip.style.left = e.pageX + 12 + "px";
+    tip.style.top = e.pageY + 12 + "px";
+
+    tip.classList.add("show");
+}
+
+function hideGameTip() {
+    document.getElementById("tooltip").classList.remove("show");
+}
 
         function filterRows(rows, state) {
             const q = state.search.trim().toLowerCase();
