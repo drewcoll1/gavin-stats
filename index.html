@@ -372,8 +372,28 @@
     overflow-y: hidden;
     padding-bottom: 4px;
     width: 100%;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+}
 
-    justify-content: flex-start; /* ✅ default = left (mobile) */
+/* same scrollbar feel as game logs */
+.team-record-strip::-webkit-scrollbar {
+    height: 10px;
+}
+
+.team-record-strip::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .05);
+}
+
+.team-record-strip::-webkit-scrollbar-thumb {
+    border: 2px solid rgba(0, 0, 0, .25);
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(204, 0, 0, .85), rgba(204, 0, 0, .55));
+}
+
+.team-record-strip::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, rgba(204, 0, 0, 1), rgba(204, 0, 0, .7));
 }
 
 /* each stat bubble */
