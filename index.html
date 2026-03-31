@@ -211,13 +211,37 @@
         color: rgba(255, 255, 255, .78);
     }
 
-    .penn-logo {
-        width: 92px;
-        height: 92px;
-        object-fit: contain;
-        flex: 0 0 auto;
-    }
+    .hero-right {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 18px;
+}
 
+.hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quick-card {
+    width: 140px;
+    min-width: 140px;
+    max-width: 140px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .28);
+}
+
+.hero-penn-logo {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    display: block;
+    margin: 0;
+    flex: 0 0 auto;
+}
     .player-meta .sub {
         margin: 6px 0 0;
         font-size: 14px;
@@ -276,13 +300,7 @@
         backdrop-filter: blur(6px);
     }
 
-    .hero-right {
-    display: flex;
-    flex-wrap: nowrap;      /* ❌ prevents wrapping */
-    gap: 12px;
-    align-items: stretch;
-    overflow-x: auto;       /* ✅ allows scroll if needed */
-}
+  
 
   .quick-card {
     flex: 0 0 140px;
@@ -1142,7 +1160,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                                 </div>
                             </div>
 
-                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
                         </div>
 
                         <div class="hero-awards">
@@ -1200,7 +1217,7 @@ padding: 2px; /* optional but makes logos look cleaner */
                         <div class="hint">AVG vs Ivy League</div>
                     </div>
 
-
+<img class="hero-penn-logo" src="logo.png" alt="Penn logo" />
                 </div>
             </div>
 
