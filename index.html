@@ -125,7 +125,10 @@
         position: absolute;
         inset: -2px;
         pointer-events: none;
-        background: #990000;
+        background:
+            radial-gradient(900px 300px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
+            radial-gradient(600px 240px at 60% 0%, rgba(255, 255, 255, .05), transparent 55%),
+            radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .35), transparent 60%);
     }
 
     .hero-row {
@@ -176,6 +179,7 @@
     .player-photo {
         width: 200px;
         height: 250px;
+        border: 2px solid rgba(255, 255, 255, .65);
         border-radius: 12px;
         object-fit: cover;
         object-position: center top;
@@ -240,7 +244,7 @@
         padding: 4px 8px;
         border: 1px solid rgba(255, 255, 255, .12);
         border-radius: 8px;
-        background: #011F5B;
+        background: rgba(0, 0, 0, .25);
         color: #fff;
         font-size: 11px;
     }
@@ -287,7 +291,7 @@
     padding: 10px 12px;
     border: 1px solid var(--border-soft);
     border-radius: 12px;
-    background: #011F5B;
+    background: rgba(0, 0, 0, .28);
 }
         @media (max-width: 600px) {
     .hero-right {
@@ -407,8 +411,8 @@
         padding: 10px 12px;
         border: 1px solid var(--border-soft);
         border-radius: 12px;
-        background: #990000;
-        color: #990000;
+        background: rgba(255, 255, 255, .04);
+        color: rgba(255, 255, 255, .85);
         font-size: 13px;
         font-weight: 700;
         cursor: pointer;
@@ -416,8 +420,8 @@
     }
 
     .tab.active {
-        border-color: #011F5B;
-        background: #011F5B;
+        border-color: rgba(204, 0, 0, .45);
+        background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
     }
 
     /* Layout */
