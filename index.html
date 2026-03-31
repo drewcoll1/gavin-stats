@@ -140,6 +140,10 @@
         gap: 18px;
     }
 
+        .stat-full {
+    grid-column: 1 / -1;   /* 👈 spans entire row */
+    text-align: center;
+}
     .hero-left {
         display: flex;
         align-items: center;
@@ -2573,12 +2577,12 @@
                 { k: "R", v: logBatTotals.R, s: "Runs" },
                 { k: "RBI", v: logBatTotals.RBI, s: "Runs Batted In" },
                 { k: "TB", v: logBatTotals.TB, s: "Total Bases" },
-                { k: "H / AB", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "Hits / At bats" },
+                { k: "H / AB", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "Hits / At Bats", full: true },
             ];
 
             const strip = $("#summaryStrip");
 strip.innerHTML = [...topBlock, ...base].map(x => `
-    <div class="stat">
+    <div class="stat ${x.full ? 'stat-full' : ''}">
       <div class="k">${x.k}</div>
       <div class="v">${x.v}</div>
       <div class="s">${x.s}</div>
