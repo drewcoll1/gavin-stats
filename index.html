@@ -2547,17 +2547,17 @@
 
             if (offSeason) {
                 topBlock = [
-                     { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
-                    { k: "OPS", v: fmt3(offSeason.OPS), s: "Official" },
-                    { k: "BB", v: offSeason.BB, s: "Official" },
-                    { k: "SO", v: offSeason.SO, s: "Official" },
+                     { k: "SLG", v: fmt3(offSeason.SLG), s: "Slugging %" },
+                    { k: "OPS", v: fmt3(offSeason.OPS), s: "On-base + Slugging %" },
+                    { k: "BB", v: offSeason.BB, s: "Base on Balls" },
+                    { k: "SO", v: offSeason.SO, s: "Strikeouts" },
                 ];
             } else if (careerRates && careerOffTotals) {
                 topBlock = [
-                    { k: "SLG", v: fmt3(careerRates.SLG), s: "Official (2024+2025+2026)" },
-                    { k: "OPS", v: fmt3(careerRates.OPS), s: "Official (2024+2025+2026)" },
-                    { k: "BB", v: careerOffTotals.BB, s: "Official (2024+2025+2026)" },
-                    { k: "SO", v: careerOffTotals.SO, s: "Official (2024+2025+2026)" },
+                    { k: "SLG", v: fmt3(careerRates.SLG), s: "Slugging % (2024+2025+2026)" },
+                    { k: "OPS", v: fmt3(careerRates.OPS), s: "On-base + Slugging % (2024+2025+2026)" },
+                    { k: "BB", v: careerOffTotals.BB, s: "Base on Balls (2024+2025+2026)" },
+                    { k: "SO", v: careerOffTotals.SO, s: "Strikeouts (2024+2025+2026)" },
                 ];
             } else {
                 topBlock = [
