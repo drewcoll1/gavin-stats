@@ -2569,12 +2569,12 @@
             }
 
             const base = [
-                { k: "Games", v: batGames.length, s: mode === "career" ? "Combined logs" : "Season logs" },
-                { k: "H / AB", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "From logs" },
-                { k: "R", v: logBatTotals.R, s: "From logs" },
-                { k: "RBI", v: logBatTotals.RBI, s: "From logs" },
-                { k: "HR", v: logBatTotals.HR, s: "From logs" },
-                { k: "TB", v: logBatTotals.TB, s: "From logs" },
+                { k: "Games", v: batGames.length, s: mode === "career" ? "Combined logs" : "Games played" },
+                { k: "H / AB", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "Hits / At bats" },
+                { k: "R", v: logBatTotals.R, s: "Runs" },
+                { k: "RBI", v: logBatTotals.RBI, s: "Runs Batted In" },
+                { k: "HR", v: logBatTotals.HR, s: "Home Runs" },
+                { k: "TB", v: logBatTotals.TB, s: "Total Bases" },
             ];
 
             const strip = $("#summaryStrip");
