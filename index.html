@@ -140,9 +140,12 @@
         gap: 18px;
     }
 
-        .stat-full {
-    grid-column: 1 / -1;   /* 👈 spans entire row */
-    text-align: center;
+       .stat-full {
+    grid-column: 1 / -1;
+    text-align: left;        /* 👈 key change */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 👈 keeps everything left */
 }
     .hero-left {
         display: flex;
