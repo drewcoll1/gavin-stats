@@ -1247,24 +1247,15 @@
                                         <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
                                         </th>
                                         <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                        <th class="right" data-key="H" style="width: 5ch;">H <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="AB" style="width: 5ch;">AB <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="R" style="width: 5ch;">R <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="2B" style="width: 6ch;">2B <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="3B" style="width: 6ch;">3B <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="HR" style="width: 6ch;">HR <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="RBI" style="width: 6ch;">RBI <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="TB" style="width: 6ch;">TB <span
-                                                class="sort">↕</span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span>
-                                        </th>
+<th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+
+<th class="right" data-key="H">H <span class="sort">↕</span></th>
+<th class="right" data-key="AB">AB <span class="sort">↕</span></th>
+<th class="right" data-key="R">R <span class="sort">↕</span></th>
+<th class="right" data-key="2B">2B <span class="sort">↕</span></th>
+<th class="right" data-key="3B">3B <span class="sort">↕</span></th>
+<th class="right" data-key="HR">HR <span class="sort">↕</span></th>
+<th class="right" data-key="RBI">RBI <span class="sort">↕</span></th>
                                     </tr>
                                 </thead>
                                 <tbody id="battingBody"></tbody>
@@ -2071,6 +2062,7 @@
                 tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
+           <td data-label="Result">${r.result || ""}</td>
           <td class="right" data-label="H">${r.H}</td>
           <td class="right" data-label="AB">${r.AB}</td>
           <td class="right" data-label="R">${r.R}</td>
@@ -2078,8 +2070,7 @@
           <td class="right" data-label="3B">${r["3B"]}</td>
           <td class="right" data-label="HR">${r.HR}</td>
           <td class="right" data-label="RBI">${r.RBI}</td>
-          <td class="right" data-label="TB">${r.TB}</td>
-          <td data-label="Result">${r.result || ""}</td>
+         
         `;
                 body.appendChild(tr);
             }
