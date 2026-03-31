@@ -211,12 +211,22 @@
         color: rgba(255, 255, 255, .78);
     }
 
-    .penn-logo {
-        width: 92px;
-        height: 92px;
-        object-fit: contain;
-        flex: 0 0 auto;
-    }
+    .hero-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.hero-penn-logo {
+    width: 220px;
+    height: 220px;
+    object-fit: contain;
+    display: block;
+    margin: 8px auto 0;
+    flex: 0 0 100%;
+}
 
     .player-meta .sub {
         margin: 6px 0 0;
@@ -975,10 +985,11 @@ padding: 2px; /* optional but makes logos look cleaner */
             height: 160px;
         }
 
-        .penn-logo {
-            width: 60px;
-            height: 60px;
-        }
+        .hero-penn-logo {
+    width: 160px;
+    height: 160px;
+    margin-top: 10px;
+}
 
         .player-name {
             font-size: 22px;
@@ -1022,9 +1033,11 @@ padding: 2px; /* optional but makes logos look cleaner */
         align-items: center;
     }
 
-    .penn-logo {
-        margin-top: 6px;
-    }
+    .hero-penn-logo {
+    width: 160px;
+    height: 160px;
+    margin-top: 10px;
+}
 
     .player-meta .sub {
         text-align: center;
@@ -1067,12 +1080,11 @@ padding: 2px; /* optional but makes logos look cleaner */
         align-items: center;
     }
 
-    .penn-logo {
-        width: 110px;
-        height: 110px;
-        margin-top: 8px;
-        margin-bottom: 6px;
-    }
+    .hero-penn-logo {
+    width: 160px;
+    height: 160px;
+    margin-top: 10px;
+}
 
     .player-meta .sub {
         text-align: center;
@@ -1141,8 +1153,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                                     <strong><em>University of Pennsylvania Quakers</em></strong>
                                 </div>
                             </div>
-
-                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
                         </div>
 
                         <div class="hero-awards">
@@ -1199,6 +1209,8 @@ padding: 2px; /* optional but makes logos look cleaner */
                         <div class="value" id="heroIvyAVG">—</div>
                         <div class="hint">AVG vs Ivy League</div>
                     </div>
+
+                    <img class="penn-logo" src="logo.png" alt="Penn logo" />
 
 
                 </div>
