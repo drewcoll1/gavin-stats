@@ -1784,7 +1784,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                 overallPct: ".490",
                 conf: "11-10",
                 confPct: ".524",
-                streak: "L2",
                 home: "10-6",
                 away: "11-17",
                 neutral: "3-2"
@@ -1795,7 +1794,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                 overallPct: ".512",
                 conf: "13-8",
                 confPct: ".619",
-                streak: "L2",
                 home: "11-7",
                 away: "9-11",
                 neutral: "1-2"
@@ -1806,7 +1804,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                 overallPct: ".389",
                 conf: "3-3",
                 confPct: ".500",
-                streak: "W1",
                 home: "6-3",
                 away: "2-11",
                 neutral: "0-0"
@@ -1816,7 +1813,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                 overallPct: ".468",
                 conf: "27-21",
                 confPct: ".563",
-                streak: "W1",
                 home: "27-16",
                 away: "22-39",
                 neutral: "4-4"
@@ -2551,13 +2547,12 @@ function hideGameTip() {
                     teamStrip.innerHTML = `
             <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
             <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
-            <div class="stat"><div class="k">Streak</div><div class="v">—</div><div class="s">Current</div></div>
+            
         `;
                 } else {
                     teamStrip.innerHTML = `
             <div class="stat"><div class="k">Overall</div><div class="v">${rec.overall}</div><div class="s"></div></div>
             <div class="stat"><div class="k">Conference</div><div class="v">${rec.conf}</div><div class="s"></div></div>
-            <div class="stat"><div class="k">Streak</div><div class="v">${rec.streak}</div><div class="s"></div></div>
             <div class="stat"><div class="k">Home</div><div class="v">${rec.home}</div><div class="s"></div></div>
             <div class="stat"><div class="k">Away</div><div class="v">${rec.away}</div><div class="s"></div></div>
             <div class="stat"><div class="k">Neutral</div><div class="v">${rec.neutral}</div><div class="s"></div></div>
