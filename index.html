@@ -2580,9 +2580,9 @@ function hideGameTip() {
         `;
                 }
             }
-           $("#heroSeasonText").textContent = (mode === "career") ? "Career" : currentSeason;
-$("#heroStatsSeason").textContent = (mode === "career") ? "Career" : currentSeason;
-           $("#summarySeasonText").text((mode === "career") ? "Career" : currentSeason);
+           $("#heroSeasonText").text((mode === "career") ? "Career" : currentSeason);
+$("#heroStatsSeason").text((mode === "career") ? "Career" : currentSeason);
+$("#summarySeasonText").text((mode === "career") ? "Career" : currentSeason);
 
             const batGames = (mode === "career") ? careerBattingLog : battingLog;
             const ivyAVG = computeIvyAvg(batGames);
