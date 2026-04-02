@@ -50,65 +50,6 @@
         padding: 18px 0 34px;
         position: relative;
     }
-        .summary-top {
-    display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(260px, .9fr);
-    gap: 18px;
-    align-items: start;
-    margin-bottom: 14px;
-}
-
-.summary-awards {
-    padding-left: 18px;
-    border-left: 1px solid rgba(255, 255, 255, .10);
-}
-
-.summary-awards-title {
-    margin: 0 0 10px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .35px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, .72);
-}
-
-.summary-awards-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-        .summary-awards .award {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: none;
-    font-size: 12px;
-    line-height: 1.35;
-    color: rgba(255, 255, 255, .92);
-}
-
-.summary-awards .award-logo {
-    width: 18px;
-    height: 18px;
-    flex: 0 0 auto;
-}
-        @media (max-width: 860px) {
-    .summary-top {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .summary-awards {
-        padding-left: 0;
-        border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, .10);
-        padding-top: 12px;
-    }
-}
 
     /* Tooltip */
     .tooltip {
@@ -288,6 +229,12 @@
         color: #fff;
     }
 
+    .hero-awards {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: 0 0 20px;
+    }
 
     .award {
         display: flex;
@@ -1313,34 +1260,27 @@ padding: 2px; /* optional but makes logos look cleaner */
             </div>
         </div>
         <div class="summary-bar">
-    <div class="summary-top">
-        <div class="summary-bar-head">
-            <div>
-                <h2 class="summary-bar-title">Season Team Summary</h2>
-            </div>
-        </div>
-
-        <div class="summary-awards">
-            <div class="summary-awards-title">Career Honors</div>
-
-            <div class="summary-awards-list">
-                <span class="award">
-                    <img class="award-logo" src="ivy.png" alt="Ivy">
-                    2025 First-team All-Ivy (OF)
-                </span>
-
-                <span class="award">
-                    <img class="award-logo" src="ivy.png" alt="Ivy">
-                    Ivy League Player of the Week (4/15/25)
-                </span>
-
-                <span class="award">
-                    <img class="award-logo" src="ivy.png" alt="Ivy">
-                    Ivy League Rookie of the Week (3/25/24)
-                </span>
-            </div>
+    <div class="summary-bar-head">
+        <div>
+            <h2 class="summary-bar-title">Season Team Summary</h2>
         </div>
     </div>
+            <div class="hero-awards">
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                2025 First-team All-Ivy (OF)
+                            </span>
+
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                Ivy League Player of the Week (4/15/25)
+                            </span>
+
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                Ivy League Rookie of the Week (3/25/24)
+                            </span>
+                        </div>
 
     <div class="team-record-strip" id="teamRecordStrip"></div>
 </div>
