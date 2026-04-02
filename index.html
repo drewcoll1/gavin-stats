@@ -289,20 +289,22 @@
     align-items: stretch;
 }
 
-
-
-.hero-right {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.hero-stats-card {
+    width: 100%;
     min-width: 420px;
     max-width: 460px;
-    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #111827;
+    box-shadow: var(--shadow);
+    
 }
 
 .hero-stats-bar {
-    padding: 0;
-    background: none;
+    padding: 10px 14px;
+    background:
+            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
     color: #fff;
     font-size: 13px;
     font-weight: 800;
@@ -313,14 +315,16 @@
 .hero-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
 }
 
 .hero-stat-item {
-    padding: 0;
+    padding: 16px 14px;
     text-align: center;
-    border: none;
-    background: none;
+    border-right: 1px solid rgba(255, 255, 255, .08);
+}
+
+.hero-stat-item:last-child {
+    border-right: none;
 }
 
 .hero-stat-item .label {
@@ -330,7 +334,7 @@
 }
 
 .hero-stat-item .value {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 900;
     letter-spacing: .4px;
 }
@@ -341,27 +345,28 @@
     color: rgba(255, 255, 255, .60);
 }
  
- @media (max-width: 600px) {
+        @media (max-width: 600px) {
     .hero-right {
         width: 100%;
+    }
+
+    .hero-stats-card {
         min-width: 0;
         max-width: 100%;
+        width: 100%;
     }
 
     .hero-stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        align-items: start;
+        grid-template-columns: 1fr;
     }
 
     .hero-stat-item {
-        padding: 0;
-        border: none;
-        text-align: center;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, .08);
     }
 
-    .hero-stat-item .hint {
-        display: none;
+    .hero-stat-item:last-child {
+        border-bottom: none;
     }
 }
 
@@ -552,13 +557,16 @@
     }
 
     .stat {
-    min-width: 0;
-    min-height: 68px;
-    padding: 10px 10px 9px;
-    border: none;
-    border-radius: 0;
-    background: none;
-}
+        min-width: 0;
+        min-height: 68px;
+        padding: 10px 10px 9px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, 0)),
+            var(--panel2);
+    }
+
     .stat .k {
         font-size: 11px;
         letter-spacing: .35px;
@@ -571,7 +579,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 32px;
+        font-size: 20px;
         font-weight: 900;
         letter-spacing: .2px;
     }
@@ -1204,6 +1212,23 @@ padding: 2px; /* optional but makes logos look cleaner */
 
                             <img class="penn-logo" src="logo.png" alt="Penn logo" />
                         </div>
+
+                        <div class="hero-awards">
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                2025 First-team All-Ivy (OF)
+                            </span>
+
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                Ivy League Player of the Week (4/15/25)
+                            </span>
+
+                            <span class="award">
+                                <img class="award-logo" src="ivy.png" alt="Ivy">
+                                Ivy League Rookie of the Week (3/25/24)
+                            </span>
+                        </div>
                         <div class="sub">
                             <strong>#16</strong> • RF • B/T: R/L
                         </div>
@@ -1216,27 +1241,29 @@ padding: 2px; /* optional but makes logos look cleaner */
                 </div>
 
                 <div class="hero-right">
-    <div class="hero-stats-bar">
-        <span id="heroStatsSeason">2026</span> Season Stats
-    </div>
-
-    <div class="hero-stats-grid">
-        <div class="hero-stat-item">
-            <div class="label">AVG</div>
-            <div class="value" id="heroAVG">—</div>
-            <div class="hint">Batting Average</div>
+    <div class="hero-stats-card">
+        <div class="hero-stats-bar">
+            <span id="heroStatsSeason">2026</span> Season Stats
         </div>
 
-        <div class="hero-stat-item">
-            <div class="label">OBP</div>
-            <div class="value" id="heroOBP">—</div>
-            <div class="hint">On-Base Percentage</div>
-        </div>
+        <div class="hero-stats-grid">
+            <div class="hero-stat-item">
+                <div class="label">AVG</div>
+                <div class="value" id="heroAVG">—</div>
+                <div class="hint">Batting Average</div>
+            </div>
 
-        <div class="hero-stat-item">
-            <div class="label">IVY AVG</div>
-            <div class="value" id="heroIvyAVG">—</div>
-            <div class="hint">AVG vs Ivy League</div>
+            <div class="hero-stat-item">
+                <div class="label">OBP</div>
+                <div class="value" id="heroOBP">—</div>
+                <div class="hint">On-Base Percentage</div>
+            </div>
+
+            <div class="hero-stat-item">
+                <div class="label">IVY AVG</div>
+                <div class="value" id="heroIvyAVG">—</div>
+                <div class="hint">AVG vs Ivy League</div>
+            </div>
         </div>
     </div>
 </div>
@@ -1265,22 +1292,6 @@ padding: 2px; /* optional but makes logos look cleaner */
             <h2 class="summary-bar-title">Season Team Summary</h2>
         </div>
     </div>
-            <div class="hero-awards">
-                            <span class="award">
-                                <img class="award-logo" src="ivy.png" alt="Ivy">
-                                2025 First-team All-Ivy (OF)
-                            </span>
-
-                            <span class="award">
-                                <img class="award-logo" src="ivy.png" alt="Ivy">
-                                Ivy League Player of the Week (4/15/25)
-                            </span>
-
-                            <span class="award">
-                                <img class="award-logo" src="ivy.png" alt="Ivy">
-                                Ivy League Rookie of the Week (3/25/24)
-                            </span>
-                        </div>
 
     <div class="team-record-strip" id="teamRecordStrip"></div>
 </div>
