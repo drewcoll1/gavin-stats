@@ -1091,11 +1091,11 @@ padding: 2px; /* optional but makes logos look cleaner */
         white-space: nowrap;
     }
 
-    /* keep everything in one line no matter what */
-    .player-meta-inline span {
-        white-space: nowrap;
+    .player-meta-inline {
+        font-size: 12px;      /* smaller on mobile */
+        margin-top: 2px;      /* tighter under last name */
+        opacity: 0.85;
     }
-
     /* prevent flex from forcing wraps */
     .player-meta-inline {
         flex-wrap: nowrap;
