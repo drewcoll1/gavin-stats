@@ -334,13 +334,19 @@
     }
 
     .hero-stats-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        align-items: start;
     }
 
     .hero-stat-item {
         padding: 0;
         border: none;
+        text-align: center;
+    }
+
+    .hero-stat-item .hint {
+        display: none;
     }
 }
 
