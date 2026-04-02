@@ -190,6 +190,7 @@
     display: flex;
     align-items: flex-start;
     gap: 6px;
+    width: fit-content;   /* 🔥 prevents full-width stretch */
 }
         
     }
@@ -197,7 +198,6 @@
     .identity-text {
         display: flex;
         flex-direction: column;
-        gap: 6px;
     }
 
     .player-name {
@@ -228,7 +228,7 @@
         width: 92px;
         height: 92px;
         object-fit: contain;
-        flex: 0 0 auto;
+        /* flex: 0 0 auto; */
     }
 
     .player-meta .sub {
