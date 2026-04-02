@@ -293,56 +293,43 @@
     width: 100%;
     min-width: 420px;
     max-width: 460px;
-    border-radius: 14px;
-    overflow: hidden;
-    background: #111827;
-    box-shadow: var(--shadow);
-    
+    background: none;
+    box-shadow: none;
 }
 
 .hero-stats-bar {
-    padding: 10px 14px;
-    background:
-            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
-            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    padding: 0 0 8px 0;
+    background: none;
     color: #fff;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: .4px;
-    text-transform: uppercase;
+    font-size: 12px;
+    opacity: 0.8;
 }
 
 .hero-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    gap: 28px;
+    align-items: center;
 }
 
 .hero-stat-item {
-    padding: 16px 14px;
-    text-align: center;
-    border-right: 1px solid rgba(255, 255, 255, .08);
+    padding: 0;
+    text-align: left;
+    border: none;
 }
 
-.hero-stat-item:last-child {
-    border-right: none;
+
+.hero-stat-item .value {
+    font-size: 26px;
+    font-weight: 900;
 }
 
 .hero-stat-item .label {
-    margin-bottom: 6px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, .72);
-}
-
-.hero-stat-item .value {
-    font-size: 24px;
-    font-weight: 900;
-    letter-spacing: .4px;
+    font-size: 11px;
+    opacity: 0.7;
 }
 
 .hero-stat-item .hint {
-    margin-top: 4px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, .60);
+    display: none; /* removes extra clutter */
 }
  
         @media (max-width: 600px) {
@@ -374,10 +361,11 @@
 
     /* Tabs */
     .tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 40px;
+        .summary-bar {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
     }
         .summary-bar {
     margin-top: 14px;
@@ -385,9 +373,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-      background:
-            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
-            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    background: linear-gradient(90deg, #990000, #011F5B);
 }
 
 .summary-bar-head {
