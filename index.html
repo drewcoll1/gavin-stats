@@ -750,6 +750,36 @@
         background: rgba(255, 255, 255, .05);
     }
 
+        .right-panels {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* summary bigger, awards smaller */
+    gap: 14px;
+}
+        .awards-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.awards-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.award-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #fff;
+}
+
+.award-logo {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
     .table-wrap::-webkit-scrollbar-thumb {
         border: 2px solid rgba(0, 0, 0, .25);
         border-radius: 10px;
@@ -1261,14 +1291,60 @@ padding: 2px; /* optional but makes logos look cleaner */
                 <!-- removed Analytics tab -->
             </div>
         </div>
-        <div class="summary-bar">
-    <div class="summary-bar-head">
-        <div>
-            <h2 class="summary-bar-title">Season Team Summary</h2>
+        <div class="right-panels">
+
+    <!-- Season Summary -->
+    <div class="panel">
+        <div class="panel-head">
+            <h2 class="panel-title">Season Summary</h2>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="section active" id="summary-batting">
+                <div class="tag" style="margin-bottom:10px;">Batting</div>
+                <div class="stat-strip" id="summaryStrip"></div>
+
+                <div class="divider"></div>
+
+                <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+                <div class="chart-wrap">
+                    <canvas id="hitTypeChart" width="600" height="220"></canvas>
+                </div>
+            </div>
+
+            <div class="section" id="summary-fielding">
+                <div class="tag" style="margin-bottom:10px;">Fielding</div>
+                <div class="stat-strip" id="fieldingStrip"></div>
+            </div>
+
         </div>
     </div>
 
-    <div class="team-record-strip" id="teamRecordStrip"></div>
+    <!-- 🔥 NEW AWARDS PANEL -->
+    <div class="panel awards-panel">
+        <div class="panel-head">
+            <h2 class="panel-title">Career Honors</h2>
+        </div>
+
+        <div class="panel-body awards-body">
+            <div class="award-row">
+                <img src="ivy.png" class="award-logo">
+                <span>2025 First-team All-Ivy (OF)</span>
+            </div>
+
+            <div class="award-row">
+                <img src="ivy.png" class="award-logo">
+                <span>Ivy League Player of the Week (4/15/25)</span>
+            </div>
+
+            <div class="award-row">
+                <img src="ivy.png" class="award-logo">
+                <span>Ivy League Rookie of the Week (3/25/24)</span>
+            </div>
+        </div>
+    </div>
+
 </div>
 
         <div class="grid">
