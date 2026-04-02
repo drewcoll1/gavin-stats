@@ -338,33 +338,38 @@
     }
 
     .hero-stats-card {
-        min-width: 0;
-        max-width: 100%;
-        width: 100%;
-    }
+    width: 100%;
+    min-width: 420px;
+    max-width: 460px;
+    border-radius: 0;
+    overflow: visible;
+    background: none;
+    box-shadow: none;
+}
 
     .hero-stats-grid {
-        grid-template-columns: 1fr;
-    }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+}
 
     .hero-stat-item {
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
-    }
+    padding: 0;
+    text-align: center;
+    border-right: none;
+}
 
-    .hero-stat-item:last-child {
-        border-bottom: none;
-    }
+
 }
 
     
 
     /* Tabs */
     .tabs {
-        .summary-bar {
     display: flex;
-    gap: 28px;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
 }
     }
         .summary-bar {
@@ -374,6 +379,28 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     background: linear-gradient(90deg, #990000, #011F5B);
+}
+        .summary-bar .team-record-strip .stat {
+    min-height: auto;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    flex: 0 0 auto;
+}
+        .summary-bar .team-record-strip .stat .k {
+    margin-bottom: 4px;
+    color: rgba(255, 255, 255, .72);
+}
+
+.summary-bar .team-record-strip .stat .v {
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.summary-bar .team-record-strip .stat .s {
+    margin-top: 2px;
 }
 
 .summary-bar-head {
@@ -543,15 +570,15 @@
     }
 
     .stat {
-        min-width: 0;
-        min-height: 68px;
-        padding: 10px 10px 9px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, 0)),
-            var(--panel2);
-    }
+    min-width: 0;
+    min-height: 68px;
+    padding: 10px 10px 9px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, 0)),
+        var(--panel2);
+}
 
     .stat .k {
         font-size: 11px;
