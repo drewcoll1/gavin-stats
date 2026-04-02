@@ -1255,8 +1255,9 @@ padding: 2px; /* optional but makes logos look cleaner */
         </div>
         <div class="summary-bar">
     <div class="summary-bar-head">
+        <div class="tag">
     <span id="summarySeasonText">2025</span> Season Team Summary
-
+</div>
     </div>
     <div class="team-record-strip" id="teamRecordStrip"></div>
 </div>
@@ -2580,9 +2581,8 @@ function hideGameTip() {
         `;
                 }
             }
-           $("#heroSeasonText").text((mode === "career") ? "Career" : currentSeason);
-$("#heroStatsSeason").text((mode === "career") ? "Career" : currentSeason);
-$("#summarySeasonText").text((mode === "career") ? "Career" : currentSeason);
+           $("#heroSeasonText").textContent = (mode === "career") ? "Career" : currentSeason;
+$("#heroStatsSeason").textContent = (mode === "career") ? "Career" : currentSeason;
 
             const batGames = (mode === "career") ? careerBattingLog : battingLog;
             const ivyAVG = computeIvyAvg(batGames);
