@@ -470,6 +470,23 @@
 .team-record-strip .stat {
     flex: 0 0 160px;
 }
+
+        @media (max-width: 600px) {
+
+    .team-record-strip .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;   /* 👈 centers everything horizontally */
+        justify-content: center;
+        text-align: center;    /* 👈 ensures text is centered */
+    }
+
+    .team-record-strip .stat .k,
+    .team-record-strip .stat .s {
+        text-align: center;
+        width: 100%;
+    }
+}
 @media (max-width: 600px) {
 
     .team-record-strip {
