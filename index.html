@@ -1169,6 +1169,57 @@ padding: 2px; /* optional but makes logos look cleaner */
         display: none;
     }
 }
+
+        @media (max-width: 600px) {
+
+    /* keep everything from wrapping */
+    .hero-left,
+    .hero-identity,
+    .player-meta-inline {
+        flex-wrap: nowrap;
+    }
+
+    /* shrink name */
+    .first-name {
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .last-name {
+        font-size: 22px;
+        letter-spacing: 1px;
+    }
+
+    /* shrink school */
+    .identity-school {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    /* shrink meta line */
+    .player-meta-inline {
+        font-size: 11px;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    /* shrink logo slightly */
+    .penn-logo {
+        height: 44px;
+    }
+
+    /* make sure text doesn't force wrap */
+    .identity-text {
+        min-width: 0;
+    }
+
+    /* prevent overflow breaking layout */
+    .identity-text span,
+    .identity-text div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
  @media (max-width: 1100px) {
 
     .table-wrap {
