@@ -193,12 +193,12 @@
     width: fit-content;   /* 🔥 prevents full-width stretch */
 }
         
-    }
 
     .identity-text {
-        display: flex;
-        flex-direction: column;
-    }
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
 
     .player-name {
     display: flex;
@@ -225,11 +225,12 @@
     }
 
     .penn-logo {
-        width: 92px;
-        height: 92px;
-        object-fit: contain;
-        /* flex: 0 0 auto; */
-    }
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex: 0 0 auto;
+    margin-left: 0;
+}
 
     .player-meta .sub {
         margin: 6px 0 0;
