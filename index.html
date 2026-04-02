@@ -470,6 +470,33 @@
 .team-record-strip .stat {
     flex: 0 0 160px;
 }
+@media (max-width: 600px) {
+
+    .team-record-strip {
+        overflow-x: visible;      /* 🚫 remove scroll */
+        flex-wrap: wrap;          /* allow wrapping instead */
+        justify-content: center;  /* clean alignment */
+    }
+
+    .team-record-strip .stat {
+        flex: 1 1 30%;            /* 3 per row */
+        min-width: 0;
+    }
+
+    /* shrink numbers */
+    .team-record-strip .stat .v {
+        font-size: 20px;
+    }
+
+    /* shrink labels */
+    .team-record-strip .stat .k {
+        font-size: 10px;
+    }
+
+    .team-record-strip .stat .s {
+        font-size: 10px;
+    }
+}
         @media (min-width: 900px) {
     .team-record-strip {
         justify-content: center; /* ✅ center only on larger screens */
