@@ -293,43 +293,56 @@
     width: 100%;
     min-width: 420px;
     max-width: 460px;
-    background: none;
-    box-shadow: none;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #111827;
+    box-shadow: var(--shadow);
+    
 }
 
 .hero-stats-bar {
-    padding: 0 0 8px 0;
-    background: none;
+    padding: 10px 14px;
+    background:
+            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
     color: #fff;
-    font-size: 12px;
-    opacity: 0.8;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .4px;
+    text-transform: uppercase;
 }
 
 .hero-stats-grid {
-    display: flex;
-    gap: 28px;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .hero-stat-item {
-    padding: 0;
-    text-align: left;
-    border: none;
+    padding: 16px 14px;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, .08);
 }
 
-
-.hero-stat-item .value {
-    font-size: 26px;
-    font-weight: 900;
+.hero-stat-item:last-child {
+    border-right: none;
 }
 
 .hero-stat-item .label {
-    font-size: 11px;
-    opacity: 0.7;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .72);
+}
+
+.hero-stat-item .value {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: .4px;
 }
 
 .hero-stat-item .hint {
-    display: none; /* removes extra clutter */
+    margin-top: 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .60);
 }
  
         @media (max-width: 600px) {
@@ -338,39 +351,33 @@
     }
 
     .hero-stats-card {
-    width: 100%;
-    min-width: 420px;
-    max-width: 460px;
-    border-radius: 0;
-    overflow: visible;
-    background: none;
-    box-shadow: none;
-}
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+    }
 
     .hero-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 26px;
-}
+        grid-template-columns: 1fr;
+    }
 
     .hero-stat-item {
-    padding: 0;
-    text-align: center;
-    border-right: none;
-}
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
 
-
+    .hero-stat-item:last-child {
+        border-bottom: none;
+    }
 }
 
     
 
     /* Tabs */
     .tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 18px;
-}
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 40px;
     }
         .summary-bar {
     margin-top: 14px;
@@ -378,29 +385,9 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    background: linear-gradient(90deg, #990000, #011F5B);
-}
-        .summary-bar .team-record-strip .stat {
-    min-height: auto;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    flex: 0 0 auto;
-}
-        .summary-bar .team-record-strip .stat .k {
-    margin-bottom: 4px;
-    color: rgba(255, 255, 255, .72);
-}
-
-.summary-bar .team-record-strip .stat .v {
-    margin-top: 0;
-    font-size: 22px;
-}
-
-.summary-bar .team-record-strip .stat .s {
-    margin-top: 2px;
+      background:
+            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
 }
 
 .summary-bar-head {
@@ -570,15 +557,15 @@
     }
 
     .stat {
-    min-width: 0;
-    min-height: 68px;
-    padding: 10px 10px 9px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, 0)),
-        var(--panel2);
-}
+        min-width: 0;
+        min-height: 68px;
+        padding: 10px 10px 9px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, 0)),
+            var(--panel2);
+    }
 
     .stat .k {
         font-size: 11px;
