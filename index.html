@@ -199,11 +199,21 @@
     }
 
     .player-name {
-        margin: 0;
-        font-size: 30px;
-        line-height: 1.05;
-        letter-spacing: .2px;
-    }
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+
+.first-name {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.last-name {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
 
     .identity-school {
         margin: 0;
@@ -1196,7 +1206,10 @@ padding: 2px; /* optional but makes logos look cleaner */
                     <div class="player-meta">
                         <div class="hero-identity">
                             <div class="identity-text">
-                                <h1 class="player-name">Gavin Collins</h1>
+                                <h1 class="player-name">
+    <span class="first-name">Gavin</span>
+    <span class="last-name">Collins</span>
+</h1>
                                 <div class="identity-school">
                                     <strong><em>University of Pennsylvania Quakers</em></strong>
                                 </div>
