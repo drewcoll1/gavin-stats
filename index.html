@@ -1084,11 +1084,28 @@ padding: 2px; /* optional but makes logos look cleaner */
         flex: 0 0 auto;
     }
 @media (max-width: 600px) {
-    .penn-logo {
-        display: none;
+
+    /* 🚫 prevent stacking on these two lines */
+    .identity-school,
+    .player-meta-inline {
+        white-space: nowrap;
     }
-}
-       
+
+    /* keep everything in one line no matter what */
+    .player-meta-inline span {
+        white-space: nowrap;
+    }
+
+    /* prevent flex from forcing wraps */
+    .player-meta-inline {
+        flex-wrap: nowrap;
+    }
+
+    /* optional: slightly tighten spacing so it fits better */
+    .player-meta-inline {
+        gap: 6px;
+    }
+}   
  @media (max-width: 1100px) {
 
     .table-wrap {
