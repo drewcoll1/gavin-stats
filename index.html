@@ -115,7 +115,9 @@
         border: 1px solid rgba(255, 255, 255, .06);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
-        background: linear-gradient(90deg, #011F5B, #990000);
+        background:
+            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
     }
 
     .hero::before {
@@ -271,6 +273,7 @@
         background: rgba(0, 0, 0, .25);
         color: rgba(255, 255, 255, .85);
         font-size: 12px;
+        backdrop-filter: blur(6px);
     }
 
     .hero-right {
@@ -288,7 +291,7 @@
     padding: 10px 12px;
     border: 1px solid var(--border-soft);
     border-radius: 12px;
-    background: #111827;
+    background: rgba(0, 0, 0, .28);
 }
         @media (max-width: 600px) {
     .hero-right {
@@ -408,7 +411,7 @@
         padding: 10px 12px;
         border: 1px solid var(--border-soft);
         border-radius: 12px;
-        background: #1f2937;
+        background: rgba(255, 255, 255, .04);
         color: rgba(255, 255, 255, .85);
         font-size: 13px;
         font-weight: 700;
@@ -417,9 +420,8 @@
     }
 
     .tab.active {
-       border-color: #990000;
-    background: #990000;
-    color: #fff;
+        border-color: rgba(204, 0, 0, .45);
+        background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
     }
 
     /* Layout */
@@ -712,40 +714,6 @@
         scrollbar-gutter: stable;
         -webkit-overflow-scrolling: touch;
     }
-        .tabs-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 14px;
-    margin-top: 14px;
-    flex-wrap: wrap;
-}
-
-.tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 0;
-}
-
-.tabs-season {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255, 255, 255, .85);
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.tabs-season select {
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, .12);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .06);
-    color: inherit;
-    font-size: 13px;
-    outline: none;
-}
 
     .table-wrap::-webkit-scrollbar {
         height: 10px;
@@ -1219,6 +1187,18 @@ padding: 2px; /* optional but makes logos look cleaner */
                         <div class="sub" style="margin-top:4px;">
                             <span id="heroSeasonText">2025</span> • Game Log • Batting + Fielding
                         </div>
+
+                        <div class="pill-row">
+                            <div class="pill">
+                                Season:
+                                <select id="seasonSelect" aria-label="Select season">
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026" selected>2026</option>
+                                    <option value="career">Career</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1244,22 +1224,11 @@ padding: 2px; /* optional but makes logos look cleaner */
                 </div>
             </div>
 
-           <div class="tabs-bar">
-    <div class="tabs" role="tablist" aria-label="Stat sections">
-        <div class="tab active" data-tab="batting">Batting</div>
-        <div class="tab" data-tab="fielding">Fielding</div>
-    </div>
-
-    <div class="tabs-season">
-        <label for="seasonSelect">Season</label>
-        <select id="seasonSelect" aria-label="Select season">
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
-            <option value="career">Career</option>
-        </select>
-    </div>
-</div>
+            <div class="tabs" role="tablist" aria-label="Stat sections">
+                <div class="tab active" data-tab="batting">Batting</div>
+                <div class="tab" data-tab="fielding">Fielding</div>
+                <!-- removed Analytics tab -->
+            </div>
         </div>
         <div class="summary-bar">
     <div class="summary-bar-head">
