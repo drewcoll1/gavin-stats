@@ -276,35 +276,18 @@
         backdrop-filter: blur(6px);
     }
 
-    .hero-right {
+.hero-right {
     display: flex;
-    flex-wrap: nowrap;      /* ❌ prevents wrapping */
-    gap: 12px;
-    align-items: stretch;
-    overflow-x: auto;       /* ✅ allows scroll if needed */
-}
-
-        .hero-right {
-    display: flex;
-    align-items: stretch;
-}
-
-.hero-stats-card {
-    width: 100%;
+    flex-direction: column;
+    gap: 10px;
     min-width: 420px;
     max-width: 460px;
-    border-radius: 14px;
-    overflow: hidden;
-    background: #111827;
-    box-shadow: var(--shadow);
-    
+    width: 100%;
 }
 
 .hero-stats-bar {
-    padding: 10px 14px;
-    background:
-            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
-            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    padding: 0;
+    background: none;
     color: #fff;
     font-size: 13px;
     font-weight: 800;
@@ -315,16 +298,14 @@
 .hero-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
 }
 
 .hero-stat-item {
-    padding: 16px 14px;
+    padding: 0;
     text-align: center;
-    border-right: 1px solid rgba(255, 255, 255, .08);
-}
-
-.hero-stat-item:last-child {
-    border-right: none;
+    border: none;
+    background: none;
 }
 
 .hero-stat-item .label {
@@ -348,25 +329,18 @@
         @media (max-width: 600px) {
     .hero-right {
         width: 100%;
-    }
-
-    .hero-stats-card {
         min-width: 0;
         max-width: 100%;
-        width: 100%;
     }
 
     .hero-stats-grid {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
 
     .hero-stat-item {
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
-    }
-
-    .hero-stat-item:last-child {
-        border-bottom: none;
+        padding: 0;
+        border: none;
     }
 }
 
@@ -1241,29 +1215,27 @@ padding: 2px; /* optional but makes logos look cleaner */
                 </div>
 
                 <div class="hero-right">
-    <div class="hero-stats-card">
-        <div class="hero-stats-bar">
-            <span id="heroStatsSeason">2026</span> Season Stats
+    <div class="hero-stats-bar">
+        <span id="heroStatsSeason">2026</span> Season Stats
+    </div>
+
+    <div class="hero-stats-grid">
+        <div class="hero-stat-item">
+            <div class="label">AVG</div>
+            <div class="value" id="heroAVG">—</div>
+            <div class="hint">Batting Average</div>
         </div>
 
-        <div class="hero-stats-grid">
-            <div class="hero-stat-item">
-                <div class="label">AVG</div>
-                <div class="value" id="heroAVG">—</div>
-                <div class="hint">Batting Average</div>
-            </div>
+        <div class="hero-stat-item">
+            <div class="label">OBP</div>
+            <div class="value" id="heroOBP">—</div>
+            <div class="hint">On-Base Percentage</div>
+        </div>
 
-            <div class="hero-stat-item">
-                <div class="label">OBP</div>
-                <div class="value" id="heroOBP">—</div>
-                <div class="hint">On-Base Percentage</div>
-            </div>
-
-            <div class="hero-stat-item">
-                <div class="label">IVY AVG</div>
-                <div class="value" id="heroIvyAVG">—</div>
-                <div class="hint">AVG vs Ivy League</div>
-            </div>
+        <div class="hero-stat-item">
+            <div class="label">IVY AVG</div>
+            <div class="value" id="heroIvyAVG">—</div>
+            <div class="hint">AVG vs Ivy League</div>
         </div>
     </div>
 </div>
