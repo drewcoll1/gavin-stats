@@ -1085,27 +1085,27 @@ padding: 2px; /* optional but makes logos look cleaner */
     }
 @media (max-width: 600px) {
 
-    /* 🚫 prevent stacking on these two lines */
+    /* keep both lines on one row */
     .identity-school,
     .player-meta-inline {
         white-space: nowrap;
+        font-size: 12px;
     }
 
+    /* meta specific tweaks */
     .player-meta-inline {
-        font-size: 10px;      /* smaller on mobile */
-        margin-top: 2px;      /* tighter under last name */
+        margin-top: 2px;
         opacity: 0.85;
-    }
-    /* prevent flex from forcing wraps */
-    .player-meta-inline {
         flex-wrap: nowrap;
-    }
-
-    /* optional: slightly tighten spacing so it fits better */
-    .player-meta-inline {
         gap: 6px;
     }
-}  
+
+    /* optional: slight styling difference */
+    .identity-school {
+        opacity: 0.8;
+        margin-top: 2px;
+    }
+}
         @media (max-width: 600px) {
     .penn-logo {
         display: none !important;
