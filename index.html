@@ -71,6 +71,19 @@
         line-height: 1.35;
     }
 
+        .player-meta-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-size: 14px;
+    color: rgba(255,255,255,.78);
+    flex-wrap: wrap; /* keeps it clean on smaller widths */
+}
+
+.meta-divider {
+    opacity: 0.6;
+}
     .tooltip.show {
         opacity: 1;
         transform: translateY(0);
@@ -1210,14 +1223,22 @@ padding: 2px; /* optional but makes logos look cleaner */
                         <div class="hero-identity">
                              <img class="penn-logo" src="logo.png" alt="Penn logo" />
                             <div class="identity-text">
-                                <h1 class="player-name">
-    <span class="first-name">Gavin</span>
-    <span class="last-name">Collins</span>
-</h1>
-                                <div class="identity-school">
-                                    <strong><em>University of Pennsylvania Quakers</em></strong>
-                                </div>
-                            </div>
+    <h1 class="player-name">
+        <span class="first-name">Gavin</span>
+        <span class="last-name">Collins</span>
+    </h1>
+
+    <div class="identity-school">
+        <strong><em>University of Pennsylvania Quakers</em></strong>
+    </div>
+
+    <!-- ✅ MOVE META HERE -->
+    <div class="player-meta-inline">
+        <span><strong>#16</strong> • RF • B/T: R/L</span>
+        <span class="meta-divider">•</span>
+        <span id="heroSeasonText">2025</span> Game Log
+    </div>
+</div>
 
                         </div>
                         <div class="sub">
