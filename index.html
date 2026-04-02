@@ -473,28 +473,27 @@
 @media (max-width: 600px) {
 
     .team-record-strip {
-        overflow-x: visible;      /* 🚫 remove scroll */
-        flex-wrap: wrap;          /* allow wrapping instead */
-        justify-content: center;  /* clean alignment */
+        overflow-x: hidden;     /* 🚫 no scroll */
+        flex-wrap: nowrap;      /* 🚫 no stacking */
+        gap: 6px;               /* tighter spacing */
     }
 
     .team-record-strip .stat {
-        flex: 1 1 30%;            /* 3 per row */
+        flex: 1 1 0;            /* all items share space evenly */
         min-width: 0;
+        padding: 6px 4px;       /* tighter padding */
     }
 
-    /* shrink numbers */
+    /* numbers */
     .team-record-strip .stat .v {
-        font-size: 20px;
+        font-size: 16px;
+        font-weight: 800;
     }
 
-    /* shrink labels */
-    .team-record-strip .stat .k {
-        font-size: 10px;
-    }
-
+    /* labels */
+    .team-record-strip .stat .k,
     .team-record-strip .stat .s {
-        font-size: 10px;
+        font-size: 9px;
     }
 }
         @media (min-width: 900px) {
