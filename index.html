@@ -14,13 +14,11 @@
         --panel2: #1f2230;
         --text: #ffffff;
         --muted: #a8adbd;
-        --penn-red: #990000;
-        --penn-blue: #011F5B;
-        --accent: #990000;
+        --accent: #cc0000;
         --shadow: 0 10px 30px rgba(0, 0, 0, .35);
         --radius: 14px;
-        /* --border: rgba(255, 255, 255, .08); */
-        /* --border-soft: rgba(255, 255, 255, .10); */
+        --border: rgba(255, 255, 255, .08);
+        --border-soft: rgba(255, 255, 255, .10);
         --surface: rgba(0, 0, 0, .18);
         --surface-2: rgba(255, 255, 255, .05);
     }
@@ -30,11 +28,21 @@
     }
 
     body {
-    margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-    color: var(--text);
-    background: #ffffff; 
-}
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        color: var(--text);
+        background:
+            repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.015) 0px,
+                rgba(255, 255, 255, 0.015) 1px,
+                transparent 1px,
+                transparent 3px
+            ),
+            radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
+            radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
+            var(--bg);
+    }
 
     .container {
         width: min(1150px, calc(100% - 32px));
@@ -55,7 +63,7 @@
         padding: 10px;
         border-radius: 12px;
         background: rgba(10, 11, 14, .92);
-        /* border: 1px solid var(--border-soft); */
+        border: 1px solid var(--border-soft);
         box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
         backdrop-filter: blur(10px);
         color: rgba(255, 255, 255, .92);
@@ -104,14 +112,12 @@
         position: relative;
         overflow: hidden;
         padding: 18px;
-        /* border: 1px solid rgba(255, 255, 255, .06); */
+        border: 1px solid rgba(255, 255, 255, .06);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
-        background: linear-gradient(
-    135deg,
-    rgba(153, 0, 0, 0.85),
-    rgba(1, 31, 91, 0.85)
-);
+        background:
+            linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+            linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
     }
 
     .hero::before {
@@ -332,8 +338,8 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     background:
-        linear-gradient(180deg, rgba(153, 0, 0, 0.08), rgba(1, 31, 91, 0.05)),
-    var(--panel);
+        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
+        var(--panel);
 }
 
 .summary-bar-head {
