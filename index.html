@@ -1170,54 +1170,47 @@ padding: 2px; /* optional but makes logos look cleaner */
     }
 }
 
-        @media (max-width: 600px) {
+      @media (max-width: 600px) {
 
-    /* keep everything from wrapping */
-    .hero-left,
+    /* keep photo left + content right */
+    .hero-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* THIS is the key change */
+    .hero-identity {
+        display: flex;
+        flex-direction: row;   /* 👈 forces logo to the right */
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* text block stays stacked internally */
+    .identity-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* logo to the right of name */
+    .penn-logo {
+        order: 2;              /* 👈 pushes it to the right side */
+        height: 60px;          /* adjust if needed */
+        margin: 0;
+    }
+
+    /* name/meta block on left */
+    .identity-text {
+        order: 1;
+    }
+
+    /* prevent wrapping */
     .hero-identity,
     .player-meta-inline {
         flex-wrap: nowrap;
-    }
-
-    /* shrink name */
-    .first-name {
-        font-size: 20px;
-        letter-spacing: 1px;
-    }
-
-    .last-name {
-        font-size: 22px;
-        letter-spacing: 1px;
-    }
-
-    /* shrink school */
-    .identity-school {
-        font-size: 11px;
-        white-space: nowrap;
-    }
-
-    /* shrink meta line */
-    .player-meta-inline {
-        font-size: 11px;
-        gap: 6px;
-        white-space: nowrap;
-    }
-
-    /* shrink logo slightly */
-    .penn-logo {
-        height: 44px;
-    }
-
-    /* make sure text doesn't force wrap */
-    .identity-text {
-        min-width: 0;
-    }
-
-    /* prevent overflow breaking layout */
-    .identity-text span,
-    .identity-text div {
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 }
  @media (max-width: 1100px) {
