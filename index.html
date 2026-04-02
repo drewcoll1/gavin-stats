@@ -188,9 +188,15 @@
 
     .hero-identity {
     display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    width: fit-content;   /* 🔥 prevents full-width stretch */
+    align-items: center;   /* 🔥 vertically aligns with name */
+    gap: 10px;
+    width: fit-content;
+}
+
+.penn-logo {
+    height: 72px;   /* 🔥 matches stacked name height */
+    width: auto;
+    object-fit: contain;
 }
         
     }
@@ -224,12 +230,7 @@
         color: rgba(255, 255, 255, .78);
     }
 
-    .penn-logo {
-        width: 92px;
-        height: 92px;
-        object-fit: contain;
-        flex: 0 0 auto;
-    }
+   
 
     .player-meta .sub {
         margin: 6px 0 0;
@@ -1208,6 +1209,7 @@ padding: 2px; /* optional but makes logos look cleaner */
                     <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
                     <div class="player-meta">
                         <div class="hero-identity">
+                             <img class="penn-logo" src="logo.png" alt="Penn logo" />
                             <div class="identity-text">
                                 <h1 class="player-name">
     <span class="first-name">Gavin</span>
@@ -1218,7 +1220,6 @@ padding: 2px; /* optional but makes logos look cleaner */
                                 </div>
                             </div>
 
-                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
                         </div>
                         <div class="sub">
                             <strong>#16</strong> • RF • B/T: R/L
