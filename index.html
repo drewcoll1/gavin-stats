@@ -1329,6 +1329,29 @@ padding: 2px; /* optional but makes logos look cleaner */
         max-width: 500px;
     }
 }
+        @media (max-width: 700px) {
+
+    /* shrink entire expanded section to fit screen */
+    .game-detail {
+        transform: scale(0.82);
+        transform-origin: top left;
+        width: 122%;   /* compensates for scale so it fills width */
+    }
+
+    /* make sure parent clips overflow */
+    .game-detail-row td {
+        overflow: hidden;
+    }
+
+    /* shrink text slightly for better fit */
+    .game-detail .v {
+        font-size: 14px;
+    }
+
+    .game-detail .k {
+        font-size: 10px;
+    }
+}
 
     
       
