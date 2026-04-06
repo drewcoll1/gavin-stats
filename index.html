@@ -844,13 +844,6 @@
     .table-wrap::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(90deg, rgba(204, 0, 0, 1), rgba(204, 0, 0, .7));
     }
-
-    table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
     #battingTable,
     #fieldingTable {
         min-width: 640px;
@@ -878,23 +871,42 @@
         opacity: .7;
     }
 
-    tbody td {
-        padding: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, .06);
-        color: rgba(255, 255, 255, .92);
-        font-size: 13px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+   table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;   /* vertical gap between rows */
+}
 
-    tbody tr:nth-child(even) td {
-        background: rgba(255, 255, 255, .02);
-    }
+tbody td {
+    padding: 14px 10px;      /* taller rows */
+    border-bottom: none;     /* remove hard line between rows */
+    color: rgba(255, 255, 255, .92);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
 
-    tbody tr:hover td {
-        background: rgba(255, 255, 255, .04);
-    }
+/* round the left and right ends of each row */
+tbody td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+tbody td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* keep hover effect but make it feel smoother */
+tbody tr {
+    transition: transform .15s ease;
+}
+
+tbody tr:hover {
+    transform: translateY(-1px);
+}
 
     /* Opponent / logo */
     .opp {
