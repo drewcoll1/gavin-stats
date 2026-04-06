@@ -2195,21 +2195,14 @@ padding: 2px; /* optional but makes logos look cleaner */
 
         /* ------------ TABLE RENDER ------------ */
         function renderBattingTable(rows) {
-    const body = $("#battingBody");
-    body.innerHTML = "";
-    for (const r of rows) {
-        const tr = document.createElement("tr");
-
-        tr.style.cursor = "pointer";
-
-        tr.addEventListener("click", () => {
-            setSharedOpponent(r.opponent);
-        });
-
-        tr.innerHTML = `
+            const body = $("#battingBody");
+            body.innerHTML = "";
+            for (const r of rows) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
-          <td data-label="Result">${r.result || ""}</td>
+           <td data-label="Result">${r.result || ""}</td>
           <td class="right" data-label="H">${r.H}</td>
           <td class="right" data-label="AB">${r.AB}</td>
           <td class="right" data-label="R">${r.R}</td>
@@ -2217,26 +2210,20 @@ padding: 2px; /* optional but makes logos look cleaner */
           <td class="right" data-label="3B">${r["3B"]}</td>
           <td class="right" data-label="HR">${r.HR}</td>
           <td class="right" data-label="RBI">${r.RBI}</td>
+         
         `;
-        body.appendChild(tr);
-    }
-    $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
-}
+                body.appendChild(tr);
+            }
+            $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+        }
 
-       function renderFieldingTable(rows) {
-    const body = $("#fieldingBody");
-    body.innerHTML = "";
-    for (const r of rows) {
-        const tr = document.createElement("tr");
-        const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
-
-        tr.style.cursor = "pointer";
-
-        tr.addEventListener("click", () => {
-            setSharedOpponent(r.opponent);
-        });
-
-        tr.innerHTML = `
+        function renderFieldingTable(rows) {
+            const body = $("#fieldingBody");
+            body.innerHTML = "";
+            for (const r of rows) {
+                const tr = document.createElement("tr");
+                const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
+                tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
           <td data-label="Result">${r.result || ""}</td>
@@ -2245,11 +2232,13 @@ padding: 2px; /* optional but makes logos look cleaner */
           <td class="right" data-label="A">${r.A}</td>
           <td class="right" data-label="E">${r.E}</td>
           <td class="right" data-label="FPCT">${fp}</td>
+          
         `;
-        body.appendChild(tr);
-    }
-    $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
-}
+                body.appendChild(tr);
+            }
+            $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+        }
+
         const battingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
         const fieldingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
 
