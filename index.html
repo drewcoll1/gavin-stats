@@ -681,14 +681,15 @@
 
     /* Controls */
     .controls {
-        display: flex;
-        flex: 0 0 auto;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 0 14px; /* 🔥 adds space left + right */
+}
 
     .left-controls,
     .right-controls {
