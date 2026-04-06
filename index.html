@@ -550,7 +550,7 @@
         display: flex;
         flex-direction: column;
         min-width: 0;
-        overflow: hidden;
+        overflow: visible;
         border: 1px solid var(--border);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
@@ -586,12 +586,12 @@
     }
 
     .panel-body {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        min-height: 0;
-        padding: 14px;
-    }
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0; /* 🔥 REMOVE spacing */
+}
 
     #rowCountTag {
         display: none !important;
@@ -812,19 +812,20 @@
         height: 220px;
     }
 
-    /* Table */
-    .table-wrap {
-        flex: 1 1 auto;
-        width: 100%;
-        min-height: 0;
-        overflow-x: auto;
-        overflow-y: auto;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--surface);
-        scrollbar-gutter: stable;
-        -webkit-overflow-scrolling: touch;
-    }
+   .table-wrap {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: auto;
+    border: none;          /* 🔥 remove box */
+    border-radius: 0;      /* 🔥 remove rounded edges */
+    background: none;      /* 🔥 remove background */
+}
+        table {
+    width: 100%;
+    border-collapse: collapse; /* 🔥 removes inner spacing */
+}
 
     .table-wrap::-webkit-scrollbar {
         height: 10px;
