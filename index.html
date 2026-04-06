@@ -845,7 +845,12 @@
     scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
 }
-
+        tbody tr:nth-child(even) td {
+    background: rgba(255, 255, 255, .02);
+}
+tbody tr:hover td {
+    background: rgba(255, 255, 255, .04);
+}
     .table-wrap::-webkit-scrollbar {
         height: 10px;
     }
