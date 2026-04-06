@@ -2163,12 +2163,13 @@ padding: 2px; /* optional but makes logos look cleaner */
                 tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
+          <td data-label="Result">${r.result || ""}</td>
           <td class="right" data-label="TC">${r.TC}</td>
           <td class="right" data-label="PO">${r.PO}</td>
           <td class="right" data-label="A">${r.A}</td>
           <td class="right" data-label="E">${r.E}</td>
           <td class="right" data-label="FPCT">${fp}</td>
-          <td data-label="Result">${r.result || ""}</td>
+          
         `;
                 body.appendChild(tr);
             }
