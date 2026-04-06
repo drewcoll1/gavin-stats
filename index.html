@@ -586,29 +586,13 @@
     }
 
     .panel-body {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
-    padding: 0;
-}
-        .controls,
-#vsOppWrap,
-#vsOppWrapFld,
-#summary-batting,
-#summary-fielding,
-.note {
-    margin-left: 14px;
-    margin-right: 14px;
-}
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        padding: 14px;
+    }
 
-.controls {
-    margin-top: 14px;
-}
-
-.note {
-    margin-bottom: 14px;
-}
     #rowCountTag {
         display: none !important;
     }
@@ -830,20 +814,17 @@
 
     /* Table */
     .table-wrap {
-    flex: 1 1 auto;
-    width: 100%;
-    min-height: 0;
-    overflow-x: auto;
-    overflow-y: auto;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    border-left: none;
-    border-right: none;
-    border-radius: 0;
-    background: transparent;
-    scrollbar-gutter: stable;
-    -webkit-overflow-scrolling: touch;
-}
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        scrollbar-gutter: stable;
+        -webkit-overflow-scrolling: touch;
+    }
 
     .table-wrap::-webkit-scrollbar {
         height: 10px;
@@ -864,40 +845,32 @@
         background: linear-gradient(90deg, rgba(204, 0, 0, 1), rgba(204, 0, 0, .7));
     }
 
-   
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
     #battingTable,
     #fieldingTable {
         min-width: 640px;
     }
 
-    thead {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
-        rgba(20, 22, 32, .95);
-}
-
-thead tr {
-    background: inherit;
-}
-
-thead th {
-    padding: 10px;
-    border-bottom: 1px solid var(--border);
-    background: transparent;
-    color: rgba(255, 255, 255, .75);
-    font-size: 12px;
-    text-align: left;
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
-    overflow: visible;
-    text-overflow: clip;
-}
-        #battingTable,
-#fieldingTable {
-    width: 100%;
-}
+    thead th {
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
+            rgba(20, 22, 32, .95);
+        color: rgba(255, 255, 255, .75);
+        font-size: 12px;
+        text-align: left;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        overflow: visible;
+        text-overflow: clip;
+    }
 
     thead th .sort {
         margin-left: 6px;
@@ -905,7 +878,24 @@ thead th {
         opacity: .7;
     }
 
-   
+    tbody td {
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, .06);
+        color: rgba(255, 255, 255, .92);
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    tbody tr:nth-child(even) td {
+        background: rgba(255, 255, 255, .02);
+    }
+
+    tbody tr:hover td {
+        background: rgba(255, 255, 255, .04);
+    }
+
     /* Opponent / logo */
     .opp {
         display: flex;
@@ -913,50 +903,7 @@ thead th {
         gap: 10px;
         min-width: 0;
     }
-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
 
-/* ROW BASE */
-
-/* CELLS */
-tbody td {
-    padding: 14px 12px;      /* 🔥 taller rows = cleaner */
-    border: none;            /* ❌ remove hard grid lines */
-    font-size: 13px;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-/* ROUND THE ROW EDGES */
-
-        td[data-label="Date"] {
-    padding-left: 14px;
-}
-
-td[data-label="Opponent"] {
-    min-width: 140px;
-}
-
-td[data-label="Result"] {
-    min-width: 70px;
-    font-weight: 600;
-}
-
-td.right {
-    text-align: right;
-    padding-right: 14px;
-    font-variant-numeric: tabular-nums;  /* 🔥 makes numbers line up evenly */
-}
-        tbody tr {
-    display: table-row;
-}
-
-tbody tr td {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* subtle depth */
-}
     .logo,
     td[data-label="Opponent"] .logo {
         width: 22px;
