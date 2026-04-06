@@ -1333,15 +1333,18 @@ padding: 2px; /* optional but makes logos look cleaner */
         @media (max-width: 700px) {
 
     /* shrink entire expanded section to fit screen */
-    .game-detail {
-        transform: scale(0.82);
-        transform-origin: top left;
-        width: 122%;   /* compensates for scale so it fills width */
+    .game-detail-row td {
+        padding: 0;
+        overflow: hidden;
+        position: sticky;
+        left: 0;
+        z-index: 4;
+        background: #171922;
     }
 
-    /* make sure parent clips overflow */
-    .game-detail-row td {
-        overflow: hidden;
+    .game-detail {
+        width: 260px;
+        max-width: 260px;
     }
 
     /* shrink text slightly for better fit */
@@ -1351,6 +1354,20 @@ padding: 2px; /* optional but makes logos look cleaner */
 
     .game-detail .k {
         font-size: 10px;
+    }
+}
+
+        @media (max-width: 700px) {
+    .game-detail-row td {
+        position: sticky;
+        left: 0;
+        z-index: 4;
+        background: #171922;
+    }
+
+    .game-detail {
+        width: 260px;
+        max-width: 260px;
     }
 }
       
