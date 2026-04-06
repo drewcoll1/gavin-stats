@@ -663,12 +663,13 @@
     }
 
     .stat-strip {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 10px;
-        width: 100%;
-        min-width: 0;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    padding-left: 14px;   /* 🔥 adds space from left edge */
+}
 
     .stat {
     min-width: 0;
@@ -1459,7 +1460,7 @@ padding: 2px; /* optional but makes logos look cleaner */
 
     <!-- Batting Summary -->
     <div class="section active" id="summary-batting">
-        <div class="tag" style="margin-bottom:10px;">Batting</div>
+        <div class="tag" style="margin: 10px 0 10px;">Batting</div>
         <div class="stat-strip" id="summaryStrip"></div>
 
         <div class="divider"></div>
