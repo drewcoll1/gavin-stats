@@ -866,10 +866,7 @@
 
    
 
-    #battingTable,
-    #fieldingTable {
-        min-width: 640px;
-    }
+  
 
     thead th {
         padding: 10px;
@@ -905,6 +902,22 @@ table {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+}
+
+      #battingTable,
+#fieldingTable {
+    width: 100%;
+    min-width: 100%;
+    table-layout: fixed;
+}  
+        #battingTable thead tr,
+#fieldingTable thead tr {
+    width: 100%;
+}
+
+#battingTable thead th:last-child,
+#fieldingTable thead th:last-child {
+    padding-right: 10px;
 }
 
 /* ROW BASE */
@@ -1011,10 +1024,7 @@ padding: 2px; /* optional but makes logos look cleaner */
 
     /* Desktop table behavior */
     @media (min-width: 861px) {
-        #battingTable,
-        #fieldingTable {
-            table-layout: auto;
-        }
+    
 
         th[data-key="opponent"],
         td[data-label="Opponent"] {
@@ -1212,12 +1222,6 @@ padding: 2px; /* optional but makes logos look cleaner */
         background: var(--surface);
         overflow-x: auto;
         overflow-y: hidden;
-    }
-
-    #battingTable,
-    #fieldingTable {
-        width: max(100%, 640px);
-        min-width: 0;
     }
 }    
 </style>
