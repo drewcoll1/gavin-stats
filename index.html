@@ -281,6 +281,53 @@
         object-fit: contain;
     }
 
+        .game-detail-row td {
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+    background: rgba(0, 0, 0, .30) !important;
+}
+
+.game-detail {
+    padding: 14px 16px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)),
+        rgba(255, 255, 255, .02);
+}
+
+.game-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.game-detail-item {
+    min-width: 0;
+}
+
+.game-detail-item .k {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.65);
+    letter-spacing: .35px;
+}
+
+.game-detail-item .v {
+    margin-top: 4px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+}
+
+#battingBody tr,
+#fieldingBody tr {
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .game-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
     .pill-row {
         display: flex;
         flex-wrap: wrap;
@@ -1984,7 +2031,41 @@ padding: 2px; /* optional but makes logos look cleaner */
             return { singles, doubles, triples, hrs };
         }
 
+function toggleGameDetailRow(tr, r) {
+    // if next row is already a detail row → remove it (collapse)
+    const next = tr.nextElementSibling;
+    if (next && next.classList.contains("game-detail-row")) {
+        next.remove();
+        return;
+    }
 
+    // remove any other open rows (only 1 open at a time)
+    document.querySelectorAll(".game-detail-row").forEach(el => el.remove());
+
+    // create new detail row
+    const detailTr = document.createElement("tr");
+    detailTr.className = "game-detail-row";
+
+    const td = document.createElement("td");
+    td.colSpan = tr.children.length;
+
+    td.innerHTML = `
+        <div class="game-detail">
+            <div><strong>Date:</strong> ${r.date}</div>
+            <div><strong>Opponent:</strong> ${r.opponent}</div>
+            <div><strong>Result:</strong> ${r.result}</div>
+
+            <div style="margin-top:8px;">
+                <strong>Batting Line:</strong> ${r.H}-${r.AB}, ${r.R} R, ${r.RBI} RBI
+            </div>
+        </div>
+    `;
+
+    detailTr.appendChild(td);
+
+    // insert below clicked row
+    tr.insertAdjacentElement("afterend", detailTr);
+}
 
         function computeAdvancedFromLog(t) {
             return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
@@ -2194,15 +2275,17 @@ padding: 2px; /* optional but makes logos look cleaner */
         }
 
         /* ------------ TABLE RENDER ------------ */
-        function renderBattingTable(rows) {
-            const body = $("#battingBody");
-            body.innerHTML = "";
-            for (const r of rows) {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
+      function renderBattingTable(rows) {
+    const body = $("#battingBody");
+    body.innerHTML = "";
+
+    for (const r of rows) {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
-           <td data-label="Result">${r.result || ""}</td>
+          <td data-label="Result">${r.result || ""}</td>
           <td class="right" data-label="H">${r.H}</td>
           <td class="right" data-label="AB">${r.AB}</td>
           <td class="right" data-label="R">${r.R}</td>
@@ -2210,20 +2293,27 @@ padding: 2px; /* optional but makes logos look cleaner */
           <td class="right" data-label="3B">${r["3B"]}</td>
           <td class="right" data-label="HR">${r.HR}</td>
           <td class="right" data-label="RBI">${r.RBI}</td>
-         
         `;
-                body.appendChild(tr);
-            }
-            $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
-        }
+
+        tr.addEventListener("click", () => {
+            toggleGameDetailRow(tr, r, "batting");
+        });
+
+        body.appendChild(tr);
+    }
+
+    $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+}
 
         function renderFieldingTable(rows) {
-            const body = $("#fieldingBody");
-            body.innerHTML = "";
-            for (const r of rows) {
-                const tr = document.createElement("tr");
-                const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
-                tr.innerHTML = `
+    const body = $("#fieldingBody");
+    body.innerHTML = "";
+
+    for (const r of rows) {
+        const tr = document.createElement("tr");
+        const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
+
+        tr.innerHTML = `
           <td class="muted" data-label="Date">${r.date}</td>
           <td data-label="Opponent">${opponentCellHTML(r)}</td>
           <td data-label="Result">${r.result || ""}</td>
@@ -2232,12 +2322,17 @@ padding: 2px; /* optional but makes logos look cleaner */
           <td class="right" data-label="A">${r.A}</td>
           <td class="right" data-label="E">${r.E}</td>
           <td class="right" data-label="FPCT">${fp}</td>
-          
         `;
-                body.appendChild(tr);
-            }
-            $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
-        }
+
+        tr.addEventListener("click", () => {
+            toggleGameDetailRow(tr, r, "fielding");
+        });
+
+        body.appendChild(tr);
+    }
+
+    $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+}
 
         const battingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
         const fieldingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
@@ -2563,6 +2658,111 @@ function hideGameTip() {
                 }
                 return -1;
             }
+
+            function toggleGameDetailRow(tr, r, mode) {
+    const next = tr.nextElementSibling;
+
+    // close same row if already open
+    if (next && next.classList.contains("game-detail-row")) {
+        next.remove();
+        tr.classList.remove("open");
+        return;
+    }
+
+    // close any other open detail rows
+    document.querySelectorAll(".game-detail-row").forEach(el => el.remove());
+    document.querySelectorAll("#battingBody tr.open, #fieldingBody tr.open").forEach(el => el.classList.remove("open"));
+
+    const detailTr = document.createElement("tr");
+    detailTr.className = "game-detail-row";
+
+    const td = document.createElement("td");
+    td.colSpan = tr.children.length;
+
+    if (mode === "batting") {
+        td.innerHTML = `
+            <div class="game-detail">
+                <div class="game-detail-grid">
+                    <div class="game-detail-item">
+                        <div class="k">Date</div>
+                        <div class="v">${r.date}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">Opponent</div>
+                        <div class="v">${r.opponent}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">Result</div>
+                        <div class="v">${r.result || "—"}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">H-AB</div>
+                        <div class="v">${r.H}-${r.AB}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">Runs</div>
+                        <div class="v">${r.R}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">2B / 3B / HR</div>
+                        <div class="v">${r["2B"]} / ${r["3B"]} / ${r.HR}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">RBI</div>
+                        <div class="v">${r.RBI}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">Total Bases</div>
+                        <div class="v">${r.TB}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else {
+        td.innerHTML = `
+            <div class="game-detail">
+                <div class="game-detail-grid">
+                    <div class="game-detail-item">
+                        <div class="k">Date</div>
+                        <div class="v">${r.date}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">Opponent</div>
+                        <div class="v">${r.opponent}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">Result</div>
+                        <div class="v">${r.result || "—"}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">TC</div>
+                        <div class="v">${r.TC}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">PO</div>
+                        <div class="v">${r.PO}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">A</div>
+                        <div class="v">${r.A}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">E</div>
+                        <div class="v">${r.E}</div>
+                    </div>
+                    <div class="game-detail-item">
+                        <div class="k">FPCT</div>
+                        <div class="v">${isFinite(r.FPCT) ? fmt3(r.FPCT) : "—"}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    detailTr.appendChild(td);
+    tr.insertAdjacentElement("afterend", detailTr);
+    tr.classList.add("open");
+}
 
             function showTooltip(i, evt) {
                 const tip = document.getElementById("tooltip");
