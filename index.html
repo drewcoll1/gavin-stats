@@ -1320,44 +1320,28 @@ padding: 2px; /* optional but makes logos look cleaner */
 
         @media (max-width: 700px) {
 
-    /* prevent ANY overflow */
-    .game-detail,
-    .game-detail * {
-        max-width: 100%;
-        box-sizing: border-box;
+    /* shrink entire expanded section to fit screen */
+    .game-detail {
+        transform: scale(0.82);
+        transform-origin: top left;
+        width: 122%;   /* compensates for scale so it fills width */
     }
 
-    /* stack stat strip instead of forcing horizontal row */
-    .game-detail .stat-strip {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        width: 100%;
-    }
-
-    /* make stat cards shrink properly */
-    .game-detail .stat {
-        min-width: 0;
-        width: 100%;
-    }
-
-    /* fix chart container */
-    .game-detail-chart {
-        width: 100%;
-        overflow: hidden;
-    }
-
-    /* FORCE canvas to fit screen */
-    .game-detail-chart canvas {
-        width: 100% !important;
-        height: auto !important;
-    }
-
-    /* remove any weird table overflow */
+    /* make sure parent clips overflow */
     .game-detail-row td {
         overflow: hidden;
     }
+
+    /* shrink text slightly for better fit */
+    .game-detail .v {
+        font-size: 14px;
+    }
+
+    .game-detail .k {
+        font-size: 10px;
+    }
 }
+      
         
 </style>
 </head>
