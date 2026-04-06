@@ -586,12 +586,29 @@
     }
 
     .panel-body {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        min-height: 0;
-        padding: 14px;
-    }
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+}
+        .controls,
+#vsOppWrap,
+#vsOppWrapFld,
+#summary-batting,
+#summary-fielding,
+.note {
+    margin-left: 14px;
+    margin-right: 14px;
+}
+
+.controls {
+    margin-top: 14px;
+}
+
+.note {
+    margin-bottom: 14px;
+}
 
     #rowCountTag {
         display: none !important;
@@ -814,17 +831,20 @@
 
     /* Table */
     .table-wrap {
-        flex: 1 1 auto;
-        width: 100%;
-        min-height: 0;
-        overflow-x: auto;
-        overflow-y: auto;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--surface);
-        scrollbar-gutter: stable;
-        -webkit-overflow-scrolling: touch;
-    }
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    background: transparent;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+}
 
     .table-wrap::-webkit-scrollbar {
         height: 10px;
@@ -871,12 +891,11 @@
         opacity: .7;
     }
 
-   table {
+  table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;   /* vertical gap between rows */
+    border-collapse: collapse;
+    border-spacing: 0;
 }
-
 tbody td {
     padding: 14px 10px;      /* taller rows */
     border-bottom: none;     /* remove hard line between rows */
@@ -888,25 +907,7 @@ tbody td {
     vertical-align: middle;
 }
 
-/* round the left and right ends of each row */
-tbody td:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
 
-tbody td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-/* keep hover effect but make it feel smoother */
-tbody tr {
-    transition: transform .15s ease;
-}
-
-tbody tr:hover {
-    transform: translateY(-1px);
-}
 
     /* Opponent / logo */
     .opp {
