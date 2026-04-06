@@ -840,7 +840,7 @@
     border-left: none;
     border-right: none;
     border-radius: 0;
-    background: #171922;
+    background: transparent;
     scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
 }
@@ -866,7 +866,10 @@
 
    
 
-  
+    #battingTable,
+    #fieldingTable {
+        min-width: 640px;
+    }
 
     thead th {
         padding: 10px;
@@ -904,22 +907,6 @@ table {
     border-spacing: 0;
 }
 
-      #battingTable,
-#fieldingTable {
-    width: 100%;
-    min-width: 100%;
-    table-layout: fixed;
-}  
-        #battingTable thead tr,
-#fieldingTable thead tr {
-    width: 100%;
-}
-
-#battingTable thead th:last-child,
-#fieldingTable thead th:last-child {
-    padding-right: 10px;
-}
-
 /* ROW BASE */
 
 /* CELLS */
@@ -946,27 +933,18 @@ td[data-label="Result"] {
     font-weight: 600;
 }
 
-
+td.right {
+    text-align: right;
+    padding-right: 14px;
+    font-variant-numeric: tabular-nums;  /* 🔥 makes numbers line up evenly */
+}
         tbody tr {
     display: table-row;
 }
-#battingTable,
-#fieldingTable {
-    width: 100%;
-    min-width: 100%;
-}
 
-td.right {
-    text-align: right;
-    padding-right: 10px;
-    font-variant-numeric: tabular-nums;
+tbody tr td {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* subtle depth */
 }
-
-thead th:last-child,
-tbody td:last-child {
-    padding-right: 10px;
-}
-
     .logo,
     td[data-label="Opponent"] .logo {
         width: 22px;
@@ -1024,7 +1002,10 @@ padding: 2px; /* optional but makes logos look cleaner */
 
     /* Desktop table behavior */
     @media (min-width: 861px) {
-    
+        #battingTable,
+        #fieldingTable {
+            table-layout: auto;
+        }
 
         th[data-key="opponent"],
         td[data-label="Opponent"] {
@@ -1222,6 +1203,12 @@ padding: 2px; /* optional but makes logos look cleaner */
         background: var(--surface);
         overflow-x: auto;
         overflow-y: hidden;
+    }
+
+    #battingTable,
+    #fieldingTable {
+        width: max(100%, 640px);
+        min-width: 0;
     }
 }    
 </style>
