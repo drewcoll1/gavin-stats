@@ -871,21 +871,33 @@
         min-width: 640px;
     }
 
-    thead th {
-        padding: 10px;
-        border-bottom: 1px solid var(--border);
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
-            rgba(20, 22, 32, .95);
-        color: rgba(255, 255, 255, .75);
-        font-size: 12px;
-        text-align: left;
-        white-space: nowrap;
-        cursor: pointer;
-        user-select: none;
-        overflow: visible;
-        text-overflow: clip;
-    }
+    thead {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
+        rgba(20, 22, 32, .95);
+}
+
+thead tr {
+    background: inherit;
+}
+
+thead th {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    color: rgba(255, 255, 255, .75);
+    font-size: 12px;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    overflow: visible;
+    text-overflow: clip;
+}
+        #battingTable,
+#fieldingTable {
+    width: 100%;
+}
 
     thead th .sort {
         margin-left: 6px;
