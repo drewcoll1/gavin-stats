@@ -840,7 +840,7 @@
     border-left: none;
     border-right: none;
     border-radius: 0;
-    background: transparent;
+    background: #171922;
     scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
 }
@@ -933,18 +933,27 @@ td[data-label="Result"] {
     font-weight: 600;
 }
 
-td.right {
-    text-align: right;
-    padding-right: 14px;
-    font-variant-numeric: tabular-nums;  /* 🔥 makes numbers line up evenly */
-}
+
         tbody tr {
     display: table-row;
 }
-
-tbody tr td {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* subtle depth */
+#battingTable,
+#fieldingTable {
+    width: 100%;
+    min-width: 100%;
 }
+
+td.right {
+    text-align: right;
+    padding-right: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+thead th:last-child,
+tbody td:last-child {
+    padding-right: 10px;
+}
+
     .logo,
     td[data-label="Opponent"] .logo {
         width: 22px;
