@@ -586,13 +586,29 @@
     }
 
     .panel-body {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        min-height: 0;
-        padding: 14px;
-    }
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+}
+        .controls,
+#vsOppWrap,
+#vsOppWrapFld,
+#summary-batting,
+#summary-fielding,
+.note {
+    margin-left: 14px;
+    margin-right: 14px;
+}
 
+.controls {
+    margin-top: 14px;
+}
+
+.note {
+    margin-bottom: 14px;
+}
     #rowCountTag {
         display: none !important;
     }
@@ -814,17 +830,20 @@
 
     /* Table */
     .table-wrap {
-        flex: 1 1 auto;
-        width: 100%;
-        min-height: 0;
-        overflow-x: auto;
-        overflow-y: auto;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--surface);
-        scrollbar-gutter: stable;
-        -webkit-overflow-scrolling: touch;
-    }
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    background: transparent;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+}
 
     .table-wrap::-webkit-scrollbar {
         height: 10px;
@@ -884,14 +903,11 @@
     }
 table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 6px;   /* 🔥 adds space between rows */
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 /* ROW BASE */
-tbody tr {
-    transition: transform 0.12s ease;
-}
 
 /* CELLS */
 tbody td {
@@ -903,20 +919,7 @@ tbody td {
 }
 
 /* ROUND THE ROW EDGES */
-tbody td:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
 
-tbody td:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-/* SUBTLE HOVER (structure change, not color change) */
-tbody tr:hover {
-    transform: translateY(-1px);
-}
         td[data-label="Date"] {
     padding-left: 14px;
 }
