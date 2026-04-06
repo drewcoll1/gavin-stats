@@ -586,29 +586,12 @@
     }
 
     .panel-body {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
-    padding: 0;
-}
-        .controls,
-#vsOppWrap,
-#vsOppWrapFld,
-#summary-batting,
-#summary-fielding,
-.note {
-    margin-left: 14px;
-    margin-right: 14px;
-}
-
-.controls {
-    margin-top: 14px;
-}
-
-.note {
-    margin-bottom: 14px;
-}
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        padding: 14px;
+    }
 
     #rowCountTag {
         display: none !important;
@@ -831,20 +814,17 @@
 
     /* Table */
     .table-wrap {
-    flex: 1 1 auto;
-    width: 100%;
-    min-height: 0;
-    overflow-x: auto;
-    overflow-y: auto;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    border-left: none;
-    border-right: none;
-    border-radius: 0;
-    background: #171922;   /* fills behind the whole logs area */
-    scrollbar-gutter: stable;
-    -webkit-overflow-scrolling: touch;
-}
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        scrollbar-gutter: stable;
+        -webkit-overflow-scrolling: touch;
+    }
 
     .table-wrap::-webkit-scrollbar {
         height: 10px;
@@ -864,6 +844,13 @@
     .table-wrap::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(90deg, rgba(204, 0, 0, 1), rgba(204, 0, 0, .7));
     }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
     #battingTable,
     #fieldingTable {
         min-width: 640px;
@@ -891,23 +878,23 @@
         opacity: .7;
     }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-tbody td {
-    padding: 14px 10px;
-    border-bottom: none;
-    color: rgba(255, 255, 255, .92);
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-}
+    tbody td {
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, .06);
+        color: rgba(255, 255, 255, .92);
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
+    tbody tr:nth-child(even) td {
+        background: rgba(255, 255, 255, .02);
+    }
 
+    tbody tr:hover td {
+        background: rgba(255, 255, 255, .04);
+    }
 
     /* Opponent / logo */
     .opp {
