@@ -505,6 +505,18 @@
 /* each stat bubble */
 .team-record-strip .stat {
     flex: 0 0 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.team-record-strip .stat .k,
+.team-record-strip .stat .v,
+.team-record-strip .stat .s {
+    width: 100%;
+    text-align: center;
 }
 
         @media (max-width: 600px) {
