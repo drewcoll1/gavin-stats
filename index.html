@@ -366,6 +366,41 @@
     font-size: 12px;
     color: rgba(255, 255, 255, .60);
 }
+        @media (max-width: 600px) {
+
+    .controls {
+        flex-wrap: nowrap;          /* 🔥 prevents stacking */
+        align-items: center;
+    }
+
+    .left-controls {
+        flex-wrap: nowrap;          /* 🔥 keep inputs on one line */
+        gap: 6px;
+        flex: 1;                    /* 🔥 take available space */
+        min-width: 0;
+    }
+
+    .input {
+        padding: 6px 8px;           /* 🔥 tighter so it fits */
+    }
+
+    .input input,
+    .input select {
+        width: 100%;
+        min-width: 0;
+        font-size: 12px;
+    }
+
+    .right-controls {
+        margin-left: auto;          /* 🔥 pushes Reset to the right */
+        flex-shrink: 0;             /* 🔥 prevents shrinking */
+    }
+
+    .btn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+}
  
  @media (max-width: 600px) {
     .hero-right {
