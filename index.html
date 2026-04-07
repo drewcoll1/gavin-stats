@@ -1318,32 +1318,24 @@ padding: 2px; /* optional but makes logos look cleaner */
     }
 } 
 
-        @media (max-width: 700px) {
+       @media (max-width: 700px) {
     .game-detail-row td {
         padding: 0;
         overflow: hidden;
     }
 
     .game-detail {
-        width: 500px;   /* adjust if needed */
-        max-width: 500px;
-    }
-}
-        @media (max-width: 700px) {
-
-    /* shrink entire expanded section to fit screen */
-    .game-detail {
-        transform: scale(0.82);
-        transform-origin: top left;
-        width: 122%;   /* compensates for scale so it fills width */
+        width: 100%;
+        max-width: 100%;
+        padding: 10px 12px;
+        transform: none;
     }
 
-    /* make sure parent clips overflow */
-    .game-detail-row td {
-        overflow: hidden;
+    .game-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
     }
 
-    /* shrink text slightly for better fit */
     .game-detail .v {
         font-size: 14px;
     }
@@ -1351,8 +1343,16 @@ padding: 2px; /* optional but makes logos look cleaner */
     .game-detail .k {
         font-size: 10px;
     }
-}
 
+    .game-detail-chart {
+        margin-top: 10px;
+        padding: 8px;
+    }
+
+    .game-detail-chart canvas {
+        height: 180px;
+    }
+}
     
       
         
