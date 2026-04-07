@@ -2228,6 +2228,7 @@ function toggleGameDetailRow(tr, r) {
 
             // Totals + FPCT using your existing helper
             const t = computeFieldingTotals(rows);
+            const oppRecord = computeOpponentRecord(rows);
 
             const label = $("#vsOppLabelFld");
             if (label) {
@@ -2238,14 +2239,13 @@ function toggleGameDetailRow(tr, r) {
 
             const items = [
     { k: "G", v: rows.length, s: "Games vs opponent" },
-    { k: "TEAM REC", v: getActiveTeamRecord(), s: (currentSeason === "career") ? "Career team record" : `${currentSeason} team record` },
+    { k: "REC", v: oppRecord, s: `Record vs ${opponent}` },
     { k: "TC", v: t.TC, s: "Total chances" },
     { k: "PO", v: t.PO, s: "Putouts" },
     { k: "A", v: t.A, s: "Assists" },
     { k: "E", v: t.E, s: "Errors" },
     { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
 ];
-
             strip.innerHTML = items.map(x => `
     <div class="stat">
       <div class="k">${x.k}</div>
@@ -3237,6 +3237,20 @@ function setTab(tabName) {
             return { avg, slg, ops };
         }
 
+        function computeOpponentRecord(rows) {
+    let wins = 0;
+    let losses = 0;
+
+    for (const r of rows) {
+        const result = String(r.result || "").trim();
+
+        if (result.startsWith("W")) wins++;
+        else if (result.startsWith("L")) losses++;
+    }
+
+    return `${wins}-${losses}`;
+}
+
         function renderVsOpponentAllTime(opponent) {
             const wrap = $("#vsOppWrap");
 
@@ -3280,9 +3294,9 @@ function setTab(tabName) {
 
             const t = computeBattingTotals(rows);
             const { avg, slg, ops } = computeOPSFromTotals(t);
+            const oppRecord = computeOpponentRecord(rows);
 
             const items = [
-                { k: "TEAM REC", v: getActiveTeamRecord(), s: (currentSeason === "career") ? "Career team record" : `${currentSeason} team record` },
                 { k: "G", v: rows.length, s: "Games vs opponent (filtered)" },
                 { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
                 { k: "AVG", v: fmt3(avg), s: "H / AB" },
@@ -3291,6 +3305,7 @@ function setTab(tabName) {
                 { k: "HR", v: t.HR, s: "From logs" },
                 { k: "RBI", v: t.RBI, s: "From logs" },
                 { k: "TB", v: t.TB, s: "From logs" },
+                { k: "REC", v: oppRecord, s: `Record vs ${opponent}` },
             ];
 
             strip.innerHTML = items.map(x => `
