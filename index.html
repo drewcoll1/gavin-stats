@@ -84,6 +84,9 @@ body {
     text-transform: uppercase;
     color: rgba(255, 255, 255, .92);
 }
+        #section-awards .hero-awards {
+    margin: 0;
+}
 
 .tip-row {
     display: flex;
@@ -1570,22 +1573,25 @@ td[data-label="Opponent"] .opp-emoji {
                         </div>
                     </div>
 
-                    <div class="section" id="section-awards">
+ <div class="section" id="section-awards">
     <div style="padding: 14px;">
         <div class="tag" style="margin-bottom:10px;">Career Awards</div>
 
-        <div class="stat-strip" id="awardsStrip">
-            <div class="stat">
-                <div class="k">2025</div>
-                <div class="v">First Team</div>
-                <div class="s">All-Ivy League</div>
-            </div>
+        <div class="hero-awards">
+            <span class="award">
+                <img class="award-logo" src="ivy.png" alt="Ivy">
+                2025 First-team All-Ivy (OF)
+            </span>
 
-            <div class="stat">
-                <div class="k">2026</div>
-                <div class="v">Replace Me</div>
-                <div class="s">Add next Ivy award</div>
-            </div>
+            <span class="award">
+                <img class="award-logo" src="ivy.png" alt="Ivy">
+                Ivy League Player of the Week (4/15/25)
+            </span>
+
+            <span class="award">
+                <img class="award-logo" src="ivy.png" alt="Ivy">
+                Ivy League Rookie of the Week (3/25/24)
+            </span>
         </div>
     </div>
 </div>
@@ -1618,9 +1624,19 @@ td[data-label="Opponent"] .opp-emoji {
     </div>
 
     <!-- Fielding Summary -->
-    <div class="section" id="summary-fielding">
+   <div class="section" id="summary-fielding">
     <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
     <div class="stat-strip" id="fieldingStrip"></div>
+</div>
+
+<div class="section" id="summary-awards">
+    <div class="tag" style="margin: 10px 0 10px;">Career Batting</div>
+    <div class="stat-strip" id="careerSummaryStrip"></div>
+
+    <div class="divider"></div>
+
+    <div class="tag" style="margin: 10px 0 10px;">Career Fielding</div>
+    <div class="stat-strip" id="careerFieldingStrip"></div>
 </div>
 
 <div class="section" id="summary-awards">
@@ -3180,7 +3196,47 @@ strip.innerHTML = [...topBlock, ...base].map(x => `
     </div>
   `).join("");
         }
+function renderCareerAwardsSummary() {
+    const batTotals = computeBattingTotals(careerBattingLog);
+    const fldTotals = computeFieldingTotals(careerFieldingLog);
+    const careerAvg = safeDiv(batTotals.H, batTotals.AB);
+    const careerObp = safeDiv((batTotals.H + batTotals.BB + batTotals.HBP), (batTotals.AB + batTotals.BB + batTotals.HBP + batTotals.SF));
+    const careerSlg = safeDiv(batTotals.TB, batTotals.AB);
+    const careerOps = (isFinite(careerObp) && isFinite(careerSlg)) ? (careerObp + careerSlg) : NaN;
 
+    const cstrip = $("#careerSummaryStrip");
+    cstrip.innerHTML = [
+        { k: "AVG", v: fmt3(careerAvg), s: "Career batting average" },
+        { k: "OBP", v: fmt3(careerObp), s: "Career on-base %" },
+        { k: "OPS", v: fmt3(careerOps), s: "Career OPS" },
+        { k: "G", v: batTotals.G, s: "Games played" },
+        { k: "R", v: batTotals.R, s: "Runs" },
+        { k: "RBI", v: batTotals.RBI, s: "Runs batted in" },
+        { k: "TB", v: batTotals.TB, s: "Total bases" },
+        { k: "Hits / AB", v: `${batTotals.H} / ${batTotals.AB}`, s: "Career totals" }
+    ].map(x => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+
+    const cfstrip = $("#careerFieldingStrip");
+    cfstrip.innerHTML = [
+        { k: "TC", v: fldTotals.TC, s: "Total chances" },
+        { k: "PO", v: fldTotals.PO, s: "Putouts" },
+        { k: "A", v: fldTotals.A, s: "Assists" },
+        { k: "E", v: fldTotals.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(fldTotals.FPCT), s: "Career fielding %" }
+    ].map(x => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
         /* ------------ TABS / SEASON DROPDOWN ------------ */
    /* ------------ TABS / SEASON DROPDOWN ------------ */
 function setTab(tabName) {
@@ -3214,10 +3270,10 @@ function setTab(tabName) {
         document.getElementById("section-awards").classList.add("active");
         document.getElementById("summary-awards").classList.add("active");
         $("#panelTitle").textContent = "Career Awards";
-        $("#panelSub").textContent = "Ivy League honors and career recognition.";
+        $("#panelSub").textContent = "Ivy League honors and career totals.";
+        renderCareerAwardsSummary();
     }
-}
-                            
+}                        
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
