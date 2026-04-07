@@ -1330,7 +1330,6 @@ padding: 2px; /* optional but makes logos look cleaner */
         width: 100%;
         max-width: 100%;
         padding: 10px 12px;
-        transform: none;
     }
 
     .game-detail-grid {
@@ -1338,11 +1337,11 @@ padding: 2px; /* optional but makes logos look cleaner */
         gap: 10px;
     }
 
-    .game-detail .v {
+    .game-detail-item .v {
         font-size: 14px;
     }
 
-    .game-detail .k {
+    .game-detail-item .k {
         font-size: 10px;
     }
 }
@@ -2361,7 +2360,7 @@ function toggleGameDetailRow(tr, r) {
     detailTr.className = "game-detail-row";
 
     const td = document.createElement("td");
-    td.colSpan = tr.children.length;
+    td.colSpan = window.innerWidth <= 700 ? 3 : tr.children.length;
 
     if (mode === "batting") {
         const rows = [r];
