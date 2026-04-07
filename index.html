@@ -821,7 +821,6 @@ tbody tr:hover td {
     background-clip: padding-box;
 }
 
-/* keep sticky Date + Opponent fully opaque too */
 #battingBody tr:has(+ .game-detail-row) td:first-child,
 #battingBody tr:has(+ .game-detail-row) td:nth-child(2),
 #fieldingBody tr:has(+ .game-detail-row) td:first-child,
@@ -831,7 +830,6 @@ tbody tr:hover td {
     background-clip: padding-box;
 }
 
-/* left red accent only on the Date cell */
 #battingBody tr:has(+ .game-detail-row) td:first-child,
 #fieldingBody tr:has(+ .game-detail-row) td:first-child {
     box-shadow:
@@ -839,7 +837,6 @@ tbody tr:hover td {
         inset 0 1px 0 rgba(255,255,255,.10),
         inset 0 -1px 0 rgba(255,255,255,.10);
 }
-
 
 #battingBody tr,
 #fieldingBody tr {
@@ -960,7 +957,19 @@ td[data-label="Opponent"] .opp-emoji {
     height: 220px;
 }
 
-/* Desktop */
+#rowCountTag,
+.note,
+.divider,
+.chart-wrap,
+#vsOppWrap,
+#vsOppWrapFld {
+    flex: 0 0 auto;
+}
+
+/* =========================
+   MEDIA QUERIES
+   ========================= */
+
 @media (min-width: 861px) {
     #battingTable,
     #fieldingTable {
@@ -991,7 +1000,6 @@ td[data-label="Opponent"] .opp-emoji {
     }
 }
 
-/* Tablet */
 @media (max-width: 1200px) {
     #battingTable,
     #fieldingTable {
@@ -999,33 +1007,34 @@ td[data-label="Opponent"] .opp-emoji {
         border-spacing: 0;
     }
 
-#battingTable th:first-child,
-#battingTable td:first-child,
-#fieldingTable th:first-child,
-#fieldingTable td:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 5;
-    background-color: #171922 !important;
-    background-image: none;
-}
-
-#battingTable th:nth-child(2),
-#battingTable td:nth-child(2),
-#fieldingTable th:nth-child(2),
-#fieldingTable td:nth-child(2) {
-    position: sticky;
-    left: 72px;
-    z-index: 5;
-    background-color: #171922 !important;
-    background-image: none;
-}
+    #battingTable th:first-child,
     #battingTable td:first-child,
-#battingTable td:nth-child(2),
-#fieldingTable td:first-child,
-#fieldingTable td:nth-child(2) {
-    backdrop-filter: none !important;
-}
+    #fieldingTable th:first-child,
+    #fieldingTable td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        background-color: #171922 !important;
+        background-image: none;
+    }
+
+    #battingTable th:nth-child(2),
+    #battingTable td:nth-child(2),
+    #fieldingTable th:nth-child(2),
+    #fieldingTable td:nth-child(2) {
+        position: sticky;
+        left: 72px;
+        z-index: 5;
+        background-color: #171922 !important;
+        background-image: none;
+    }
+
+    #battingTable td:first-child,
+    #battingTable td:nth-child(2),
+    #fieldingTable td:first-child,
+    #fieldingTable td:nth-child(2) {
+        backdrop-filter: none !important;
+    }
 
     #battingTable thead th:first-child,
     #battingTable thead th:nth-child(2),
@@ -1135,43 +1144,37 @@ td[data-label="Opponent"] .opp-emoji {
         padding: 4px 6px !important;
     }
 
-    .game-detail-row .game-detail-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 2px !important;
-}
-
-.game-detail-row .game-detail-item {
-    min-width: 0 !important;
-    padding: 0 !important;
-}
-
-.game-detail-row .game-detail-item .v,
-.game-detail-row .game-detail .game-detail-item .v,
-.game-detail-row td .game-detail-item .v {
-    font-size: 7px !important;
-    font-weight: 800 !important;
-    line-height: 1 !important;
-    margin-top: 1px !important;
-}
-
-.game-detail-row .game-detail-item .k,
-.game-detail-row .game-detail .game-detail-item .k,
-.game-detail-row td .game-detail-item .k {
-    font-size: 5px !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-}
-
-.game-detail-row .game-detail-head {
-    font-size: 8px !important;
-    margin-bottom: 4px !important;
-}
-
-}
-
-@media (max-width: 700px) {
+    .game-detail-row .game-detail-grid,
     .game-detail-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 2px !important;
+    }
+
+    .game-detail-row .game-detail-item {
+        min-width: 0 !important;
+        padding: 0 !important;
+    }
+
+    .game-detail-row .game-detail-item .v,
+    .game-detail-row .game-detail .game-detail-item .v,
+    .game-detail-row td .game-detail-item .v {
+        font-size: 7px !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+        margin-top: 1px !important;
+    }
+
+    .game-detail-row .game-detail-item .k,
+    .game-detail-row .game-detail .game-detail-item .k,
+    .game-detail-row td .game-detail-item .k {
+        font-size: 5px !important;
+        line-height: 1 !important;
+        letter-spacing: 0 !important;
+    }
+
+    .game-detail-row .game-detail-head {
+        font-size: 8px !important;
+        margin-bottom: 4px !important;
     }
 }
 
@@ -1298,16 +1301,8 @@ td[data-label="Opponent"] .opp-emoji {
         margin-top: 2px;
     }
 }
-
-#rowCountTag,
-.note,
-.divider,
-.chart-wrap,
-#vsOppWrap,
-#vsOppWrapFld {
-    flex: 0 0 auto;
-}
 </style>
+    
    
 </head>
 
