@@ -2117,7 +2117,7 @@ function toggleGameDetailRow(tr, r) {
     detailTr.className = "game-detail-row";
 
     const td = document.createElement("td");
-    td.colSpan = window.innerWidth <= 700 ? 4 : tr.children.length;
+    td.colSpan = window.innerWidth <= 700 ? 5 : tr.children.length;
 
     td.innerHTML = `
         <div class="game-detail">
@@ -2363,7 +2363,7 @@ function toggleGameDetailRow(tr, r) {
     detailTr.className = "game-detail-row";
 
     const td = document.createElement("td");
-    td.colSpan = window.innerWidth <= 700 ? 4 : tr.children.length;
+    td.colSpan = window.innerWidth <= 700 ? 5 : tr.children.length;
 
     if (mode === "batting") {
         const rows = [r];
