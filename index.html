@@ -1418,6 +1418,7 @@ td[data-label="Opponent"] .opp-emoji {
             <div class="tabs" role="tablist" aria-label="Stat sections">
                 <div class="tab active" data-tab="batting">Batting</div>
                 <div class="tab" data-tab="fielding">Fielding</div>
+                <div class="tab" data-tab="awards">Career Awards</div>
                 
                             <div class="pill">
                                 Season:
@@ -1569,7 +1570,25 @@ td[data-label="Opponent"] .opp-emoji {
                         </div>
                     </div>
 
-                    <!-- (Removed) Analytics section -->
+                    <div class="section" id="section-awards">
+    <div style="padding: 14px;">
+        <div class="tag" style="margin-bottom:10px;">Career Awards</div>
+
+        <div class="stat-strip" id="awardsStrip">
+            <div class="stat">
+                <div class="k">2025</div>
+                <div class="v">First Team</div>
+                <div class="s">All-Ivy League</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">2026</div>
+                <div class="v">Replace Me</div>
+                <div class="s">Add next Ivy award</div>
+            </div>
+        </div>
+    </div>
+</div>
                 </div>
             </div>
 
@@ -1600,9 +1619,20 @@ td[data-label="Opponent"] .opp-emoji {
 
     <!-- Fielding Summary -->
     <div class="section" id="summary-fielding">
-        <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
-        <div class="stat-strip" id="fieldingStrip"></div>
+    <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
+    <div class="stat-strip" id="fieldingStrip"></div>
+</div>
+
+<div class="section" id="summary-awards">
+    <div class="tag" style="margin: 10px 0 10px;">Ivy League Awards</div>
+    <div class="stat-strip">
+        <div class="stat">
+            <div class="k">Career</div>
+            <div class="v">1+</div>
+            <div class="s">Ivy League Honors</div>
+        </div>
     </div>
+</div>
 
 </div>
             </div>
@@ -3158,13 +3188,15 @@ function setTab(tabName) {
         t.classList.toggle("active", t.dataset.tab === tabName);
     });
 
-    // LEFT ONLY
+    // LEFT
     document.getElementById("section-batting").classList.remove("active");
     document.getElementById("section-fielding").classList.remove("active");
+    document.getElementById("section-awards").classList.remove("active");
 
-    // RIGHT ONLY
+    // RIGHT
     document.getElementById("summary-batting").classList.remove("active");
     document.getElementById("summary-fielding").classList.remove("active");
+    document.getElementById("summary-awards").classList.remove("active");
 
     if (tabName === "batting") {
         document.getElementById("section-batting").classList.add("active");
@@ -3172,15 +3204,19 @@ function setTab(tabName) {
         $("#panelTitle").textContent = "Batting • Game Log";
         $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
         refreshBatting();
-    } else {
+    } else if (tabName === "fielding") {
         document.getElementById("section-fielding").classList.add("active");
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
         refreshFielding();
+    } else if (tabName === "awards") {
+        document.getElementById("section-awards").classList.add("active");
+        document.getElementById("summary-awards").classList.add("active");
+        $("#panelTitle").textContent = "Career Awards";
+        $("#panelSub").textContent = "Ivy League honors and career recognition.";
     }
 }
-         
                             
 
         function applySeason(seasonKey) {
