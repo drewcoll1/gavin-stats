@@ -1390,7 +1390,7 @@ td[data-label="Opponent"] .opp-emoji {
 
                 <div class="hero-right">
     <div class="hero-stats-bar">
-        <span id="heroStatsSeason">2026</span> Season Stats
+        <div class="hero-stats-bar" id="heroStatsBar">2026 Season Stats</div>
     </div>
 
     <div class="hero-stats-grid">
@@ -3185,7 +3185,9 @@ function setTab(tabName) {
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
-
+$("#heroStatsBar").textContent = (currentSeason === "career")
+        ? "Career Stats"
+        : `${currentSeason} Season Stats`;
             if (currentSeason === "career") {
     battingLog = careerBattingLog;
     fieldingLog = careerFieldingLog;
