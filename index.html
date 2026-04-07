@@ -1132,47 +1132,39 @@ td[data-label="Opponent"] .opp-emoji {
     .game-detail-row .game-detail {
         width: 100%;
         max-width: 100%;
-        padding: 6px 8px !important;
+        padding: 4px 6px !important;
     }
 
-    .game-detail-row .game-detail-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 4px !important;
-    }
     .game-detail-row .game-detail-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 2px !important;
 }
 
 .game-detail-row .game-detail-item {
-    min-width: 0;
+    min-width: 0 !important;
     padding: 0 !important;
 }
 
-.game-detail-row .game-detail-item .v {
-    font-size: 8px !important;
+.game-detail-row .game-detail-item .v,
+.game-detail-row .game-detail .game-detail-item .v,
+.game-detail-row td .game-detail-item .v {
+    font-size: 7px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
-    margin-top: 2px !important;
+    margin-top: 1px !important;
 }
 
-.game-detail-row .game-detail-item .k {
-    font-size: 6px !important;
+.game-detail-row .game-detail-item .k,
+.game-detail-row .game-detail .game-detail-item .k,
+.game-detail-row td .game-detail-item .k {
+    font-size: 5px !important;
     line-height: 1 !important;
-    letter-spacing: .1px !important;
+    letter-spacing: 0 !important;
 }
 
 .game-detail-row .game-detail-head {
-    font-size: 9px !important;
-    margin-bottom: 6px !important;
-}
-    .game-detail-row .game-detail-chart {
-    padding: 6px !important;
-    margin-top: 6px !important;
-}
-
-.game-detail-row .game-detail-chart canvas {
-    height: 120px !important;
+    font-size: 8px !important;
+    margin-bottom: 4px !important;
 }
 
 }
