@@ -1322,6 +1322,8 @@ padding: 2px; /* optional but makes logos look cleaner */
     .game-detail-row td {
         padding: 0;
         overflow: hidden;
+        text-align: left;
+        vertical-align: top;
     }
 
     .game-detail {
@@ -1343,17 +1345,7 @@ padding: 2px; /* optional but makes logos look cleaner */
     .game-detail .k {
         font-size: 10px;
     }
-
-    .game-detail-chart {
-        margin-top: 10px;
-        padding: 8px;
-    }
-
-    .game-detail-chart canvas {
-        height: 180px;
-    }
 }
-    
       
         
 </style>
@@ -2123,7 +2115,7 @@ function toggleGameDetailRow(tr, r) {
     detailTr.className = "game-detail-row";
 
     const td = document.createElement("td");
-    td.colSpan = tr.children.length;
+    td.colSpan = window.innerWidth <= 700 ? 3 : tr.children.length;
 
     td.innerHTML = `
         <div class="game-detail">
