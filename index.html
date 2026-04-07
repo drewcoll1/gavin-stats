@@ -2214,53 +2214,49 @@ function toggleGameDetailRow(tr, r) {
                 selectEl.appendChild(o);
             }
         }
-        function renderVsOpponentFieldingAllTime(opponent) {
-            const wrap = $("#vsOppWrapFld");
+       function renderVsOpponentFieldingAllTime(opponent) {
+    const wrap = $("#vsOppWrapFld");
+    const strip = $("#vsOppStripFld");
+    if (!wrap || !strip) return;
 
-            const strip = $("#vsOppStripFld");
-            if (!wrap || !strip) return;
+    if (!opponent) {
+        wrap.style.display = "none";
+        const label = $("#vsOppLabelFld");
+        if (label) label.textContent = "—";
+        strip.innerHTML = "";
+        return;
+    }
 
-            if (!opponent) {
-                wrap.style.display = "none";
-                const label = $("#vsOppLabelFld");
-                if (label) label.textContent = "—";
-                strip.innerHTML = "";
-                return;
-            }
+    const baseLog = (currentSeason === "career") ? careerFieldingLog : fieldingLog;
+    const rows = baseLog.filter(r => r.opponent === opponent);
 
-            // All-time = CAREER fielding logs
-            // ✅ Use current season logs (or career logs if in Career mode)
-            const baseLog = (currentSeason === "career") ? careerFieldingLog : fieldingLog;
-            const rows = baseLog.filter(r => r.opponent === opponent);
+    const t = computeFieldingTotals(rows);
+    const oppRecord = computeOpponentRecord(rows);
 
-            // Totals + FPCT using your existing helper
-            const t = computeFieldingTotals(rows);
-            const oppRecord = computeOpponentRecord(rows);
+    const label = $("#vsOppLabelFld");
+    if (label) {
+        label.innerHTML = (currentSeason === "career")
+            ? `<b>Career Record vs ${opponent}</b>`
+            : `<b>${currentSeason} Record vs ${opponent}</b>`;
+    }
 
-            const label = $("#vsOppLabelFld");
-if (label) {
-    const seasonText = (currentSeason === "career")
-        ? "Career Record vs"
-        : `${currentSeason} Record vs`;
+    wrap.style.display = "block";
 
-    label.innerHTML = `<b>${seasonText}</b> <b>${opponent}</b>`;
-}
-            wrap.style.display = "block";
+    const items = [
+        { k: "G", v: rows.length, s: "Games vs opponent" },
+        { k: "REC", v: oppRecord, s: `Record vs ${opponent}` },
+        { k: "TC", v: t.TC, s: "Total chances" },
+        { k: "PO", v: t.PO, s: "Putouts" },
+        { k: "A", v: t.A, s: "Assists" },
+        { k: "E", v: t.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
+    ];
 
-            const items = [
-    { k: "G", v: rows.length, s: "Games vs opponent" },
-    { k: "REC", v: oppRecord, s: `Penn vs ${opponent}` },
-    { k: "TC", v: t.TC, s: "Total chances" },
-    { k: "PO", v: t.PO, s: "Putouts" },
-    { k: "A", v: t.A, s: "Assists" },
-    { k: "E", v: t.E, s: "Errors" },
-    { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
-];
-         strip.innerHTML = items.map(x => `
+    strip.innerHTML = items.map(x => `
         <div class="stat ${x.k === "REC" ? "stat-center" : ""}">
-          <div class="k">${x.k}</div>
-          <div class="v">${x.v}</div>
-          <div class="s">${x.s}</div>
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
         </div>
     `).join("");
 }
@@ -3261,76 +3257,70 @@ function setTab(tabName) {
     return `${wins}-${losses}`;
 }
 
-        function renderVsOpponentAllTime(opponent) {
-            const wrap = $("#vsOppWrap");
+function renderVsOpponentAllTime(opponent) {
+    const wrap = $("#vsOppWrap");
+    const strip = $("#vsOppStrip");
+    if (!wrap || !strip) return;
 
-            const strip = $("#vsOppStrip");
-            if (!wrap || !strip) return;
+    if (!opponent) {
+        wrap.style.display = "none";
+        const label = $("#vsOppLabel");
+        if (label) label.textContent = "—";
+        strip.innerHTML = "";
+        return;
+    }
 
-            if (!opponent) {
-                wrap.style.display = "none";
-                
+    const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
+    const rows = baseLog.filter(r => r.opponent === opponent);
 
-            // ✅ Use current season logs (or career logs if in Career mode)
-            const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
-            const rows = baseLog.filter(r => r.opponent === opponent);
-            const label = $("#vsOppLabel");
-if (label) {
-    label.innerHTML = (currentSeason === "career")
-        ? `<b>Career Record vs ${opponent}</b>`
-        : `<b>${currentSeason} Record vs ${opponent}</b>`;
-}
+    const label = $("#vsOppLabel");
+    if (label) {
+        label.innerHTML = (currentSeason === "career")
+            ? `<b>Career Record vs ${opponent}</b>`
+            : `<b>${currentSeason} Record vs ${opponent}</b>`;
+    }
 
-            const label = $("#vsOppLabel");
-if (label) {
-    const seasonText = (currentSeason === "career")
-        ? "Career Record vs"
-        : `${currentSeason} Record vs`;
+    wrap.style.display = "block";
 
-    label.innerHTML = `<b>${seasonText}</b> <b>${opponent}</b>`;
-}
-            wrap.style.display = "block";
+    const name2 = document.getElementById("vsOppName2");
+    if (name2) name2.textContent = opponent;
 
-            const name2 = document.getElementById("vsOppName2");
-            if (name2) name2.textContent = opponent;
-
-            // Render the opponent pie after visible
-            requestAnimationFrame(() => {
-                const ht = computeHitTypeTotals(rows);
-                const oppCanvas = document.getElementById("vsOppHitTypeChart");
-                if (oppCanvas) {
-                    opponentHitPie.render(
-                        oppCanvas,
-                        ["1B", "2B", "3B", "HR"],
-                        [ht.singles, ht.doubles, ht.triples, ht.hrs]
-                    );
-                }
-            });
-
-            const t = computeBattingTotals(rows);
-            const { avg, slg, ops } = computeOPSFromTotals(t);
-            const oppRecord = computeOpponentRecord(rows);
-
-            const items = [
-                { k: "G", v: rows.length, s: "Games vs opponent (filtered)" },
-                { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
-                { k: "AVG", v: fmt3(avg), s: "H / AB" },
-                { k: "SLG", v: fmt3(slg), s: "TB / AB" },
-                { k: "OPS", v: fmt3(ops), s: "AVG + SLG (from logs)" },
-                { k: "HR", v: t.HR, s: "From logs" },
-                { k: "RBI", v: t.RBI, s: "From logs" },
-                { k: "TB", v: t.TB, s: "From logs" },
-                { k: "REC", v: oppRecord, s: `Record vs ${opponent}` },
-            ];
-
-            strip.innerHTML = items.map(x => `
-    <div class="stat ${x.k === "REC" ? "stat-center" : ""}">
-      <div class="k">${x.k}</div>
-      <div class="v">${x.v}</div>
-      <div class="s">${x.s}</div>
-    </div>
-  `).join("");
+    requestAnimationFrame(() => {
+        const ht = computeHitTypeTotals(rows);
+        const oppCanvas = document.getElementById("vsOppHitTypeChart");
+        if (oppCanvas) {
+            opponentHitPie.render(
+                oppCanvas,
+                ["1B", "2B", "3B", "HR"],
+                [ht.singles, ht.doubles, ht.triples, ht.hrs]
+            );
         }
+    });
+
+    const t = computeBattingTotals(rows);
+    const { avg, slg, ops } = computeOPSFromTotals(t);
+    const oppRecord = computeOpponentRecord(rows);
+
+    const items = [
+        { k: "G", v: rows.length, s: "Games vs opponent" },
+        { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
+        { k: "AVG", v: fmt3(avg), s: "H / AB" },
+        { k: "SLG", v: fmt3(slg), s: "TB / AB" },
+        { k: "OPS", v: fmt3(ops), s: "AVG + SLG" },
+        { k: "HR", v: t.HR, s: "From logs" },
+        { k: "RBI", v: t.RBI, s: "From logs" },
+        { k: "TB", v: t.TB, s: "From logs" },
+        { k: "REC", v: oppRecord, s: `Record vs ${opponent}` },
+    ];
+
+    strip.innerHTML = items.map(x => `
+        <div class="stat ${x.k === "REC" ? "stat-center" : ""}">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
 
 
         /* ------------ INIT ------------ */
