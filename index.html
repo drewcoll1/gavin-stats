@@ -1208,25 +1208,32 @@ td[data-label="Opponent"] .opp-emoji {
 
    .game-detail-row .stat {
     min-width: 0 !important;
-    min-height: 34px !important;
-    padding: 3px 3px 2px !important;
+    min-height: 48px !important;
+    padding: 6px 6px 5px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 2px !important;
     overflow: hidden !important;
 }
 
-.game-detail-row .stat .v {
-    font-size: 15px !important;
-    font-weight: 800 !important;
-    line-height: 1 !important;
-    margin-top: 1px !important;
+.game-detail-row .stat .k {
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+    letter-spacing: .3px !important;
+    color: rgba(255,255,255,.7) !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
 }
 
-.game-detail-row .stat .k {
-    font-size: 11px !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
+.game-detail-row .stat .v {
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -1234,8 +1241,8 @@ td[data-label="Opponent"] .opp-emoji {
 
 .game-detail-row .stat .s {
     font-size: 11px !important;
-    line-height: 1 !important;
-    margin-top: 1px !important;
+    line-height: 1.1 !important;
+    color: rgba(255,255,255,.65) !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
