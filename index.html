@@ -814,7 +814,7 @@ tbody tr:hover td {
     transition: background .15s ease, box-shadow .15s ease;
 }
 
-#battingBody tr:has(+ .game-detail-row) td,
+        #battingBody tr:has(+ .game-detail-row) td,
 #fieldingBody tr:has(+ .game-detail-row) td {
     background: rgba(204, 0, 0, .14) !important;
     box-shadow:
@@ -822,6 +822,15 @@ tbody tr:hover td {
         inset 0 -1px 0 rgba(255,255,255,.10);
 }
 
+/* keep sticky Date + Opponent solid so stats do not show through */
+#battingBody tr:has(+ .game-detail-row) td:first-child,
+#battingBody tr:has(+ .game-detail-row) td:nth-child(2),
+#fieldingBody tr:has(+ .game-detail-row) td:first-child,
+#fieldingBody tr:has(+ .game-detail-row) td:nth-child(2) {
+    background: #171922 !important;
+}
+
+/* left red accent only on the Date cell */
 #battingBody tr:has(+ .game-detail-row) td:first-child,
 #fieldingBody tr:has(+ .game-detail-row) td:first-child {
     box-shadow:
@@ -829,6 +838,7 @@ tbody tr:hover td {
         inset 0 1px 0 rgba(255,255,255,.10),
         inset 0 -1px 0 rgba(255,255,255,.10);
 }
+
 
 #battingBody tr,
 #fieldingBody tr {
