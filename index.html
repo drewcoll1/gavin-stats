@@ -3278,6 +3278,12 @@ function setTab(tabName) {
             // ✅ Use current season logs (or career logs if in Career mode)
             const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
             const rows = baseLog.filter(r => r.opponent === opponent);
+            const label = $("#vsOppLabel");
+if (label) {
+    label.innerHTML = (currentSeason === "career")
+        ? `<b>Career Record vs ${opponent}</b>`
+        : `<b>${currentSeason} Record vs ${opponent}</b>`;
+}
 
             const label = $("#vsOppLabel");
 if (label) {
