@@ -814,19 +814,21 @@ tbody tr:hover td {
     transition: background .15s ease, box-shadow .15s ease;
 }
 
-        #battingBody tr:has(+ .game-detail-row) td,
+#battingBody tr:has(+ .game-detail-row) td,
 #fieldingBody tr:has(+ .game-detail-row) td {
-    background: linear-gradient(180deg, rgba(204, 0, 0, .95), rgba(204, 0, 0, .65)) !important;
+    background: linear-gradient(180deg, rgb(204, 0, 0), rgb(166, 0, 0)) !important;
     color: #fff !important;
+    background-clip: padding-box;
 }
 
-/* keep sticky Date + Opponent solid so stats do not show through */
+/* keep sticky Date + Opponent fully opaque too */
 #battingBody tr:has(+ .game-detail-row) td:first-child,
 #battingBody tr:has(+ .game-detail-row) td:nth-child(2),
 #fieldingBody tr:has(+ .game-detail-row) td:first-child,
 #fieldingBody tr:has(+ .game-detail-row) td:nth-child(2) {
-    background: linear-gradient(180deg, rgba(204, 0, 0, .95), rgba(204, 0, 0, .65)) !important;
+    background: linear-gradient(180deg, rgb(204, 0, 0), rgb(166, 0, 0)) !important;
     color: #fff !important;
+    background-clip: padding-box;
 }
 
 /* left red accent only on the Date cell */
@@ -997,14 +999,15 @@ td[data-label="Opponent"] .opp-emoji {
         border-spacing: 0;
     }
 
-   #battingTable th:first-child,
+#battingTable th:first-child,
 #battingTable td:first-child,
 #fieldingTable th:first-child,
 #fieldingTable td:first-child {
     position: sticky;
     left: 0;
     z-index: 5;
-    background: #171922 !important;
+    background-color: #171922 !important;
+    background-image: none;
 }
 
 #battingTable th:nth-child(2),
@@ -1014,7 +1017,8 @@ td[data-label="Opponent"] .opp-emoji {
     position: sticky;
     left: 72px;
     z-index: 5;
-    background: #171922 !important;
+    background-color: #171922 !important;
+    background-image: none;
 }
     #battingTable td:first-child,
 #battingTable td:nth-child(2),
