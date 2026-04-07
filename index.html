@@ -2235,9 +2235,9 @@ function toggleGameDetailRow(tr, r) {
 
     const label = $("#vsOppLabelFld");
     if (label) {
-        label.innerHTML = (currentSeason === "career")
-            ? `<b>Career Record vs ${opponent}</b>`
-            : `<b>${currentSeason} Record vs ${opponent}</b>`;
+       label.innerHTML = (currentSeason === "career")
+    ? `<b>career record vs ${opponent}</b>`
+    : `<b>${currentSeason} record vs ${opponent}</b>`;
     }
 
     wrap.style.display = "block";
