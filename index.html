@@ -3269,11 +3269,7 @@ function setTab(tabName) {
 
             if (!opponent) {
                 wrap.style.display = "none";
-                const label = $("#vsOppLabel");
-                if (label) label.textContent = "—";
-                strip.innerHTML = "";
-                return;
-            }
+                
 
             // ✅ Use current season logs (or career logs if in Career mode)
             const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
