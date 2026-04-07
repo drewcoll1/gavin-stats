@@ -592,6 +592,13 @@ body {
     font-size: 12px;
     color: rgba(255, 255, 255, .60);
 }
+        .stat-center {
+    grid-column: 1 / -1;   /* spans full width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 
 .divider {
     height: 1px;
@@ -2239,21 +2246,21 @@ function toggleGameDetailRow(tr, r) {
 
             const items = [
     { k: "G", v: rows.length, s: "Games vs opponent" },
-    { k: "REC", v: oppRecord, s: `Record vs ${opponent}` },
+    { k: "REC", v: oppRecord, s: `Penn vs ${opponent}` },
     { k: "TC", v: t.TC, s: "Total chances" },
     { k: "PO", v: t.PO, s: "Putouts" },
     { k: "A", v: t.A, s: "Assists" },
     { k: "E", v: t.E, s: "Errors" },
     { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
 ];
-            strip.innerHTML = items.map(x => `
-    <div class="stat">
-      <div class="k">${x.k}</div>
-      <div class="v">${x.v}</div>
-      <div class="s">${x.s}</div>
-    </div>
-  `).join("");
-        }
+         strip.innerHTML = items.map(x => `
+        <div class="stat ${x.k === "REC" ? "stat-center" : ""}">
+          <div class="k">${x.k}</div>
+          <div class="v">${x.v}</div>
+          <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
 
         function opponentCellHTML(r) {
             if (r.logo) {
@@ -3309,7 +3316,7 @@ function setTab(tabName) {
             ];
 
             strip.innerHTML = items.map(x => `
-    <div class="stat">
+    <div class="stat ${x.k === "REC" ? "stat-center" : ""}">
       <div class="k">${x.k}</div>
       <div class="v">${x.v}</div>
       <div class="s">${x.s}</div>
