@@ -2238,10 +2238,13 @@ function toggleGameDetailRow(tr, r) {
             const oppRecord = computeOpponentRecord(rows);
 
             const label = $("#vsOppLabelFld");
-            if (label) {
-                const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
-                label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-            }
+if (label) {
+    const seasonText = (currentSeason === "career")
+        ? "Career Record vs"
+        : `${currentSeason} Record vs`;
+
+    label.innerHTML = `<b>${seasonText}</b> <b>${opponent}</b>`;
+}
             wrap.style.display = "block";
 
             const items = [
@@ -3277,10 +3280,13 @@ function setTab(tabName) {
             const rows = baseLog.filter(r => r.opponent === opponent);
 
             const label = $("#vsOppLabel");
-            if (label) {
-                const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
-                label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-            }
+if (label) {
+    const seasonText = (currentSeason === "career")
+        ? "Career Record vs"
+        : `${currentSeason} Record vs`;
+
+    label.innerHTML = `<b>${seasonText}</b> <b>${opponent}</b>`;
+}
             wrap.style.display = "block";
 
             const name2 = document.getElementById("vsOppName2");
