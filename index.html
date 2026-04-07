@@ -2214,7 +2214,7 @@ function toggleGameDetailRow(tr, r) {
                 selectEl.appendChild(o);
             }
         }
-       function renderVsOpponentFieldingAllTime(opponent) {
+      function renderVsOpponentFieldingAllTime(opponent) {
     const wrap = $("#vsOppWrapFld");
     const strip = $("#vsOppStripFld");
     if (!wrap || !strip) return;
@@ -2235,9 +2235,9 @@ function toggleGameDetailRow(tr, r) {
 
     const label = $("#vsOppLabelFld");
     if (label) {
-       label.innerHTML = (currentSeason === "career")
-    ? `<b>career record vs ${opponent}</b>`
-    : `<b>${currentSeason} record vs ${opponent}</b>`;
+        label.innerHTML = (currentSeason === "career")
+            ? `<b>career record vs ${opponent}</b>`
+            : `<b>${currentSeason} record vs ${opponent}</b>`;
     }
 
     wrap.style.display = "block";
@@ -3265,10 +3265,11 @@ function renderVsOpponentAllTime(opponent) {
     if (!opponent) {
         wrap.style.display = "none";
         const label = $("#vsOppLabel");
-        if (label) label.textContent = "—";
-        strip.innerHTML = "";
-        return;
-    }
+if (label) {
+    label.innerHTML = (currentSeason === "career")
+        ? `<b>career record vs ${opponent}</b>`
+        : `<b>${currentSeason} record vs ${opponent}</b>`;
+}
 
     const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
     const rows = baseLog.filter(r => r.opponent === opponent);
