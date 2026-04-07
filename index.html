@@ -2237,13 +2237,14 @@ function toggleGameDetailRow(tr, r) {
             wrap.style.display = "block";
 
             const items = [
-                { k: "G", v: rows.length, s: "Games vs opponent" },
-                { k: "TC", v: t.TC, s: "Total chances" },
-                { k: "PO", v: t.PO, s: "Putouts" },
-                { k: "A", v: t.A, s: "Assists" },
-                { k: "E", v: t.E, s: "Errors" },
-                { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
-            ];
+    { k: "G", v: rows.length, s: "Games vs opponent" },
+    { k: "TEAM REC", v: getActiveTeamRecord(), s: (currentSeason === "career") ? "Career team record" : `${currentSeason} team record` },
+    { k: "TC", v: t.TC, s: "Total chances" },
+    { k: "PO", v: t.PO, s: "Putouts" },
+    { k: "A", v: t.A, s: "Assists" },
+    { k: "E", v: t.E, s: "Errors" },
+    { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
+];
 
             strip.innerHTML = items.map(x => `
     <div class="stat">
@@ -2608,6 +2609,11 @@ function hideGameTip() {
             state.opp = "";
         }
 
+        function getActiveTeamRecord() {
+    const rec = teamRecords[currentSeason];
+    if (!rec) return "—";
+    return rec.overall || "—";
+}
 
 
         function createHitPie() {
@@ -3276,6 +3282,7 @@ function setTab(tabName) {
             const { avg, slg, ops } = computeOPSFromTotals(t);
 
             const items = [
+                { k: "TEAM REC", v: getActiveTeamRecord(), s: (currentSeason === "career") ? "Career team record" : `${currentSeason} team record` },
                 { k: "G", v: rows.length, s: "Games vs opponent (filtered)" },
                 { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
                 { k: "AVG", v: fmt3(avg), s: "H / AB" },
