@@ -2512,14 +2512,14 @@ function showSelectedFieldingGame(r, tr = null) {
           <td class="right" data-label="FPCT">${fp}</td>
         `;
 
-        tr.addEventListener("click", () => {
-    if (selectedBattingGame === r) {
+       tr.addEventListener("click", () => {
+    if (selectedFieldingGame === r) {
         clearSelectedGameSummary();
         return;
     }
 
-    setSelectedRow("battingBody", tr);
-    showSelectedBattingGame(r);
+    setSelectedRow("fieldingBody", tr);
+    showSelectedFieldingGame(r, tr);
 });
 
         body.appendChild(tr);
