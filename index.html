@@ -784,6 +784,21 @@ table {
     border-spacing: 0;
 }
 
+.summary-logo-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 14px 0 10px;
+}
+
+.summary-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px;
+}
 .selected-game-top {
     display: flex;
     flex-direction: column;
@@ -1374,6 +1389,9 @@ td[data-label="Opponent"] .opp-emoji {
 
                 <div class="panel-body">
                     <!-- Batting -->
+                    <div class="summary-logo-wrap">
+    <img src="logo.png" class="summary-logo" alt="Penn logo">
+</div>
                     <div class="section active" id="section-batting">
                         <div class="controls">
                             <div class="left-controls">
