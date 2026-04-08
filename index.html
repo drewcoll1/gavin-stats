@@ -768,6 +768,61 @@ table {
     border-spacing: 0;
 }
 
+.selected-game-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 4px 0 14px;
+    text-align: center;
+}
+
+.selected-game-date {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: .3px;
+}
+
+.selected-game-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.selected-game-logo {
+    width: 56px;
+    height: 56px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 10px;
+    background: #fff;
+    padding: 4px;
+    object-fit: contain;
+}
+
+.selected-game-logo.fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #111;
+}
+
+.selected-game-team-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,.88);
+}
+
+.selected-game-result {
+    font-size: 15px;
+    font-weight: 900;
+    color: #fff;
+}
+
 #battingTable,
 #fieldingTable {
     min-width: 640px;
@@ -2147,7 +2202,7 @@ function computeAdvancedFromLog(t) {
     renderSummary();
 }
 
-       function showSelectedBattingGame(r) {
+function showSelectedBattingGame(r) {
     selectedBattingGame = r;
     selectedFieldingGame = null;
 
@@ -2156,27 +2211,85 @@ function computeAdvancedFromLog(t) {
     const opsObj = computeOPSFromTotals(totals);
     const hitTypes = computeHitTypeTotals([r]);
 
-    $("#summaryStrip").innerHTML = [
-        { k: "Date", v: r.date, s: "Game date" },
-        { k: "Opponent", v: r.opponent, s: "Matchup" },
-        { k: "Result", v: r.result, s: "Final" },
-        { k: "H / AB", v: `${r.H} / ${r.AB}`, s: "Hits / At Bats", full: true },
-        { k: "R", v: r.R, s: "Runs" },
-        { k: "RBI", v: r.RBI, s: "Runs Batted In" },
-        { k: "2B", v: r["2B"], s: "Doubles" },
-        { k: "3B", v: r["3B"], s: "Triples" },
-        { k: "HR", v: r.HR, s: "Home Runs" },
-        { k: "TB", v: totals.TB, s: "Total Bases" },
-        { k: "AVG", v: fmt3(rates.AVG), s: "H / AB" },
-        { k: "SLG", v: fmt3(opsObj.slg), s: "Slugging %" },
-        { k: "OPS", v: fmt3(opsObj.ops), s: "On-base + Slugging %" },
-    ].map(x => `
-        <div class="stat ${x.full ? 'stat-full' : ''}">
-            <div class="k">${x.k}</div>
-            <div class="v">${x.v}</div>
-            <div class="s">${x.s}</div>
+    const logoSrc = logoMap[r.opponent] || "";
+    const logoHTML = logoSrc
+        ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
+        : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
+
+    $("#summaryStrip").innerHTML = `
+        <div class="selected-game-top">
+            <div class="selected-game-date">${r.date}</div>
+
+            <div class="selected-game-team">
+                ${logoHTML}
+                <div class="selected-game-team-name">${r.opponent}</div>
+            </div>
+
+            <div class="selected-game-result">${r.result}</div>
         </div>
-    `).join("");
+
+        <div class="stat-strip">
+            <div class="stat stat-full">
+                <div class="k">H / AB</div>
+                <div class="v">${r.H} / ${r.AB}</div>
+                <div class="s">Hits / At Bats</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">R</div>
+                <div class="v">${r.R}</div>
+                <div class="s">Runs</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">RBI</div>
+                <div class="v">${r.RBI}</div>
+                <div class="s">Runs Batted In</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">2B</div>
+                <div class="v">${r["2B"]}</div>
+                <div class="s">Doubles</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">3B</div>
+                <div class="v">${r["3B"]}</div>
+                <div class="s">Triples</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">HR</div>
+                <div class="v">${r.HR}</div>
+                <div class="s">Home Runs</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">TB</div>
+                <div class="v">${totals.TB}</div>
+                <div class="s">Total Bases</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">AVG</div>
+                <div class="v">${fmt3(rates.AVG)}</div>
+                <div class="s">H / AB</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">SLG</div>
+                <div class="v">${fmt3(opsObj.slg)}</div>
+                <div class="s">Slugging %</div>
+            </div>
+
+            <div class="stat">
+                <div class="k">OPS</div>
+                <div class="v">${fmt3(opsObj.ops)}</div>
+                <div class="s">On-base + Slugging %</div>
+            </div>
+        </div>
+    `;
 
     const tag = document.querySelector("#summary-batting .tag");
     if (tag) tag.textContent = "Selected Game";
