@@ -1926,32 +1926,6 @@ td[data-label="Opponent"] .opp-emoji {
             return { singles, doubles, triples, hrs };
         }
 
-function toggleGameDetailRow(tr, r) {
-    // if next row is already a detail row → remove it (collapse)
-    const next = tr.nextElementSibling;
-   
-    
-
-    // create new detail row
-    const detailTr = document.createElement("tr");
-    detailTr.className = "game-detail-row";
-
-    const td = document.createElement("td");
-    td.colSpan = window.innerWidth <= 700 ? 4 : tr.children.length;
-
-    td.innerHTML = `
-        <div class="game-detail">
-
-            <div style="margin-top:8px;">
-                <strong>Batting Line:</strong> ${r.H}-${r.AB}, ${r.R} R, ${r.RBI} RBI
-            </div>
-        </div>
-    `;
-
-    detailTr.appendChild(td);
-
-    
-}
 
         function computeAdvancedFromLog(t) {
             return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
