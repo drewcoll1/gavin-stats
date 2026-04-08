@@ -1389,9 +1389,6 @@ td[data-label="Opponent"] .opp-emoji {
 
                 <div class="panel-body">
                     <!-- Batting -->
-                    <div class="summary-logo-wrap">
-    <img src="logo.png" class="summary-logo" alt="Penn logo">
-</div>
                     <div class="section active" id="section-batting">
                         <div class="controls">
                             <div class="left-controls">
@@ -1524,22 +1521,30 @@ td[data-label="Opponent"] .opp-emoji {
 
     <!-- Batting Summary -->
     <div class="section active" id="summary-batting">
-        <div class="tag" style="margin: 10px 0 10px;">Batting</div>
-        <div class="stat-strip" id="summaryStrip"></div>
-
-        <div class="divider"></div>
-
-        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-        <div class="chart-wrap">
-            <canvas id="hitTypeChart" width="600" height="220"></canvas>
-        </div>
+    <div class="summary-logo-wrap" id="summaryLogoBatting">
+        <img src="logo.png" class="summary-logo" alt="Penn logo">
     </div>
+
+    <div class="tag" style="margin: 10px 0 10px;">Batting</div>
+    <div class="stat-strip" id="summaryStrip"></div>
+
+    <div class="divider"></div>
+
+    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+    <div class="chart-wrap">
+        <canvas id="hitTypeChart" width="600" height="220"></canvas>
+    </div>
+</div>
 
     <!-- Fielding Summary -->
     <div class="section" id="summary-fielding">
-        <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
-        <div class="stat-strip" id="fieldingStrip"></div>
+    <div class="summary-logo-wrap" id="summaryLogoFielding">
+        <img src="logo.png" class="summary-logo" alt="Penn logo">
     </div>
+
+    <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
+    <div class="stat-strip" id="fieldingStrip"></div>
+</div>
 
 </div>
             </div>
