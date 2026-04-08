@@ -2473,8 +2473,14 @@ function showSelectedBattingGame(r) {
         `;
 
         tr.addEventListener("click", () => {
-            showSelectedBattingGame(r, tr);
-        });
+    if (selectedBattingGame === r) {
+        clearSelectedGameSummary();
+        return;
+    }
+
+    setSelectedRow("battingBody", tr);
+    showSelectedBattingGame(r);
+});
 
         body.appendChild(tr);
     }
@@ -2502,8 +2508,14 @@ function showSelectedBattingGame(r) {
         `;
 
         tr.addEventListener("click", () => {
-            showSelectedFieldingGame(r, tr);
-        });
+    if (selectedBattingGame === r) {
+        clearSelectedGameSummary();
+        return;
+    }
+
+    setSelectedRow("battingBody", tr);
+    showSelectedBattingGame(r);
+});
 
         body.appendChild(tr);
     }
