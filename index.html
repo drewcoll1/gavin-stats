@@ -1328,8 +1328,13 @@ td[data-label="Opponent"] .opp-emoji {
 
                <div class="panel-body">
 
-    <!-- Batting -->
-    <div class="section active" id="section-batting">
+    <div id="selectedGamePanel" class="selected-game-panel">
+        <div class="tag" style="margin: 10px 0 10px;">Selected Game</div>
+        <div id="selectedGameTitle" class="selected-game-title">Click a game to view details</div>
+        <div id="selectedGameEmpty" class="selected-game-empty">The selected game will appear here.</div>
+        <div class="stat-strip" id="selectedGameStats" style="display:none;"></div>
+        <div class="divider"></div>
+    </div>
 
     <!-- Batting Summary -->
     <div class="section active" id="summary-batting">
@@ -1460,15 +1465,7 @@ td[data-label="Opponent"] .opp-emoji {
                     </div>
                 </div>
 
-              <div class="panel-body">
-
-    <div id="selectedGamePanel" class="selected-game-panel">
-        <div class="tag" style="margin: 10px 0 10px;">Selected Game</div>
-        <div id="selectedGameTitle" class="selected-game-title">Click a game to view details</div>
-        <div id="selectedGameEmpty" class="selected-game-empty">The selected game will appear here.</div>
-        <div class="stat-strip" id="selectedGameStats" style="display:none;"></div>
-        <div class="divider"></div>
-    </div>
+               <div class="panel-body">
 
     <!-- Batting Summary -->
     <div class="section active" id="summary-batting">
