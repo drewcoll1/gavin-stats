@@ -819,6 +819,12 @@ tbody tr:hover td {
     cursor: pointer;
 }
 
+#battingBody tr.selected-game td,
+#fieldingBody tr.selected-game td {
+    background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
+    color: #fff !important;
+}
+
 /* Opponent / logo */
 .opp,
 td[data-label="Opponent"] .opp,
@@ -1494,6 +1500,8 @@ td[data-label="Opponent"] .opp-emoji {
             }
             return safeDiv(H, AB); // returns NaN if AB=0
         }
+        let selectedBattingGame = null;
+let selectedFieldingGame = null;
         const seasonsRaw = {
             "2024": {
                 batting: [
@@ -1930,6 +1938,62 @@ td[data-label="Opponent"] .opp-emoji {
         function computeAdvancedFromLog(t) {
             return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
         }
+
+        function showSelectedBattingGame(r) {
+    selectedBattingGame = r;
+    selectedFieldingGame = null;
+
+    const totals = computeBattingTotals([r]);
+    const rates = computeAdvancedFromLog(totals);
+    const opsObj = computeOPSFromTotals(totals);
+
+    $("#summaryStrip").innerHTML = [
+        { k: "Date", v: r.date, s: "Game date" },
+        { k: "Opponent", v: r.opponent, s: "Matchup" },
+        { k: "Result", v: r.result, s: "Final" },
+        { k: "H / AB", v: `${r.H} / ${r.AB}`, s: "Hits / At Bats", full: true },
+        { k: "R", v: r.R, s: "Runs" },
+        { k: "RBI", v: r.RBI, s: "Runs Batted In" },
+        { k: "2B", v: r["2B"], s: "Doubles" },
+        { k: "3B", v: r["3B"], s: "Triples" },
+        { k: "HR", v: r.HR, s: "Home Runs" },
+        { k: "TB", v: totals.TB, s: "Total Bases" },
+        { k: "AVG", v: fmt3(rates.AVG), s: "H / AB" },
+        { k: "SLG", v: fmt3(opsObj.slg), s: "Slugging %" },
+        { k: "OPS", v: fmt3(opsObj.ops), s: "On-base + Slugging %" },
+    ].map(x => `
+        <div class="stat ${x.full ? 'stat-full' : ''}">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+
+    const tag = document.querySelector("#summary-batting .tag");
+    if (tag) tag.textContent = "Selected Game";
+
+    const panelTitle = document.querySelector(".panel:nth-of-type(2) .panel-title");
+    const panelSub = document.querySelector(".panel:nth-of-type(2) .panel-sub");
+
+    if (panelTitle) panelTitle.textContent = "Game Summary";
+    if (panelSub) panelSub.textContent = `${r.date} • ${r.opponent} • ${r.result}`;
+
+    const chartWrap = document.querySelector("#summary-batting .chart-wrap");
+    if (chartWrap) chartWrap.style.display = "none";
+}
+
+function showSelectedFieldingGame(r) {
+    selectedFieldingGame = r;
+    selectedBattingGame = null;
+
+    $("#fieldingStrip").innerHTML = [
+        { k: "Date", v: r.date, s: "Game date" },
+        { k: "Opponent", v: r.opponent, s: "Matchup" },
+        { k: "Result", v: r.result, s: "Final" },
+        { k: "TC", v: r.TC, s: "Total chances" },
+        { k: "PO", v: r.PO, s: "Putouts" },
+        { k: "A", v: r.A, s: "Assists"
+  
         function setSharedOpponent(opp) {
             // Update both states
             battingState.opp = opp;
