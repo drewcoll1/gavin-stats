@@ -646,6 +646,7 @@ body {
     background: rgba(0, 0, 0, .25);
 }
 
+
 .input label {
     white-space: nowrap;
     font-size: 12px;
@@ -814,33 +815,51 @@ tbody tr:hover td {
     transition: background .15s ease, box-shadow .15s ease;
 }
 
-#battingBody tr:has(+ .game-detail-row) td,
-#fieldingBody tr:has(+ .game-detail-row) td {
+
+#battingBody tr,
+#fieldingBody tr {
+    cursor: pointer;
+}
+
+#battingBody tr.active-row td,
+#fieldingBody tr.active-row td {
     background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
     color: #fff !important;
     background-clip: padding-box;
 }
 
-#battingBody tr:has(+ .game-detail-row) td:first-child,
-#battingBody tr:has(+ .game-detail-row) td:nth-child(2),
-#fieldingBody tr:has(+ .game-detail-row) td:first-child,
-#fieldingBody tr:has(+ .game-detail-row) td:nth-child(2) {
+#battingBody tr.active-row td:first-child,
+#battingBody tr.active-row td:nth-child(2),
+#fieldingBody tr.active-row td:first-child,
+#fieldingBody tr.active-row td:nth-child(2) {
     background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
     color: #fff !important;
     background-clip: padding-box;
 }
 
-#battingBody tr:has(+ .game-detail-row) td:first-child,
-#fieldingBody tr:has(+ .game-detail-row) td:first-child {
+#battingBody tr.active-row td:first-child,
+#fieldingBody tr.active-row td:first-child {
     box-shadow:
         inset 3px 0 0 rgba(204, 0, 0, .95),
         inset 0 1px 0 rgba(255,255,255,.10),
         inset 0 -1px 0 rgba(255,255,255,.10);
 }
 
-#battingBody tr,
-#fieldingBody tr {
-    cursor: pointer;
+.selected-game-panel {
+    padding: 12px 14px 0;
+}
+
+.selected-game-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.selected-game-empty {
+    color: rgba(255,255,255,.65);
+    font-size: 12px;
+    margin-bottom: 12px;
 }
 
 /* Opponent / logo */
@@ -897,65 +916,6 @@ td[data-label="Opponent"] .opp-emoji {
     white-space: nowrap;
 }
 
-/* Expanded game detail */
-.game-detail-row td {
-    padding: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .06);
-    background: rgba(0, 0, 0, .30) !important;
-}
-
-.game-detail {
-    padding: 14px 16px;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, 0)),
-        rgba(255, 255, 255, .02);
-}
-
-.game-detail-head {
-    margin-bottom: 12px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, .78);
-    text-transform: uppercase;
-    letter-spacing: .35px;
-}
-
-.game-detail-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.game-detail-item {
-    min-width: 0;
-}
-
-.game-detail-item .k {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, .65);
-    letter-spacing: .35px;
-}
-
-.game-detail-item .v {
-    margin-top: 4px;
-    font-size: 16px;
-    font-weight: 800;
-    color: #fff;
-}
-
-.game-detail-chart {
-    margin-top: 12px;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--surface);
-}
-
-.game-detail-chart canvas {
-    display: block;
-    width: 100%;
-    height: 220px;
-}
 
 #rowCountTag,
 .note,
@@ -1135,93 +1095,6 @@ td[data-label="Opponent"] .opp-emoji {
        OPENED GAME ROW ONLY
        ========================= */
 
-    .game-detail-row td {
-        padding: 0 !important;
-        overflow: hidden !important;
-        text-align: left;
-        vertical-align: top;
-    }
-
-    .game-detail-row .game-detail {
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden !important;
-        padding: 6px 8px !important;
-    }
-
-    .game-detail-row .game-detail-head {
-        font-size: 10px !important;
-        line-height: 1 !important;
-        margin-bottom: 6px !important;
-        letter-spacing: .2px !important;
-    }
-
-    .game-detail-row .stat-strip {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 6px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
-    }
-
-    .game-detail-row .stat {
-        min-width: 0 !important;
-        min-height: 44px !important;
-        padding: 6px 6px 5px !important;
-
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        text-align: center !important;
-
-        gap: 2px !important;
-        overflow: hidden !important;
-    }
-
-    .game-detail-row .stat .k {
-        font-size: 11px !important;
-        line-height: 1.1 !important;
-        letter-spacing: .3px !important;
-        color: rgba(255,255,255,.7) !important;
-
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    .game-detail-row .stat .v {
-        font-size: 17px !important;
-        font-weight: 900 !important;
-        line-height: 1.1 !important;
-        margin: 0 !important;
-
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    .game-detail-row .stat .s {
-        font-size: 10px !important;
-        line-height: 1.1 !important;
-        color: rgba(255,255,255,.65) !important;
-
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    /* ✅ Chart stays FULL SIZE now */
-    .game-detail-row .game-detail-chart {
-        margin-top: 8px !important;
-        padding: 8px !important;
-    }
-
-    .game-detail-row .game-detail-chart canvas {
-        height: 220px !important; /* back to normal */
-        max-width: 100% !important;
-    }
 }
 
 @media (max-width: 600px) {
@@ -1453,9 +1326,18 @@ td[data-label="Opponent"] .opp-emoji {
                     <div class="tag" id="rowCountTag"><b>—</b> rows</div>
                 </div>
 
-                <div class="panel-body">
-                    <!-- Batting -->
-                    <div class="section active" id="section-batting">
+               <div class="panel-body">
+
+    <div id="selectedGamePanel" class="selected-game-panel">
+        <div class="tag" style="margin: 10px 0 10px;">Selected Game</div>
+        <div id="selectedGameTitle" class="selected-game-title">Click a game to view details</div>
+        <div id="selectedGameEmpty" class="selected-game-empty">The selected game will appear here.</div>
+        <div class="stat-strip" id="selectedGameStats" style="display:none;"></div>
+        <div class="divider"></div>
+    </div>
+
+    <!-- Batting Summary -->
+    <div class="section active" id="summary-batting">
                         <div class="controls">
                             <div class="left-controls">
                                 <div class="input">
@@ -2341,139 +2223,104 @@ function toggleGameDetailRow(tr, r) {
         }
 
         /* ------------ TABLE RENDER ------------ */
-    function toggleGameDetailRow(tr, r, mode) {
-    const next = tr.nextElementSibling;
+  function showSelectedGame(r, mode, tr) {
+    document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => {
+        row.classList.remove("active-row");
+    });
 
-    // close same row if already open
-    if (next && next.classList.contains("game-detail-row")) {
-        next.remove();
-        tr.classList.remove("open");
-        return;
-    }
+    if (tr) tr.classList.add("active-row");
 
-    // close any other open detail rows
-    document.querySelectorAll(".game-detail-row").forEach(el => el.remove());
-    document.querySelectorAll("#battingBody tr.open, #fieldingBody tr.open").forEach(el => el.classList.remove("open"));
+    const titleEl = document.getElementById("selectedGameTitle");
+    const emptyEl = document.getElementById("selectedGameEmpty");
+    const statsEl = document.getElementById("selectedGameStats");
 
-    const detailTr = document.createElement("tr");
-    detailTr.className = "game-detail-row";
-
-    const td = document.createElement("td");
-    td.colSpan = window.innerWidth <= 700 ? 4 : tr.children.length;
+    titleEl.textContent = `${r.date} vs ${r.opponent} • ${r.result || ""}`;
+    emptyEl.style.display = "none";
+    statsEl.style.display = "grid";
 
     if (mode === "batting") {
         const rows = [r];
         const t = computeBattingTotals(rows);
         const { avg, slg, ops } = computeOPSFromTotals(t);
 
-        td.innerHTML = `
-            <div class="game-detail">
-        
-
-                <div class="stat-strip">
-                    <div class="stat">
-                        <div class="k">G</div>
-                        <div class="v">1</div>
-                        <div class="s">This game</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">H-AB</div>
-                        <div class="v">${t.H}-${t.AB}</div>
-                        <div class="s">From log</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">AVG</div>
-                        <div class="v">${fmt3(avg)}</div>
-                        <div class="s">H / AB</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">SLG</div>
-                        <div class="v">${fmt3(slg)}</div>
-                        <div class="s">TB / AB</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">OPS</div>
-                        <div class="v">${fmt3(ops)}</div>
-                        <div class="s">AVG + SLG</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">HR</div>
-                        <div class="v">${t.HR}</div>
-                        <div class="s">From log</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">RBI</div>
-                        <div class="v">${t.RBI}</div>
-                        <div class="s">From log</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">TB</div>
-                        <div class="v">${t.TB}</div>
-                        <div class="s">From log</div>
-                    </div>
-                </div>
-
-                <div class="game-detail-chart">
-                    <canvas class="game-detail-canvas" width="600" height="220"></canvas>
-                </div>
+        statsEl.innerHTML = `
+            <div class="stat">
+                <div class="k">G</div>
+                <div class="v">1</div>
+                <div class="s">This game</div>
+            </div>
+            <div class="stat">
+                <div class="k">H-AB</div>
+                <div class="v">${t.H}-${t.AB}</div>
+                <div class="s">From log</div>
+            </div>
+            <div class="stat">
+                <div class="k">AVG</div>
+                <div class="v">${fmt3(avg)}</div>
+                <div class="s">H / AB</div>
+            </div>
+            <div class="stat">
+                <div class="k">SLG</div>
+                <div class="v">${fmt3(slg)}</div>
+                <div class="s">TB / AB</div>
+            </div>
+            <div class="stat">
+                <div class="k">OPS</div>
+                <div class="v">${fmt3(ops)}</div>
+                <div class="s">AVG + SLG</div>
+            </div>
+            <div class="stat">
+                <div class="k">RBI</div>
+                <div class="v">${t.RBI}</div>
+                <div class="s">Runs Batted In</div>
+            </div>
+            <div class="stat">
+                <div class="k">R</div>
+                <div class="v">${t.R}</div>
+                <div class="s">Runs</div>
+            </div>
+            <div class="stat">
+                <div class="k">HR</div>
+                <div class="v">${t.HR}</div>
+                <div class="s">Home Runs</div>
             </div>
         `;
-
-        detailTr.appendChild(td);
-        tr.insertAdjacentElement("afterend", detailTr);
-        tr.classList.add("open");
-
-        requestAnimationFrame(() => {
-            const ht = computeHitTypeTotals(rows);
-            const canvas = detailTr.querySelector(".game-detail-canvas");
-            if (canvas) {
-                opponentHitPie.render(
-                    canvas,
-                    ["1B", "2B", "3B", "HR"],
-                    [ht.singles, ht.doubles, ht.triples, ht.hrs]
-                );
-            }
-        });
-
     } else {
-        const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
+        const rows = [r];
+        const t = computeFieldingTotals(rows);
 
-        td.innerHTML = `
-            <div class="game-detail">
-
-                <div class="stat-strip">
-                    <div class="stat">
-                        <div class="k">TC</div>
-                        <div class="v">${r.TC}</div>
-                        <div class="s">Total chances</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">PO</div>
-                        <div class="v">${r.PO}</div>
-                        <div class="s">Putouts</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">A</div>
-                        <div class="v">${r.A}</div>
-                        <div class="s">Assists</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">E</div>
-                        <div class="v">${r.E}</div>
-                        <div class="s">Errors</div>
-                    </div>
-                    <div class="stat">
-                        <div class="k">FPCT</div>
-                        <div class="v">${fp}</div>
-                        <div class="s">(PO + A) / (PO + A + E)</div>
-                    </div>
-                </div>
+        statsEl.innerHTML = `
+            <div class="stat">
+                <div class="k">G</div>
+                <div class="v">1</div>
+                <div class="s">This game</div>
+            </div>
+            <div class="stat">
+                <div class="k">TC</div>
+                <div class="v">${t.TC}</div>
+                <div class="s">Total Chances</div>
+            </div>
+            <div class="stat">
+                <div class="k">PO</div>
+                <div class="v">${t.PO}</div>
+                <div class="s">Putouts</div>
+            </div>
+            <div class="stat">
+                <div class="k">A</div>
+                <div class="v">${t.A}</div>
+                <div class="s">Assists</div>
+            </div>
+            <div class="stat">
+                <div class="k">E</div>
+                <div class="v">${t.E}</div>
+                <div class="s">Errors</div>
+            </div>
+            <div class="stat">
+                <div class="k">FPCT</div>
+                <div class="v">${isFinite(t.FPCT) ? fmt3(t.FPCT) : "—"}</div>
+                <div class="s">Fielding %</div>
             </div>
         `;
-
-        detailTr.appendChild(td);
-        tr.insertAdjacentElement("afterend", detailTr);
-        tr.classList.add("open");
     }
 }
         
@@ -2499,8 +2346,8 @@ function toggleGameDetailRow(tr, r) {
         `;
 
         tr.addEventListener("click", () => {
-            toggleGameDetailRow(tr, r, "batting");
-        });
+    showSelectedGame(r, "batting", tr);
+});
 
         body.appendChild(tr);
     }
@@ -2528,8 +2375,8 @@ function toggleGameDetailRow(tr, r) {
         `;
 
         tr.addEventListener("click", () => {
-            toggleGameDetailRow(tr, r, "fielding");
-        });
+    showSelectedGame(r, "fielding", tr);
+});
 
         body.appendChild(tr);
     }
@@ -3179,6 +3026,14 @@ function setTab(tabName) {
         $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
         refreshFielding();
     }
+    document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => {
+    row.classList.remove("active-row");
+});
+
+document.getElementById("selectedGameTitle").textContent = "Click a game to view details";
+document.getElementById("selectedGameEmpty").style.display = "block";
+document.getElementById("selectedGameStats").style.display = "none";
+document.getElementById("selectedGameStats").innerHTML = "";
 }
          
                             
@@ -3218,10 +3073,19 @@ function setTab(tabName) {
             renderVsOpponentAllTime("");
             renderVsOpponentFieldingAllTime("");
 
-            renderSummary();
+           renderSummary();
 
-            const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
-            setTab(activeTab);
+document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => {
+    row.classList.remove("active-row");
+});
+
+document.getElementById("selectedGameTitle").textContent = "Click a game to view details";
+document.getElementById("selectedGameEmpty").style.display = "block";
+document.getElementById("selectedGameStats").style.display = "none";
+document.getElementById("selectedGameStats").innerHTML = "";
+
+const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
+setTab(activeTab);
 
         }
         function computeOPSFromTotals(t) {
