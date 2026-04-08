@@ -96,6 +96,13 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.selected-game-layout {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}     
 .tip-row .k {
     color: rgba(255, 255, 255, .68);
 }
@@ -2070,12 +2077,13 @@ function showSelectedBattingGame(r) {
         : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
 
     $("#summaryStrip").innerHTML = `
+    <div class="selected-game-layout">
         <div class="selected-game-top">
             <div class="selected-game-date">${r.date}</div>
 
             <div class="selected-game-logo-wrap">
-    ${logoHTML}
-</div>
+                ${logoHTML}
+            </div>
 
             <div class="selected-game-result">${r.result}</div>
         </div>
@@ -2140,6 +2148,7 @@ function showSelectedBattingGame(r) {
                 <div class="v">${fmt3(opsObj.ops)}</div>
                 <div class="s">On-base + Slugging %</div>
             </div>
+        </div>
         </div>
     `;
 
