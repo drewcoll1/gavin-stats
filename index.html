@@ -2127,60 +2127,84 @@ function computeAdvancedFromLog(t) {
         }
 
         function clearSelectedGameSummary() {
-            selectedBattingGame = null;
-            selectedFieldingGame = null;
-            clearSelectedRows();
+    selectedBattingGame = null;
+    selectedFieldingGame = null;
 
-            const els = getRightPanelEls();
-            if (els.title) els.title.textContent = "Season Summary";
-            if (els.sub) els.sub.textContent = "Batting and fielding at a glance.";
-            if (els.battingTag) els.battingTag.textContent = "Batting";
-            if (els.fieldingTag) els.fieldingTag.textContent = "Fielding";
-            if (els.battingDivider) els.battingDivider.style.display = "";
-            if (els.battingTags[1]) els.battingTags[1].style.display = "";
-            if (els.battingChartWrap) els.battingChartWrap.style.display = "";
-        }
+    document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => {
+        row.classList.remove("selected-game");
+    });
 
-        function showSelectedBattingGame(r, tr = null) {
-            selectedBattingGame = r;
-            selectedFieldingGame = null;
-            if (tr) setSelectedRow("battingBody", tr);
+    const rightTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const rightSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+    const battingTag = document.querySelector("#summary-batting .tag");
+    const fieldingTag = document.querySelector("#summary-fielding .tag");
 
-            const t = computeBattingTotals([r]);
-            const adv = computeAdvancedFromLog(t);
-            const opsObj = computeOPSFromTotals(t);
+    if (rightTitle) rightTitle.textContent = "Season Summary";
+    if (rightSub) rightSub.textContent = "Batting and fielding at a glance.";
+    if (battingTag) battingTag.textContent = "Batting";
+    if (fieldingTag) fieldingTag.textContent = "Fielding";
 
-            const strip = $("#summaryStrip");
-            strip.innerHTML = [
-                { k: "Date", v: r.date, s: "Game date" },
-                { k: "Opponent", v: r.opponent, s: "Matchup" },
-                { k: "Result", v: r.result || "—", s: "Final" },
-                { k: "H / AB", v: `${r.H} / ${r.AB}`, s: "Hits / At Bats", full: true },
-                { k: "R", v: r.R, s: "Runs" },
-                { k: "RBI", v: r.RBI, s: "Runs Batted In" },
-                { k: "2B", v: r["2B"], s: "Doubles" },
-                { k: "3B", v: r["3B"], s: "Triples" },
-                { k: "HR", v: r.HR, s: "Home Runs" },
-                { k: "TB", v: t.TB, s: "Total Bases" },
-                { k: "AVG", v: fmt3(adv.AVG), s: "H / AB" },
-                { k: "SLG", v: fmt3(opsObj.slg), s: "TB / AB" },
-                { k: "OPS", v: fmt3(opsObj.ops), s: "AVG + SLG" }
-            ].map(x => `
-                <div class="stat ${x.full ? "stat-full" : ""}">
-                    <div class="k">${x.k}</div>
-                    <div class="v">${x.v}</div>
-                    <div class="s">${x.s}</div>
-                </div>
-            `).join("");
+    renderSummary();
+}
 
-            const els = getRightPanelEls();
-            if (els.title) els.title.textContent = "Game Summary";
-            if (els.sub) els.sub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
-            if (els.battingTag) els.battingTag.textContent = "Selected Game";
-            if (els.battingDivider) els.battingDivider.style.display = "none";
-            if (els.battingTags[1]) els.battingTags[1].style.display = "none";
-            if (els.battingChartWrap) els.battingChartWrap.style.display = "none";
-        }
+       function showSelectedBattingGame(r) {
+    selectedBattingGame = r;
+    selectedFieldingGame = null;
+
+    const totals = computeBattingTotals([r]);
+    const rates = computeAdvancedFromLog(totals);
+    const opsObj = computeOPSFromTotals(totals);
+    const hitTypes = computeHitTypeTotals([r]);
+
+    $("#summaryStrip").innerHTML = [
+        { k: "Date", v: r.date, s: "Game date" },
+        { k: "Opponent", v: r.opponent, s: "Matchup" },
+        { k: "Result", v: r.result, s: "Final" },
+        { k: "H / AB", v: `${r.H} / ${r.AB}`, s: "Hits / At Bats", full: true },
+        { k: "R", v: r.R, s: "Runs" },
+        { k: "RBI", v: r.RBI, s: "Runs Batted In" },
+        { k: "2B", v: r["2B"], s: "Doubles" },
+        { k: "3B", v: r["3B"], s: "Triples" },
+        { k: "HR", v: r.HR, s: "Home Runs" },
+        { k: "TB", v: totals.TB, s: "Total Bases" },
+        { k: "AVG", v: fmt3(rates.AVG), s: "H / AB" },
+        { k: "SLG", v: fmt3(opsObj.slg), s: "Slugging %" },
+        { k: "OPS", v: fmt3(opsObj.ops), s: "On-base + Slugging %" },
+    ].map(x => `
+        <div class="stat ${x.full ? 'stat-full' : ''}">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+
+    const tag = document.querySelector("#summary-batting .tag");
+    if (tag) tag.textContent = "Selected Game";
+
+    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+
+    if (panelTitle) panelTitle.textContent = "Game Summary";
+    if (panelSub) panelSub.textContent = `${r.date} • ${r.opponent} • ${r.result}`;
+
+    const divider = document.querySelector("#summary-batting .divider");
+    const chartTags = document.querySelectorAll("#summary-batting .tag");
+    const chartWrap = document.querySelector("#summary-batting .chart-wrap");
+    const chartCanvas = document.getElementById("hitTypeChart");
+
+    if (divider) divider.style.display = "";
+    if (chartTags[1]) chartTags[1].textContent = "Hit Type Breakdown";
+    if (chartTags[1]) chartTags[1].style.display = "";
+    if (chartWrap) chartWrap.style.display = "";
+
+    if (chartCanvas) {
+        seasonHitPie.render(
+            chartCanvas,
+            ["1B", "2B", "3B", "HR"],
+            [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
+        );
+    }
+}
 
         function showSelectedFieldingGame(r, tr = null) {
             selectedFieldingGame = r;
