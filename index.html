@@ -2513,13 +2513,13 @@ function showSelectedFieldingGame(r, tr = null) {
         `;
 
         tr.addEventListener("click", () => {
-    if (selectedBattingGame === r) {
+    if (selectedFieldingGame === r) {
         clearSelectedGameSummary();
         return;
     }
 
-    setSelectedRow("battingBody", tr);
-    showSelectedBattingGame(r);
+    setSelectedRow("fieldingBody", tr);
+    showSelectedFieldingGame(r, tr);
 });
 
         body.appendChild(tr);
