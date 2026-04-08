@@ -2478,13 +2478,13 @@ function showSelectedFieldingGame(r, tr = null) {
         `;
 
         tr.addEventListener("click", () => {
-    if (selectedFieldingGame === r) {
+    if (selectedBattingGame === r) {
         clearSelectedGameSummary();
         return;
     }
 
-    setSelectedRow("fieldingBody", tr);
-    showSelectedFieldingGame(r, tr);
+    setSelectedRow("battingBody", tr);
+    showSelectedBattingGame(r);
 });
 
         body.appendChild(tr);
@@ -2512,14 +2512,14 @@ function showSelectedFieldingGame(r, tr = null) {
           <td class="right" data-label="FPCT">${fp}</td>
         `;
 
-       tr.addEventListener("click", () => {
-    if (selectedFieldingGame === r) {
+        tr.addEventListener("click", () => {
+    if (selectedBattingGame === r) {
         clearSelectedGameSummary();
         return;
     }
 
-    setSelectedRow("fieldingBody", tr);
-    showSelectedFieldingGame(r, tr);
+    setSelectedRow("battingBody", tr);
+    showSelectedBattingGame(r);
 });
 
         body.appendChild(tr);
@@ -3039,9 +3039,9 @@ strip.innerHTML = [...topBlock, ...base].map(x => `
   `).join("");
         }
 
+        /* ------------ TABS / SEASON DROPDOWN ------------ */
+   /* ------------ TABS / SEASON DROPDOWN ------------ */
 function setTab(tabName) {
-    clearSelectedGameSummary();
-
     document.querySelectorAll(".tab").forEach(t => {
         t.classList.toggle("active", t.dataset.tab === tabName);
     });
