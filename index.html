@@ -1066,93 +1066,7 @@ td[data-label="Opponent"] .opp-emoji {
        OPENED GAME ROW ONLY
        ========================= */
 
-    .game-detail-row td {
-        padding: 0 !important;
-        overflow: hidden !important;
-        text-align: left;
-        vertical-align: top;
-    }
-
-    .game-detail-row .game-detail {
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden !important;
-        padding: 6px 8px !important;
-    }
-
-    .game-detail-row .game-detail-head {
-        font-size: 10px !important;
-        line-height: 1 !important;
-        margin-bottom: 6px !important;
-        letter-spacing: .2px !important;
-    }
-
-    .game-detail-row .stat-strip {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 6px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
-    }
-
-    .game-detail-row .stat {
-        min-width: 0 !important;
-        min-height: 44px !important;
-        padding: 6px 6px 5px !important;
-
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        text-align: center !important;
-
-        gap: 2px !important;
-        overflow: hidden !important;
-    }
-
-    .game-detail-row .stat .k {
-        font-size: 11px !important;
-        line-height: 1.1 !important;
-        letter-spacing: .3px !important;
-        color: rgba(255,255,255,.7) !important;
-
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    .game-detail-row .stat .v {
-        font-size: 17px !important;
-        font-weight: 900 !important;
-        line-height: 1.1 !important;
-        margin: 0 !important;
-
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    .game-detail-row .stat .s {
-        font-size: 10px !important;
-        line-height: 1.1 !important;
-        color: rgba(255,255,255,.65) !important;
-
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    /* ✅ Chart stays FULL SIZE now */
-    .game-detail-row .game-detail-chart {
-        margin-top: 8px !important;
-        padding: 8px !important;
-    }
-
-    .game-detail-row .game-detail-chart canvas {
-        height: 220px !important; /* back to normal */
-        max-width: 100% !important;
-    }
+  
 }
 
 @media (max-width: 600px) {
@@ -2242,7 +2156,7 @@ td[data-label="Opponent"] .opp-emoji {
 
         /* ------------ TABLE RENDER ------------ */
         
-    function renderBattingTable(rows) {
+   function renderBattingTable(rows) {
     const body = $("#battingBody");
     body.innerHTML = "";
 
@@ -2263,19 +2177,19 @@ td[data-label="Opponent"] .opp-emoji {
         `;
 
         if (sameGame(selectedGame.batting, r)) {
-    tr.classList.add("selected-game");
-}
+            tr.classList.add("selected-game");
+        }
 
-tr.addEventListener("click", () => {
-    selectGameRow(r, "batting");
-});
+        tr.addEventListener("click", () => {
+            selectGameRow(r, "batting");
+        });
+
         body.appendChild(tr);
     }
 
     $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
 }
-
- function renderFieldingTable(rows) {
+function renderFieldingTable(rows) {
     const body = $("#fieldingBody");
     body.innerHTML = "";
 
@@ -2295,12 +2209,12 @@ tr.addEventListener("click", () => {
         `;
 
         if (sameGame(selectedGame.fielding, r)) {
-    tr.classList.add("selected-game");
-}
+            tr.classList.add("selected-game");
+        }
 
-tr.addEventListener("click", () => {
-    selectGameRow(r, "fielding");
-});
+        tr.addEventListener("click", () => {
+            selectGameRow(r, "fielding");
+        });
 
         body.appendChild(tr);
     }
@@ -2316,26 +2230,56 @@ const selectedGame = {
     fielding: null
 };
 
-        function sortRows(rows, key, dir) {
-            const mult = dir === "asc" ? 1 : -1;
-            return [...rows].sort((a, b) => {
-                const av = a[key], bv = b[key];
-                if (key === "FPCT") {
-                    const aNan = !isFinite(av), bNan = !isFinite(bv);
-                    if (aNan && bNan) return 0;
-                    if (aNan) return 1;
-                    if (bNan) return -1;
-                    return (av - bv) * mult;
-                }
-                if (typeof av === "number" && typeof bv === "number") {
-                    if (av < bv) return -1 * mult;
-                    if (av > bv) return 1 * mult;
-                    return 0;
-                }
-                return String(av).localeCompare(String(bv)) * mult;
-            });
+function sameGame(a, b) {
+    if (!a || !b) return false;
+    return a.date === b.date &&
+           a.opponent === b.opponent &&
+           (a.result || "") === (b.result || "");
+}
+
+function selectGameRow(r, mode) {
+    if (mode === "batting") {
+        selectedGame.batting = sameGame(selectedGame.batting, r) ? null : r;
+    } else {
+        selectedGame.fielding = sameGame(selectedGame.fielding, r) ? null : r;
+    }
+
+    renderSummary();
+
+    if (mode === "batting") {
+        refreshBatting();
+    } else {
+        refreshFielding();
+    }
+}
+
+const selectedGame = {
+    batting: null,
+    fielding: null
+};
+
+   function sortRows(rows, key, dir) {
+    const mult = dir === "asc" ? 1 : -1;
+    return [...rows].sort((a, b) => {
+        const av = a[key], bv = b[key];
+
+        if (key === "FPCT") {
+            const aNan = !isFinite(av), bNan = !isFinite(bv);
+            if (aNan && bNan) return 0;
+            if (aNan) return 1;
+            if (bNan) return -1;
+            return (av - bv) * mult;
         }
 
+        if (typeof av === "number" && typeof bv === "number") {
+            if (av < bv) return -1 * mult;
+            if (av > bv) return 1 * mult;
+            return 0;
+        }
+
+        return String(av).localeCompare(String(bv)) * mult;
+    });
+}
 
 function hideGameTip() {
     document.getElementById("tooltip").classList.remove("show");
@@ -2362,6 +2306,7 @@ function hideGameTip() {
     const sorted = sortRows(filtered, battingState.key, battingState.dir);
     renderBattingTable(sorted);
 }
+
 function refreshFielding() {
     const filtered = filterRows(fieldingLog, fieldingState);
 
@@ -2732,8 +2677,7 @@ function selectGameRow(r, mode) {
         const seasonHitPie = createHitPie();
         const opponentHitPie = createHitPie();
 
-
-        function renderSummary() {
+function renderSummary() {
     const selectedBat = selectedGame.batting;
     const selectedFld = selectedGame.fielding;
 
