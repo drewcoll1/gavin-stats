@@ -2068,7 +2068,7 @@ function computeAdvancedFromLog(t) {
             if (tr) tr.classList.add("selected-game");
         }
 
-        function clearSelectedGameSummary() {
+ function clearSelectedGameSummary() {
     selectedBattingGame = null;
     selectedFieldingGame = null;
 
@@ -2086,12 +2086,20 @@ function computeAdvancedFromLog(t) {
     if (battingTag) battingTag.textContent = "Batting";
     if (fieldingTag) fieldingTag.textContent = "Fielding";
 
+    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
+    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
+
+    if (summaryLogoBatting) summaryLogoBatting.style.display = "flex";
+    if (summaryLogoFielding) summaryLogoFielding.style.display = "flex";
+
     renderSummary();
 }
 
 function showSelectedBattingGame(r) {
     selectedBattingGame = r;
     selectedFieldingGame = null;
+    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
+if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
     const totals = computeBattingTotals([r]);
     const rates = computeAdvancedFromLog(totals);
@@ -2210,6 +2218,8 @@ function showSelectedBattingGame(r) {
 function showSelectedFieldingGame(r, tr = null) {
     selectedFieldingGame = r;
     selectedBattingGame = null;
+    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
+if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
     if (tr) setSelectedRow("fieldingBody", tr);
 
     const logoSrc = logoMap[r.opponent] || "";
