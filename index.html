@@ -2181,33 +2181,67 @@ function showSelectedBattingGame(r) {
 }
 
         function showSelectedFieldingGame(r, tr = null) {
-            selectedFieldingGame = r;
-            selectedBattingGame = null;
-            if (tr) setSelectedRow("fieldingBody", tr);
+    selectedFieldingGame = r;
+    selectedBattingGame = null;
+    if (tr) setSelectedRow("fieldingBody", tr);
 
-            const strip = $("#fieldingStrip");
-            strip.innerHTML = [
-                { k: "Date", v: r.date, s: "Game date" },
-                { k: "Opponent", v: r.opponent, s: "Matchup" },
-                { k: "Result", v: r.result || "—", s: "Final" },
-                { k: "TC", v: r.TC, s: "Total chances" },
-                { k: "PO", v: r.PO, s: "Putouts" },
-                { k: "A", v: r.A, s: "Assists" },
-                { k: "E", v: r.E, s: "Errors" },
-                { k: "FPCT", v: isFinite(r.FPCT) ? fmt3(r.FPCT) : "—", s: "(PO + A) / (PO + A + E)" }
-            ].map(x => `
-                <div class="stat">
-                    <div class="k">${x.k}</div>
-                    <div class="v">${x.v}</div>
-                    <div class="s">${x.s}</div>
+    const logoSrc = logoMap[r.opponent] || "";
+    const logoHTML = logoSrc
+        ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
+        : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
+
+    const strip = $("#fieldingStrip");
+    strip.innerHTML = `
+        <div class="selected-game-layout">
+            <div class="selected-game-top">
+                <div class="selected-game-date">${r.date}</div>
+
+                <div class="selected-game-logo-wrap">
+                    ${logoHTML}
                 </div>
-            `).join("");
 
-            const els = getRightPanelEls();
-            if (els.title) els.title.textContent = "Game Summary";
-            if (els.sub) els.sub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
-            if (els.fieldingTag) els.fieldingTag.textContent = "Selected Game";
-        }
+                <div class="selected-game-result">${r.result || "—"}</div>
+            </div>
+
+            <div class="selected-game-stats">
+                <div class="stat">
+                    <div class="k">TC</div>
+                    <div class="v">${r.TC}</div>
+                    <div class="s">Total chances</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">PO</div>
+                    <div class="v">${r.PO}</div>
+                    <div class="s">Putouts</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">A</div>
+                    <div class="v">${r.A}</div>
+                    <div class="s">Assists</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">E</div>
+                    <div class="v">${r.E}</div>
+                    <div class="s">Errors</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">FPCT</div>
+                    <div class="v">${isFinite(r.FPCT) ? fmt3(r.FPCT) : "—"}</div>
+                    <div class="s">(PO + A) / (PO + A + E)</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const els = getRightPanelEls();
+    if (els.title) els.title.textContent = "Game Summary";
+    if (els.sub) els.sub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
+    if (els.fieldingTag) els.fieldingTag.textContent = "Selected Game";
+}
         function setSharedOpponent(opp) {
             // Update both states
             battingState.opp = opp;
