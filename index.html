@@ -3038,10 +3038,9 @@ strip.innerHTML = [...topBlock, ...base].map(x => `
     </div>
   `).join("");
         }
-
-        /* ------------ TABS / SEASON DROPDOWN ------------ */
-   /* ------------ TABS / SEASON DROPDOWN ------------ */
 function setTab(tabName) {
+    clearSelectedGameSummary();
+
     document.querySelectorAll(".tab").forEach(t => {
         t.classList.toggle("active", t.dataset.tab === tabName);
     });
