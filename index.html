@@ -572,6 +572,37 @@ body {
     color: #ffffff;
 }
 
+    .game-log-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.game-log-head-left {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.game-log-head-left .panel-title,
+.game-log-head-left .panel-sub {
+    margin: 0;
+}
+
+.game-log-head-left .panel-sub {
+    margin-top: 6px;
+}
+
+.game-log-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
 .stat .k {
     font-size: 11px;
     letter-spacing: .35px;
@@ -1430,7 +1461,6 @@ td[data-label="Opponent"] .opp-emoji {
 </style>
    
 </head>
-
 <body>
     <div class="container">
         <div id="tooltip" class="tooltip"></div>
@@ -1441,141 +1471,147 @@ td[data-label="Opponent"] .opp-emoji {
                     <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
                     <div class="player-meta">
                         <div class="hero-identity">
-                             <img class="penn-logo" src="logo.png" alt="Penn logo" />
+                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
                             <div class="identity-text">
-    <h1 class="player-name">
-        <span class="first-name">Gavin</span>
-        <span class="last-name">Collins</span>
-    </h1>
+                                <h1 class="player-name">
+                                    <span class="first-name">Gavin</span>
+                                    <span class="last-name">Collins</span>
+                                </h1>
 
-    <div class="identity-school">
-        <strong><em>University of Pennsylvania Quakers</em></strong>
-    </div>
+                                <div class="identity-school">
+                                    <strong><em>University of Pennsylvania Quakers</em></strong>
+                                </div>
 
-    <!-- ✅ MOVE META HERE -->
-    <div class="player-meta-inline">
-        <span><strong>#16</strong> • RF • B/T: R/L</span>
-        <span class="meta-divider">•</span>
-        <span id="heroSeasonText">2025</span> Game Log
-    </div>
-</div>
-
+                                <div class="player-meta-inline">
+                                    <span><strong>#16</strong> • RF • B/T: R/L</span>
+                                    <span class="meta-divider">•</span>
+                                    <span id="heroSeasonText">2025</span> Game Log
+                                </div>
+                            </div>
                         </div>
-                
-
-                        
                     </div>
                 </div>
 
                 <div class="hero-right">
-    <div class="hero-stats-bar">
-    <span id="heroStatsSeason">2026</span> <span id="heroStatsSuffix">Season Stats</span>
-</div>
+                    <div class="hero-stats-bar">
+                        <span id="heroStatsSeason">2026</span> <span id="heroStatsSuffix">Season Stats</span>
+                    </div>
 
-    <div class="hero-stats-grid">
-        <div class="hero-stat-item">
-            <div class="label">AVG</div>
-            <div class="value" id="heroAVG">—</div>
-            <div class="hint">Batting Average</div>
-        </div>
+                    <div class="hero-stats-grid">
+                        <div class="hero-stat-item">
+                            <div class="label">AVG</div>
+                            <div class="value" id="heroAVG">—</div>
+                            <div class="hint">Batting Average</div>
+                        </div>
 
-        <div class="hero-stat-item">
-            <div class="label">OBP</div>
-            <div class="value" id="heroOBP">—</div>
-            <div class="hint">On-Base Percentage</div>
-        </div>
+                        <div class="hero-stat-item">
+                            <div class="label">OBP</div>
+                            <div class="value" id="heroOBP">—</div>
+                            <div class="hint">On-Base Percentage</div>
+                        </div>
 
-        <div class="hero-stat-item">
-            <div class="label">IVY AVG</div>
-            <div class="value" id="heroIvyAVG">—</div>
-            <div class="hint">AVG vs Ivy League</div>
-        </div>
-    </div>
-</div>
+                        <div class="hero-stat-item">
+                            <div class="label">IVY AVG</div>
+                            <div class="value" id="heroIvyAVG">—</div>
+                            <div class="hint">AVG vs Ivy League</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="tabs" role="tablist" aria-label="Stat sections">
-    <div class="tab active" data-tab="batting">Batting</div>
-    <div class="tab" data-tab="fielding">Fielding</div>
-   
+                <div class="pill">
+                    Season:
+                    <select id="seasonSelect" aria-label="Select season">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="career">Career</option>
+                    </select>
+                </div>
 
-    <div class="pill">
-        Season:
-        <select id="seasonSelect" aria-label="Select season">
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
-            <option value="career">Career</option>
-        </select>
-    </div>
-    <div class="tab tab-right" data-tab="awards">Career Awards</div>                 
-                <!-- removed Analytics tab -->
+                <div class="tab tab-right active" data-tab="awards">Career Awards</div>
             </div>
         </div>
 
-<div class="awards-page section" id="section-awards-page">
-    <div class="awards-grid">
-        <div class="award-card">
-            <img src="ivy.png" alt="Award 1">
-            <div class="award-card-text">
-                <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
-                <div class="award-card-date"></div>
+        <!-- TOP ROW: CAREER AWARDS + SEASON TEAM SUMMARY -->
+        <div class="grid" style="margin-top: 14px;">
+            <div class="awards-page section active" id="section-awards-page" style="margin-top: 0;">
+                <div class="panel-head">
+                    <div>
+                        <h2 class="panel-title">Career Awards</h2>
+                        <p class="panel-sub">Honors, weekly awards, and postseason achievements.</p>
+                    </div>
+                </div>
+
+                <div class="awards-grid">
+                    <div class="award-card">
+                        <img src="ivy.png" alt="Award 1">
+                        <div class="award-card-text">
+                            <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
+                            <div class="award-card-date"></div>
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="ivy.png" alt="Award 2">
+                        <div class="award-card-text">
+                            <div class="award-card-title">Ivy League Player of the Week</div>
+                            <div class="award-card-date">04/15/2025</div>
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="ivy.png" alt="Award 3">
+                        <div class="award-card-text">
+                            <div class="award-card-title">Ivy League Rookie of the Week</div>
+                            <div class="award-card-date">03/25/2024</div>
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="ivytourney2.png" alt="Award 4">
+                        <div class="award-card-text">
+                            <div class="award-card-title">2024 Ivy League Baseball Tournament Champions</div>
+                            <div class="award-card-date"></div>
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="worldseries.avif" alt="Award 5">
+                        <div class="award-card-text">
+                            <div class="award-card-title">2024 Men's College World Series Bid</div>
+                            <div class="award-card-date"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-bar" id="teamSummaryBar" style="margin-top: 0;">
+                <div class="summary-bar-head">
+                    <div>
+                        <h2 class="summary-bar-title" id="teamSummaryTitle">Season Team Summary</h2>
+                    </div>
+                </div>
+                <div class="team-record-strip" id="teamRecordStrip"></div>
             </div>
         </div>
 
-        <div class="award-card">
-            <img src="ivy.png" alt="Award 2">
-            <div class="award-card-text">
-                <div class="award-card-title">Ivy League Player of the Week</div>
-                <div class="award-card-date">04/15/2025</div>
-            </div>
-        </div>
-
-        <div class="award-card">
-            <img src="ivy.png" alt="Award 3">
-            <div class="award-card-text">
-                <div class="award-card-title">Ivy League Rookie of the Week</div>
-                <div class="award-card-date">03/25/2024</div>
-            </div>
-        </div>
-
-        <div class="award-card">
-            <img src="ivytourney2.png" alt="Award 4">
-            <div class="award-card-text">
-                <div class="award-card-title">2024 Ivy League Baseball Tournament Champions </div>
-                <div class="award-card-date"></div>
-            </div>
-        </div>
-
-        <div class="award-card">
-            <img src="worldseries.avif" alt="Award 5">
-            <div class="award-card-text">
-                <div class="award-card-title">2024 Men's College World Series Bid</div>
-                <div class="award-card-date"></div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="summary-bar" id="teamSummaryBar">
-    <div class="summary-bar-head">
-        <div>
-           <h2 class="summary-bar-title" id="teamSummaryTitle">Season Team Summary</h2>
-        </div>
-    </div>
-    <div class="team-record-strip" id="teamRecordStrip"></div>
-</div>
-
+        <!-- MAIN GRID -->
         <div class="grid">
             <!-- LEFT -->
             <div class="panel">
-                <div class="panel-head">
-                    <div>
+                <div class="panel-head game-log-head">
+                    <div class="game-log-head-left">
                         <h2 class="panel-title" id="panelTitle">Batting • Game Log</h2>
-                        <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter
-                            to narrow the log.</p>
+                        <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter to narrow the log.</p>
                     </div>
+
+                    <div class="game-log-tabs" role="tablist" aria-label="Game log tabs">
+                        <div class="tab active" data-tab="batting">Batting</div>
+                        <div class="tab" data-tab="fielding">Fielding</div>
+                    </div>
+
                     <div class="tag" id="rowCountTag"><b>—</b> rows</div>
                 </div>
 
@@ -1597,7 +1633,7 @@ td[data-label="Opponent"] .opp-emoji {
                                 <button class="btn secondary" id="resetBat">Reset</button>
                             </div>
                         </div>
-                        <!-- All-time vs filtered opponent -->
+
                         <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
                             <div class="tag" style="margin-bottom:10px;">
                                 <span id="vsOppLabel">—</span>
@@ -1611,28 +1647,22 @@ td[data-label="Opponent"] .opp-emoji {
                             <div class="chart-wrap">
                                 <canvas id="vsOppHitTypeChart" width="600" height="220"></canvas>
                             </div>
-
                         </div>
 
-                        <!-- All-time fielding vs filtered opponent -->
-
                         <div class="table-wrap">
-
                             <table id="battingTable">
                                 <thead>
                                     <tr>
-                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
-                                        </th>
+                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
                                         <th data-key="opponent">Opponent <span class="sort"></span></th>
-<th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
-
-<th class="right" data-key="H">H <span class="sort">↕</span></th>
-<th class="right" data-key="AB">AB <span class="sort">↕</span></th>
-<th class="right" data-key="R">R <span class="sort">↕</span></th>
-<th class="right" data-key="2B">2B <span class="sort">↕</span></th>
-<th class="right" data-key="3B">3B <span class="sort">↕</span></th>
-<th class="right" data-key="HR">HR <span class="sort">↕</span></th>
-<th class="right" data-key="RBI">RBI <span class="sort">↕</span></th>
+                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                                        <th class="right" data-key="H">H <span class="sort">↕</span></th>
+                                        <th class="right" data-key="AB">AB <span class="sort">↕</span></th>
+                                        <th class="right" data-key="R">R <span class="sort">↕</span></th>
+                                        <th class="right" data-key="2B">2B <span class="sort">↕</span></th>
+                                        <th class="right" data-key="3B">3B <span class="sort">↕</span></th>
+                                        <th class="right" data-key="HR">HR <span class="sort">↕</span></th>
+                                        <th class="right" data-key="RBI">RBI <span class="sort">↕</span></th>
                                     </tr>
                                 </thead>
                                 <tbody id="battingBody"></tbody>
@@ -1657,45 +1687,34 @@ td[data-label="Opponent"] .opp-emoji {
                                 <button class="btn secondary" id="resetFld">Reset</button>
                             </div>
                         </div>
+
                         <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
                             <div class="tag" style="margin-bottom:10px;">
                                 <span id="vsOppLabelFld">—</span>
                             </div>
                             <div class="stat-strip" id="vsOppStripFld"></div>
-
                         </div>
 
                         <div class="table-wrap">
                             <table id="fieldingTable">
                                 <thead>
                                     <tr>
-                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span>
-                                        </th>
+                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
                                         <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="TC" style="width: 6ch;">TC <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="PO" style="width: 6ch;">PO <span
-                                                class="sort">↕</span></th>
-                                        <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="E" style="width: 6ch;">E <span class="sort">↕</span>
-                                        </th>
-                                        <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span
-                                                class="sort">↕</span></th>
-            
+                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                                        <th class="right" data-key="TC" style="width: 6ch;">TC <span class="sort">↕</span></th>
+                                        <th class="right" data-key="PO" style="width: 6ch;">PO <span class="sort">↕</span></th>
+                                        <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span></th>
+                                        <th class="right" data-key="E" style="width: 6ch;">E <span class="sort">↕</span></th>
+                                        <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span class="sort">↕</span></th>
                                     </tr>
                                 </thead>
                                 <tbody id="fieldingBody"></tbody>
                             </table>
                         </div>
 
-                        <div class="note">Fielding % = (PO + A) / (PO + A + E). If a row has 0 chances, FPCT shows “—”.
-                        </div>
+                        <div class="note">Fielding % = (PO + A) / (PO + A + E). If a row has 0 chances, FPCT shows “—”.</div>
                     </div>
-
-                    <!-- (Removed) Analytics section -->
                 </div>
             </div>
 
@@ -1704,45 +1723,44 @@ td[data-label="Opponent"] .opp-emoji {
                 <div class="panel-head">
                     <div>
                         <h2 class="panel-title" id="summaryPanelTitle">Season Summary</h2>
-                        <p class="panel-sub">Batting and fielding at a glance.
-                        </p>
+                        <p class="panel-sub">Batting and fielding at a glance.</p>
                     </div>
                 </div>
 
-               <div class="panel-body">
+                <div class="panel-body">
+                    <!-- Batting Summary -->
+                    <div class="section active" id="summary-batting">
+                        <div class="tag" style="margin: 10px 0 10px;">Batting</div>
 
-    <!-- Batting Summary -->
-    <div class="section active" id="summary-batting">
-    
+                        <div class="summary-logo-wrap" id="summaryLogoBatting">
+                            <img src="logo.png" class="summary-logo" alt="Penn logo">
+                        </div>
 
-    <div class="tag" style="margin: 10px 0 10px;">Batting</div>
-    <div class="summary-logo-wrap" id="summaryLogoBatting">
-    <img src="logo.png" class="summary-logo" alt="Penn logo">
-</div>
+                        <div class="stat-strip" id="summaryStrip"></div>
 
-<div class="stat-strip" id="summaryStrip"></div>
-    <div class="divider"></div>
+                        <div class="divider"></div>
 
-    <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-    <div class="chart-wrap">
-        <canvas id="hitTypeChart" width="600" height="220"></canvas>
-    </div>
-</div>
+                        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+                        <div class="chart-wrap">
+                            <canvas id="hitTypeChart" width="600" height="220"></canvas>
+                        </div>
+                    </div>
 
-  <div class="section" id="summary-fielding">
-    <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
+                    <!-- Fielding Summary -->
+                    <div class="section" id="summary-fielding">
+                        <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
 
-    <div class="summary-logo-wrap" id="summaryLogoFielding">
-        <img src="logo.png" class="summary-logo" alt="Penn logo">
-    </div>
+                        <div class="summary-logo-wrap" id="summaryLogoFielding">
+                            <img src="logo.png" class="summary-logo" alt="Penn logo">
+                        </div>
 
-    <div class="stat-strip" id="fieldingStrip"></div>
-</div>
+                        <div class="stat-strip" id="fieldingStrip"></div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- (Removed) ANALYTICS panel -->
     </div>
+
 
     <script>
         /* ------------ LOGO LOCATIONS ------------ */
