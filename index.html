@@ -1458,6 +1458,31 @@ td[data-label="Opponent"] .opp-emoji {
         opacity: 1;
     }
 }
+
+    /* =========================================================
+   MOBILE: CENTER TABLE CONTENT
+========================================================= */
+@media (max-width: 700px) {
+
+    /* center all cells */
+    #battingTable td,
+    #battingTable th,
+    #fieldingTable td,
+    #fieldingTable th {
+        text-align: center !important;
+    }
+
+    /* opponent column (logo + name) centered */
+    td[data-label="Opponent"] .opp,
+    td[data-label="Opponent"] .opp-main {
+        justify-content: center !important;
+    }
+
+    /* remove right alignment on stat columns */
+    .right {
+        text-align: center !important;
+    }
+}
 </style>
    
 </head>
@@ -1611,7 +1636,7 @@ td[data-label="Opponent"] .opp-emoji {
                             <div class="left-controls">
                                 <div class="input">
                                     <label for="searchBat">Search</label>
-                                    <input id="searchBat" type="text" placeholder="opponent, etc." />
+                                    <input id="searchBat" type="text" placeholder="" />
                                 </div>
                                 <div class="input">
                                     <label for="oppBat">Opponent</label>
