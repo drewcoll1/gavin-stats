@@ -1484,16 +1484,17 @@ td[data-label="Opponent"] .opp-emoji {
     }
 }
 
+
 /* =========================================================
-   MOBILE: CENTER HERO CONTROLS (SEASON + CAREER AWARDS)
+   MOBILE: CENTER HERO CONTROLS (SIDE-BY-SIDE)
 ========================================================= */
 @media (max-width: 700px) {
 
     .tabs {
         display: flex;
-        flex-direction: column;
-        align-items: center !important;
+        flex-direction: row !important;   /* force side-by-side */
         justify-content: center !important;
+        align-items: center;
         gap: 10px;
         width: 100%;
     }
@@ -1503,12 +1504,12 @@ td[data-label="Opponent"] .opp-emoji {
         margin: 0 !important;
     }
 
-    /* optional: make them feel balanced */
-    .tabs .pill,
-    .tabs .tab {
-        text-align: center;
+    /* prevents weird wrapping */
+    .tabs .pill {
+        display: flex;
+        align-items: center;
     }
-}   
+} 
 
 </style>
    
