@@ -10,36 +10,34 @@
 <style>
 :root {
     /* =========================
-       CORE COLORS
+       COLOR SYSTEM
        ========================= */
-    --bg: #ffffff;
-    --surface: #f4f6f8;
-    --surface-2: #f4f6f8;
-    --surface-3: #f4f6f8;
-    --panel: #f4f6f8;
-    --panel-strong: #f4f6f8;
+    --bg: #eef2f6;                 /* page background */
+    --panel: #ffffff;              /* main cards */
+    --panel-alt: #f7f9fc;          /* alternate card areas */
+    --panel-head: #e8eef6;         /* headers / section tops */
+    --surface: #f3f7fb;            /* subtle inner areas */
 
     --text: #10233f;
     --muted: #5f6f82;
 
-    --accent: #9e1b32;          /* Penn-style red */
-    --accent-dark: #7d1528;
-    --accent-blue: #011f5b;     /* Penn blue */
+    --accent-blue: #011f5b;
+    --accent-red: #9e1b32;
+    --accent-red-dark: #7d1528;
 
-    --border: rgba(1, 31, 91, 0.10);
+    --border: rgba(1, 31, 91, 0.12);
     --border-soft: rgba(1, 31, 91, 0.08);
     --shadow: 0 10px 24px rgba(16, 35, 63, 0.08);
     --radius: 14px;
 
-    /* log rows only */
-    --log-row-even: #eef2f7;
-    --log-row-hover: #e2e8f0;
+    /* LOG ROWS ONLY */
+    --log-row-even: #f4f7fb;
+    --log-row-hover: #e7edf5;
     --log-row-selected: linear-gradient(180deg, #9e1b32, #7d1528);
 
-    /* sticky columns */
-    --sticky-bg: #f4f6f8;
+    --sticky-bg: #f0f4f8;
 
-    /* controls */
+    /* CONTROLS */
     --input-bg: #ffffff;
     --button-bg: #011f5b;
     --button-bg-hover: #001742;
@@ -125,90 +123,6 @@ body {
 }
 
 /* =========================
-   SELECTED GAME
-   ========================= */
-.selected-game-logo-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.selected-game-layout {
-    grid-column: 1 / -1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.selected-game-top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 4px 0 14px;
-    text-align: center;
-}
-
-.selected-game-date {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--accent-blue);
-    letter-spacing: .3px;
-}
-
-.selected-game-team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-}
-
-.selected-game-logo {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    border-radius: 12px;
-    padding: 6px;
-}
-
-.selected-game-logo.fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text);
-}
-
-.selected-game-team-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.selected-game-result {
-    font-size: 15px;
-    font-weight: 900;
-    color: var(--accent);
-}
-
-.selected-game-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    width: 100%;
-}
-
-.selected-game-stats .stat {
-    width: 100%;
-}
-
-.selected-game-stats .stat-full {
-    grid-column: 1 / -1;
-}
-
-/* =========================
    HERO
    ========================= */
 .hero {
@@ -218,11 +132,17 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    background: var(--panel);
+    background: linear-gradient(135deg, #ffffff 0%, #f7f9fc 100%);
 }
 
 .hero::before {
-    display: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(1, 31, 91, 0.03), transparent 35%),
+        linear-gradient(180deg, rgba(158, 27, 50, 0.03), transparent 55%);
 }
 
 .hero-row {
@@ -244,11 +164,12 @@ body {
 .player-photo {
     width: 200px;
     height: 250px;
-    border: 2px solid rgba(1, 31, 91, 0.15);
+    border: 2px solid rgba(1, 31, 91, 0.14);
     border-radius: 12px;
     object-fit: cover;
     object-position: center top;
     flex: 0 0 auto;
+    background: #fff;
 }
 
 .hero-identity {
@@ -398,7 +319,7 @@ body {
 }
 
 /* =========================
-   STAT BLOCKS
+   FULL STAT BLOCK
    ========================= */
 .stat-full {
     grid-column: 1 / -1;
@@ -419,6 +340,7 @@ body {
 
 .stat-full .k {
     margin-bottom: 6px;
+    color: var(--muted);
 }
 
 .stat-full .v {
@@ -452,6 +374,7 @@ body {
     font-weight: 700;
     cursor: pointer;
     user-select: none;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 
 .tab.active {
@@ -473,7 +396,7 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    background: var(--panel);
+    background: var(--panel-head);
 }
 
 .summary-bar-head {
@@ -530,7 +453,7 @@ body {
 
 .team-record-strip::-webkit-scrollbar-thumb:hover,
 .table-wrap::-webkit-scrollbar-thumb:hover {
-    background: var(--accent);
+    background: var(--accent-red);
 }
 
 .team-record-strip .stat {
@@ -572,7 +495,7 @@ body {
     gap: 12px;
     padding: 14px 14px 10px;
     border-bottom: 1px solid var(--border);
-    background: var(--panel);
+    background: var(--panel-head);
 }
 
 .panel-title {
@@ -843,12 +766,16 @@ select option {
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: #ffffff;
+    background: var(--panel-alt);
     flex: 0 0 auto;
 }
 
 .chart-wrap::before {
-    display: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(1, 31, 91, 0.02), transparent 50%);
 }
 
 #hitTypeChart,
@@ -886,7 +813,7 @@ table {
 thead th {
     padding: 10px;
     border-bottom: 1px solid var(--border);
-    background: var(--panel);
+    background: var(--panel-head);
     color: var(--accent-blue);
     font-size: 12px;
     text-align: left;
@@ -934,7 +861,7 @@ tbody tr:hover td {
 }
 
 /* =========================
-   OPPONENT / LOGOS
+   OPPONENT / LOGO
    ========================= */
 .opp,
 td[data-label="Opponent"] .opp,
@@ -990,8 +917,21 @@ td[data-label="Opponent"] .opp-emoji {
 }
 
 /* =========================
-   SUMMARY LOGO
+   SELECTED GAME PANEL
    ========================= */
+.selected-game-logo-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selected-game-layout {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .summary-logo-wrap {
     display: flex;
     justify-content: center;
@@ -1006,6 +946,74 @@ td[data-label="Opponent"] .opp-emoji {
     border-radius: 12px;
 }
 
+.selected-game-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 4px 0 14px;
+    text-align: center;
+}
+
+.selected-game-date {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent-blue);
+    letter-spacing: .3px;
+}
+
+.selected-game-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.selected-game-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 12px;
+    padding: 6px;
+}
+
+.selected-game-logo.fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.selected-game-team-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.selected-game-result {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--accent-red);
+}
+
+.selected-game-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.selected-game-stats .stat {
+    width: 100%;
+}
+
+.selected-game-stats .stat-full {
+    grid-column: 1 / -1;
+}
+
 /* =========================
    AWARDS PAGE
    ========================= */
@@ -1016,7 +1024,7 @@ td[data-label="Opponent"] .opp-emoji {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    background: var(--panel);
+    background: var(--panel-alt);
 }
 
 .awards-page.active {
