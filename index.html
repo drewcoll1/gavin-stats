@@ -379,9 +379,6 @@ body {
 .tab.active {
     background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0));
     color: #ffffff;
-
-    border: 1px solid #cc0000;
-
     box-shadow: 0 4px 12px rgba(204, 0, 0, 0.35);
 }
 
@@ -963,6 +960,63 @@ tbody tr:hover td {
     background: transparent;
     display: flex;
     flex-direction: column;
+}
+
+     /* =========================
+   FORCE CONSISTENT DARK STYLE
+   ========================= */
+
+/* tabs, buttons, dropdowns, search */
+.tab,
+.btn,
+.btn.secondary,
+input[type="text"],
+select,
+.pill,
+.pill select,
+.input {
+    background: #171922 !important;
+    color: #ffffff !important;
+    border: 1px solid #2a2e3d !important;
+}
+
+/* labels next to inputs */
+.input label {
+    color: #ffffff !important;
+}
+
+/* placeholder text */
+input::placeholder {
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* dropdown options */
+select option {
+    background: #171922;
+    color: #ffffff;
+}
+
+/* hover = ONLY red border */
+.tab:hover,
+.btn:hover,
+.btn.secondary:hover,
+input[type="text"]:hover,
+select:hover {
+    border-color: #cc0000 !important;
+}
+
+/* focus (clicking into search or dropdown) */
+input:focus,
+select:focus {
+    border-color: #cc0000 !important;
+    box-shadow: none !important;
+    outline: none;
+}
+
+/* active tab (keep your red system) */
+.tab.active {
+    background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
+    color: #ffffff !important;
 }
 
 .award-card img {
