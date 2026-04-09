@@ -2081,7 +2081,10 @@ function computeAdvancedFromLog(t) {
     const battingTag = document.querySelector("#summary-batting .tag");
     const fieldingTag = document.querySelector("#summary-fielding .tag");
 
-    if (rightTitle) rightTitle.textContent = "Season Summary";
+    if (rightTitle) {
+    rightTitle.textContent =
+        (currentSeason === "career") ? "Career Summary" : "Season Summary";
+}
     if (rightSub) rightSub.textContent = "Batting and fielding at a glance.";
     if (battingTag) battingTag.textContent = "Batting";
     if (fieldingTag) fieldingTag.textContent = "Fielding";
