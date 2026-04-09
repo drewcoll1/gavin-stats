@@ -9,45 +9,40 @@
 
 <style>
 /* ========================================
-   1) BRAND / THEME TOKENS
+   1) BRAND TOKENS
 ======================================== */
 :root {
-    --bg: #0a0d12;
-    --panel: #121826;
-    --panel2: #182133;
-    --panel3: #202b40;
+    --bg: #0b1020;
+    --bg-2: #0f172a;
+    --panel: #111827;
+    --panel-2: #162033;
+    --panel-3: #1c2940;
 
     --text: #ffffff;
-    --muted: #b1b8c7;
-    --muted-2: rgba(255, 255, 255, .68);
+    --muted: #b8c0cf;
+    --muted-2: rgba(255, 255, 255, .70);
 
-    --penn-red: #a51e36;
-    --penn-red-bright: #c92543;
     --penn-blue: #011f5b;
-    --penn-blue-soft: #183a8a;
+    --penn-red: #a51e36;
+    --penn-red-bright: #bf2642;
+
     --accent: var(--penn-red);
+    --accent-blue: var(--penn-blue);
 
-    --glass: rgba(255, 255, 255, .05);
-    --glass-2: rgba(255, 255, 255, .07);
-    --glass-3: rgba(255, 255, 255, .10);
-
-    --border: rgba(255, 255, 255, .09);
-    --border-soft: rgba(255, 255, 255, .12);
+    --border: rgba(255, 255, 255, .10);
+    --border-soft: rgba(255, 255, 255, .14);
     --border-strong: rgba(255, 255, 255, .18);
 
+    --surface: rgba(255, 255, 255, .04);
+    --surface-2: rgba(255, 255, 255, .06);
+
     --shadow-sm: 0 8px 18px rgba(0, 0, 0, .20);
-    --shadow: 0 14px 34px rgba(0, 0, 0, .34);
-    --shadow-lg: 0 24px 52px rgba(0, 0, 0, .42);
-    --shadow-red: 0 16px 30px rgba(165, 30, 54, .20);
-    --shadow-blue: 0 16px 30px rgba(1, 31, 91, .18);
+    --shadow: 0 14px 30px rgba(0, 0, 0, .30);
+    --shadow-lg: 0 20px 42px rgba(0, 0, 0, .36);
 
     --radius: 14px;
     --radius-lg: 18px;
-    --radius-xl: 24px;
-
-    --surface: rgba(0, 0, 0, .18);
-    --surface-2: rgba(255, 255, 255, .04);
-    --surface-3: rgba(255, 255, 255, .07);
+    --radius-xl: 22px;
 }
 
 /* ========================================
@@ -66,18 +61,7 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color: var(--text);
     background:
-        linear-gradient(180deg, rgba(255,255,255,.015), transparent 18%),
-        repeating-linear-gradient(
-            45deg,
-            rgba(255, 255, 255, 0.012) 0px,
-            rgba(255, 255, 255, 0.012) 1px,
-            transparent 1px,
-            transparent 4px
-        ),
-        radial-gradient(1200px 800px at 15% 0%, rgba(165, 30, 54, .25), transparent 58%),
-        radial-gradient(900px 650px at 100% 12%, rgba(24, 58, 138, .20), transparent 55%),
-        radial-gradient(1200px 800px at 50% 100%, rgba(1, 31, 91, .18), transparent 60%),
-        var(--bg);
+        linear-gradient(180deg, #0b1020 0%, #0f172a 100%);
 }
 
 .container {
@@ -100,10 +84,9 @@ body {
     max-width: 360px;
     padding: 10px 12px;
     border-radius: 14px;
-    background: rgba(8, 10, 16, .94);
+    background: #0a0f1d;
     border: 1px solid var(--border-soft);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .48);
-    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
     color: rgba(255, 255, 255, .94);
     font-size: 12px;
     line-height: 1.35;
@@ -152,32 +135,20 @@ body {
     position: relative;
     overflow: hidden;
     padding: 22px;
-    border: 1px solid rgba(255, 255, 255, .10);
+    border: 1px solid var(--border);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     background:
-        radial-gradient(850px 320px at 0% 0%, rgba(255, 255, 255, .10), transparent 55%),
-        radial-gradient(900px 420px at 100% 100%, rgba(0, 0, 0, .35), transparent 58%),
-        linear-gradient(90deg, rgba(1, 31, 91, .82) 0%, rgba(10, 12, 20, .74) 38%, rgba(165, 30, 54, .72) 100%);
+        linear-gradient(90deg, #011f5b 0%, #0f172a 48%, #a51e36 100%);
 }
 
 .hero::before {
     content: "";
     position: absolute;
-    inset: -2px;
+    inset: 0;
     pointer-events: none;
     background:
-        linear-gradient(135deg, rgba(255,255,255,.08), transparent 28%),
-        radial-gradient(900px 300px at 0% 0%, rgba(255,255,255,.08), transparent 55%),
-        radial-gradient(700px 240px at 70% 0%, rgba(255,255,255,.04), transparent 55%);
-}
-
-.hero::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+        linear-gradient(180deg, rgba(255,255,255,.06), transparent 30%);
 }
 
 .hero-row {
@@ -199,14 +170,12 @@ body {
 .player-photo {
     width: 200px;
     height: 250px;
-    border: 2px solid rgba(255, 255, 255, .64);
+    border: 2px solid rgba(255, 255, 255, .70);
     border-radius: 16px;
     object-fit: cover;
     object-position: center top;
     flex: 0 0 auto;
-    box-shadow:
-        0 18px 38px rgba(0, 0, 0, .30),
-        0 0 0 1px rgba(255,255,255,.06) inset;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .28);
 }
 
 .hero-identity {
@@ -230,23 +199,21 @@ body {
 .first-name {
     font-size: 37px;
     font-weight: 500;
-    letter-spacing: 2.6px;
+    letter-spacing: 2.4px;
     text-transform: uppercase;
 }
 
 .last-name {
     font-size: 41px;
     font-weight: 900;
-    letter-spacing: 2.6px;
+    letter-spacing: 2.4px;
     text-transform: uppercase;
-    text-shadow: 0 8px 18px rgba(0,0,0,.20);
 }
 
 .penn-logo {
     height: 76px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22));
 }
 
 .identity-school {
@@ -279,8 +246,6 @@ body {
 }
 
 .hero-stats-bar {
-    padding: 0;
-    background: none;
     color: #fff;
     font-size: 13px;
     font-weight: 900;
@@ -291,18 +256,15 @@ body {
 .hero-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 16px;
 }
 
 .hero-stat-item {
-    position: relative;
     text-align: center;
-    padding: 8px 6px;
+    padding: 10px 6px;
     border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    border: 1px solid rgba(255,255,255,.08);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 10px 22px rgba(0,0,0,.14);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .10);
 }
 
 .hero-stat-item .label {
@@ -311,20 +273,19 @@ body {
     font-weight: 800;
     letter-spacing: .4px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .72);
+    color: rgba(255, 255, 255, .76);
 }
 
 .hero-stat-item .value {
     font-size: 34px;
     font-weight: 900;
     letter-spacing: .45px;
-    text-shadow: 0 6px 18px rgba(0, 0, 0, .18);
 }
 
 .hero-stat-item .hint {
     margin-top: 4px;
     font-size: 12px;
-    color: rgba(255, 255, 255, .58);
+    color: rgba(255, 255, 255, .62);
 }
 
 /* ========================================
@@ -345,10 +306,9 @@ body {
     padding: 5px 9px;
     border: 1px solid rgba(255, 255, 255, .14);
     border-radius: 10px;
-    background: rgba(0, 0, 0, .22);
+    background: rgba(0, 0, 0, .18);
     color: #fff;
     font-size: 11px;
-    box-shadow: 0 8px 16px rgba(0,0,0,.12);
 }
 
 .award-logo {
@@ -371,31 +331,28 @@ body {
 
 .tab {
     padding: 10px 15px;
-    border: 1px solid rgba(255, 255, 255, .12);
+    border: 1px solid var(--border-soft);
     border-radius: 12px;
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-    color: rgba(255, 255, 255, .90);
+    background: #1a2336;
+    color: rgba(255, 255, 255, .92);
     font-size: 13px;
     font-weight: 800;
     cursor: pointer;
     user-select: none;
-    transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease, filter .16s ease;
+    transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
 }
 
 .tab:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 255, 255, .18);
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+    border-color: rgba(255, 255, 255, .22);
+    background: #202b40;
     box-shadow: var(--shadow-sm);
 }
 
 .tab.active {
-    border-color: rgba(165, 30, 54, .50);
-    background:
-        linear-gradient(180deg, rgba(165, 30, 54, .38), rgba(1, 31, 91, .18));
-    box-shadow: var(--shadow-red);
+    border-color: rgba(165, 30, 54, .55);
+    background: #7f172b;
+    box-shadow: 0 10px 20px rgba(165, 30, 54, .18);
 }
 
 .tab-right {
@@ -408,14 +365,10 @@ body {
 .summary-bar {
     margin-top: 14px;
     padding: 18px 18px 15px;
-    border: 1px solid rgba(255, 255, 255, .10);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    background:
-        radial-gradient(700px 220px at 0% 0%, rgba(165, 30, 54, .16), transparent 60%),
-        radial-gradient(700px 220px at 100% 100%, rgba(1, 31, 91, .14), transparent 60%),
-        linear-gradient(90deg, rgba(1, 31, 91, .78), rgba(15, 18, 28, .78), rgba(165, 30, 54, .48)),
-        linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    box-shadow: var(--shadow);
+    background: #111b31;
 }
 
 .summary-bar-head {
@@ -455,18 +408,6 @@ body {
 
 .team-record-strip .stat {
     flex: 0 0 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.team-record-strip .stat .k,
-.team-record-strip .stat .v,
-.team-record-strip .stat .s {
-    width: 100%;
-    text-align: center;
 }
 
 .team-record-strip::-webkit-scrollbar,
@@ -484,12 +425,12 @@ body {
 .table-wrap::-webkit-scrollbar-thumb {
     border: 2px solid rgba(0, 0, 0, .25);
     border-radius: 10px;
-    background: linear-gradient(90deg, rgba(165, 30, 54, .95), rgba(24, 58, 138, .70));
+    background: linear-gradient(90deg, #a51e36, #011f5b);
 }
 
 .team-record-strip::-webkit-scrollbar-thumb:hover,
 .table-wrap::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(90deg, rgba(201, 37, 67, 1), rgba(24, 58, 138, .82));
+    background: linear-gradient(90deg, #bf2642, #183a8a);
 }
 
 /* ========================================
@@ -508,14 +449,10 @@ body {
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, .10);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    background:
-        radial-gradient(750px 260px at 0% 0%, rgba(165, 30, 54, .08), transparent 60%),
-        radial-gradient(750px 260px at 100% 0%, rgba(1, 31, 91, .10), transparent 60%),
-        linear-gradient(180deg, rgba(255, 255, 255, .06), transparent 45%),
-        var(--panel);
+    box-shadow: var(--shadow);
+    background: #121a2c;
 }
 
 .panel-head {
@@ -526,9 +463,7 @@ body {
     gap: 12px;
     padding: 16px 16px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, .08);
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.03), transparent),
-        linear-gradient(90deg, rgba(1,31,91,.14), transparent 40%, rgba(165,30,54,.10));
+    background: #18233a;
 }
 
 .panel-title {
@@ -569,10 +504,9 @@ body {
     padding: 5px 9px;
     border: 1px solid var(--border-soft);
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    color: rgba(255, 255, 255, .86);
+    background: #1c2940;
+    color: rgba(255, 255, 255, .88);
     font-size: 11px;
-    box-shadow: 0 8px 16px rgba(0,0,0,.10);
 }
 
 .tag b {
@@ -592,18 +526,17 @@ body {
     align-items: center;
     gap: 8px;
     padding: 7px 12px;
-    border: 1px solid rgba(255, 255, 255, .14);
+    border: 1px solid var(--border-soft);
     border-radius: 999px;
-    background: rgba(255, 255, 255, .05);
-    color: rgba(255, 255, 255, .90);
+    background: #162033;
+    color: rgba(255, 255, 255, .92);
     font-size: 12px;
-    backdrop-filter: blur(8px);
     transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
 
 .pill:hover {
-    border-color: rgba(255, 255, 255, .22);
-    background: rgba(255, 255, 255, .08);
+    border-color: rgba(255, 255, 255, .24);
+    background: #1c2940;
     box-shadow: var(--shadow-sm);
 }
 
@@ -620,14 +553,13 @@ body {
     min-height: 74px;
     padding: 12px 10px 10px;
     border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    background: #1a2336;
     border: 1px solid rgba(255,255,255,.06);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    box-shadow: 0 10px 22px rgba(0,0,0,.10);
 }
 
 .stat .k,
@@ -665,38 +597,13 @@ body {
 
 .stat-full {
     grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
     padding: 14px 16px;
-}
-
-.stat-full .k,
-.stat-full .v,
-.stat-full .s {
-    width: 100%;
-    text-align: center;
-}
-
-.stat-full .k {
-    margin-bottom: 6px;
-}
-
-.stat-full .v {
-    font-size: 22px;
-    font-weight: 900;
-}
-
-.stat-full .s {
-    margin-top: 6px;
 }
 
 .divider {
     height: 1px;
     margin: 14px 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+    background: rgba(255,255,255,.08);
     flex: 0 0 auto;
 }
 
@@ -745,20 +652,19 @@ body {
     padding: 9px 10px;
     border: 1px solid var(--border-soft);
     border-radius: 12px;
-    background: rgba(255, 255, 255, .04);
+    background: #162033;
     transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
 
 .input:hover {
-    border-color: rgba(255, 255, 255, .18);
-    background: rgba(255, 255, 255, .07);
-    box-shadow: var(--shadow-sm);
+    border-color: rgba(255, 255, 255, .20);
+    background: #1c2940;
 }
 
 .input label {
     white-space: nowrap;
     font-size: 12px;
-    color: rgba(255, 255, 255, .76);
+    color: rgba(255, 255, 255, .78);
 }
 
 input[type="text"],
@@ -766,7 +672,7 @@ select {
     padding: 6px 12px;
     border: 1px solid rgba(255, 255, 255, .12);
     border-radius: 999px;
-    background: rgba(255, 255, 255, .05);
+    background: #111827;
     color: var(--text);
     font-size: 13px;
     outline: none;
@@ -776,14 +682,13 @@ select {
 .pill select {
     padding: 4px 10px;
     font-size: 12px;
-    background: rgba(0, 0, 0, .18);
 }
 
 input[type="text"]:focus,
 select:focus {
-    background: rgba(255, 255, 255, .09);
-    border-color: rgba(165, 30, 54, .60);
-    box-shadow: 0 0 0 2px rgba(165, 30, 54, .25);
+    background: #0f172a;
+    border-color: rgba(165, 30, 54, .70);
+    box-shadow: 0 0 0 2px rgba(165, 30, 54, .22);
 }
 
 input::placeholder {
@@ -806,27 +711,27 @@ select option {
     cursor: pointer;
     font-weight: 800;
     color: #fff;
-    background: linear-gradient(180deg, rgba(165, 30, 54, .98), rgba(201, 37, 67, .78));
-    box-shadow: 0 12px 22px rgba(165, 30, 54, .20);
-    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    background: #a51e36;
+    box-shadow: 0 10px 20px rgba(165, 30, 54, .20);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, background .15s ease;
 }
 
 .btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 16px 26px rgba(165, 30, 54, .25);
-    filter: brightness(1.04);
+    background: #bf2642;
+    box-shadow: 0 14px 24px rgba(165, 30, 54, .24);
 }
 
 .btn.secondary {
     border: 1px solid var(--border-soft);
-    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+    background: #1c2940;
     box-shadow: none;
     color: rgba(255, 255, 255, .94);
 }
 
 .btn.secondary:hover {
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-    border-color: rgba(255, 255, 255, .20);
+    background: #24334f;
+    border-color: rgba(255, 255, 255, .22);
 }
 
 /* ========================================
@@ -857,10 +762,8 @@ table {
 thead th {
     padding: 11px 10px;
     border-bottom: 1px solid var(--border);
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,0)),
-        linear-gradient(90deg, rgba(1,31,91,.18), rgba(20,22,32,.96), rgba(165,30,54,.10));
-    color: rgba(255, 255, 255, .80);
+    background: #18233a;
+    color: rgba(255, 255, 255, .82);
     font-size: 12px;
     font-weight: 800;
     text-align: left;
@@ -888,12 +791,12 @@ tbody td {
 }
 
 tbody tr:nth-child(even) td {
-    background: rgba(255, 255, 255, .014);
+    background: rgba(255, 255, 255, .012);
 }
 
 tbody tr:hover td {
     background: rgba(255, 255, 255, .06);
-    transition: background .15s ease, box-shadow .15s ease;
+    transition: background .15s ease;
 }
 
 #battingBody tr,
@@ -903,7 +806,7 @@ tbody tr:hover td {
 
 #battingBody tr.selected-game td,
 #fieldingBody tr.selected-game td {
-    background: linear-gradient(180deg, rgb(165, 30, 54), rgb(126, 21, 41)) !important;
+    background: #7f172b !important;
     color: #fff !important;
 }
 
@@ -1059,7 +962,6 @@ td[data-label="Opponent"] .opp-emoji {
     height: 90px;
     object-fit: cover;
     border-radius: 12px;
-    box-shadow: 0 12px 22px rgba(0,0,0,.18);
 }
 
 /* ========================================
@@ -1071,23 +973,8 @@ td[data-label="Opponent"] .opp-emoji {
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 16px;
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-        rgba(0,0,0,.18);
+    background: #18233a;
     flex: 0 0 auto;
-    box-shadow: 0 12px 24px rgba(0,0,0,.14);
-}
-
-.chart-wrap::before {
-    content: "";
-    position: absolute;
-    inset: -18px;
-    pointer-events: none;
-    filter: blur(10px);
-    background:
-        radial-gradient(420px 220px at 35% 55%, rgba(165, 30, 54, .22), transparent 60%),
-        radial-gradient(320px 220px at 35% 55%, rgba(24, 58, 138, .16), transparent 55%),
-        radial-gradient(320px 220px at 80% 45%, rgba(255, 255, 255, .05), transparent 55%);
 }
 
 #hitTypeChart,
@@ -1104,14 +991,10 @@ td[data-label="Opponent"] .opp-emoji {
     display: none;
     margin-top: 14px;
     padding: 22px;
-    border: 1px solid rgba(255, 255, 255, .10);
+    border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-    background:
-        radial-gradient(700px 260px at 0% 0%, rgba(165, 30, 54, .14), transparent 60%),
-        radial-gradient(700px 260px at 100% 100%, rgba(1, 31, 91, .16), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.05), transparent 45%),
-        var(--panel);
+    box-shadow: var(--shadow);
+    background: #121a2c;
 }
 
 .awards-page.active {
@@ -1128,13 +1011,10 @@ td[data-label="Opponent"] .opp-emoji {
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, .10);
     border-radius: 20px;
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
-        linear-gradient(135deg, rgba(1,31,91,.12), rgba(165,30,54,.10));
+    background: #18233a;
     display: flex;
     flex-direction: column;
     transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-    box-shadow: 0 14px 26px rgba(0,0,0,.18);
 }
 
 .award-card:hover {
@@ -1150,7 +1030,6 @@ td[data-label="Opponent"] .opp-emoji {
     object-fit: contain;
     background: transparent;
     padding: 18px 18px 8px;
-    filter: drop-shadow(0 12px 18px rgba(0,0,0,.24));
 }
 
 .award-card-text {
@@ -1274,9 +1153,7 @@ td[data-label="Opponent"] .opp-emoji {
     #fieldingTable thead th:first-child,
     #fieldingTable thead th:nth-child(2) {
         z-index: 5;
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
-            rgba(20, 22, 32, .98);
+        background: #18233a;
     }
 
     #battingTable td:first-child,
@@ -1297,7 +1174,7 @@ td[data-label="Opponent"] .opp-emoji {
 
 @media (max-width: 1100px) {
     .table-wrap {
-        background: var(--surface);
+        background: #121a2c;
         overflow-x: auto;
         overflow-y: hidden;
     }
@@ -1451,11 +1328,6 @@ td[data-label="Opponent"] .opp-emoji {
         flex: 1 1 0;
         min-width: 0;
         padding: 6px 4px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
     }
 
     .team-record-strip .stat .v {
