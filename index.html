@@ -7,23 +7,27 @@
     <title>Gavin Collins #16</title>
     <link rel="icon" type="image/png" href="favicon.png">
 
-    <style>
+   <style>
 /* ========================================
-   1) THEME TOKENS / GLOBAL VARIABLES
+   1) THEME TOKENS
 ======================================== */
 :root {
-    --bg: #0e0f12;
-    --panel: #171922;
-    --panel2: #1f2230;
+    --bg: #0c0e12;
+    --panel: #151925;
+    --panel2: #1c2230;
     --text: #ffffff;
     --muted: #a8adbd;
     --accent: #cc0000;
+    --accent-soft: rgba(204, 0, 0, .18);
+    --blue-soft: rgba(80, 120, 255, .12);
 
     --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-    --shadow-lg: 0 14px 34px rgba(0, 0, 0, .34);
+    --shadow-lg: 0 18px 40px rgba(0, 0, 0, .38);
+    --shadow-red: 0 14px 28px rgba(204, 0, 0, .18);
 
     --radius: 14px;
     --radius-lg: 18px;
+    --radius-xl: 22px;
 
     --border: rgba(255, 255, 255, .08);
     --border-soft: rgba(255, 255, 255, .10);
@@ -41,6 +45,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -48,20 +56,21 @@ body {
     background:
         repeating-linear-gradient(
             45deg,
-            rgba(255, 255, 255, 0.015) 0px,
-            rgba(255, 255, 255, 0.015) 1px,
+            rgba(255, 255, 255, 0.012) 0px,
+            rgba(255, 255, 255, 0.012) 1px,
             transparent 1px,
             transparent 3px
         ),
-        radial-gradient(1200px 800px at 20% 0%, rgba(204, 0, 0, .18), transparent 60%),
-        radial-gradient(900px 600px at 100% 20%, rgba(80, 120, 255, .12), transparent 55%),
+        radial-gradient(1200px 800px at 18% 0%, rgba(204, 0, 0, .20), transparent 60%),
+        radial-gradient(900px 600px at 100% 18%, rgba(80, 120, 255, .13), transparent 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, .015), transparent 18%),
         var(--bg);
 }
 
 .container {
-    width: min(1150px, calc(100% - 32px));
+    width: min(1180px, calc(100% - 32px));
     margin: 0 auto;
-    padding: 18px 0 34px;
+    padding: 20px 0 38px;
     position: relative;
 }
 
@@ -78,7 +87,7 @@ body {
     max-width: 360px;
     padding: 10px;
     border-radius: 12px;
-    background: rgba(10, 11, 14, .92);
+    background: rgba(10, 11, 14, .94);
     border: 1px solid var(--border-soft);
     box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
     backdrop-filter: blur(10px);
@@ -129,12 +138,14 @@ body {
 .hero {
     position: relative;
     overflow: hidden;
-    padding: 18px;
-    border: 1px solid rgba(255, 255, 255, .06);
-    border-radius: var(--radius-lg);
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     background:
-        linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+        radial-gradient(700px 260px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
+        radial-gradient(700px 260px at 100% 100%, rgba(0, 0, 0, .26), transparent 58%),
+        linear-gradient(90deg, rgba(0, 0, 0, .74), rgba(204, 0, 0, .56)),
         linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
 }
 
@@ -146,7 +157,7 @@ body {
     background:
         radial-gradient(900px 300px at 0% 0%, rgba(255, 255, 255, .08), transparent 55%),
         radial-gradient(600px 240px at 60% 0%, rgba(255, 255, 255, .05), transparent 55%),
-        radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .35), transparent 60%);
+        radial-gradient(900px 400px at 100% 50%, rgba(0, 0, 0, .34), transparent 60%);
 }
 
 .hero-row {
@@ -155,25 +166,25 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 20px;
 }
 
 .hero-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 18px;
     min-width: 280px;
 }
 
 .player-photo {
     width: 200px;
     height: 250px;
-    border: 2px solid rgba(255, 255, 255, .65);
-    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, .62);
+    border-radius: 14px;
     object-fit: cover;
     object-position: center top;
     flex: 0 0 auto;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, .28);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, .28);
 }
 
 .hero-identity {
@@ -191,40 +202,41 @@ body {
 .player-name {
     display: flex;
     flex-direction: column;
-    line-height: 1.05;
+    line-height: 1.02;
 }
 
 .first-name {
-    font-size: 35px;
+    font-size: 36px;
     font-weight: 500;
-    letter-spacing: 2.5px;
+    letter-spacing: 2.4px;
 }
 
 .last-name {
-    font-size: 37px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
+    font-size: 39px;
+    font-weight: 800;
+    letter-spacing: 2.4px;
 }
 
 .penn-logo {
-    height: 72px;
+    height: 74px;
     width: auto;
     object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .22));
 }
 
 .identity-school {
-    margin: 0;
+    margin: 2px 0 0;
     font-size: 14px;
-    color: rgba(255, 255, 255, .78);
+    color: rgba(255, 255, 255, .82);
 }
 
 .player-meta-inline {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 6px;
+    margin-top: 8px;
     font-size: 14px;
-    color: rgba(255, 255, 255, .78);
+    color: rgba(255, 255, 255, .80);
     flex-wrap: wrap;
 }
 
@@ -232,21 +244,10 @@ body {
     opacity: .6;
 }
 
-.player-meta .sub {
-    margin: 6px 0 0;
-    font-size: 14px;
-    color: rgba(255, 255, 255, .78);
-}
-
-.player-meta .sub strong {
-    font-weight: 900;
-    color: #fff;
-}
-
 .hero-right {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     min-width: 420px;
     max-width: 460px;
     width: 100%;
@@ -257,8 +258,8 @@ body {
     background: none;
     color: #fff;
     font-size: 13px;
-    font-weight: 800;
-    letter-spacing: .4px;
+    font-weight: 900;
+    letter-spacing: .5px;
     text-transform: uppercase;
 }
 
@@ -269,32 +270,34 @@ body {
 }
 
 .hero-stat-item {
-    padding: 0;
     text-align: center;
-    border: none;
-    background: none;
+    position: relative;
 }
 
 .hero-stat-item .label {
     margin-bottom: 6px;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .35px;
+    text-transform: uppercase;
     color: rgba(255, 255, 255, .72);
 }
 
 .hero-stat-item .value {
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 900;
-    letter-spacing: .4px;
+    letter-spacing: .5px;
+    text-shadow: 0 6px 18px rgba(0, 0, 0, .20);
 }
 
 .hero-stat-item .hint {
     margin-top: 4px;
     font-size: 12px;
-    color: rgba(255, 255, 255, .60);
+    color: rgba(255, 255, 255, .58);
 }
 
 /* ========================================
-   5) HERO AWARDS / INLINE AWARD CHIPS
+   5) INLINE AWARD CHIPS
 ======================================== */
 .hero-awards {
     display: flex;
@@ -328,8 +331,10 @@ body {
 .tabs {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
-    margin-top: 40px;
+    margin-top: 18px;
+    padding-top: 2px;
 }
 
 .tab {
@@ -342,7 +347,7 @@ body {
     font-weight: 800;
     cursor: pointer;
     user-select: none;
-    transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+    transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease, filter .16s ease;
 }
 
 .tab:hover {
@@ -390,9 +395,10 @@ body {
 .summary-bar-title {
     margin: 0;
     font-size: 15px;
-    letter-spacing: .3px;
+    font-weight: 900;
+    letter-spacing: .4px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .94);
+    color: rgba(255, 255, 255, .95);
 }
 
 .summary-bar-sub {
@@ -452,7 +458,7 @@ body {
 }
 
 /* ========================================
-   8) MAIN PAGE LAYOUT / PANELS
+   8) MAIN LAYOUT / PANELS
 ======================================== */
 .grid {
     display: grid;
@@ -490,7 +496,8 @@ body {
 .panel-title {
     margin: 0;
     font-size: 15px;
-    letter-spacing: .3px;
+    font-weight: 900;
+    letter-spacing: .4px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, .92);
 }
@@ -525,7 +532,7 @@ body {
     border: 1px solid var(--border-soft);
     border-radius: 999px;
     background: var(--surface-2);
-    color: rgba(255, 255, 255, .82);
+    color: rgba(255, 255, 255, .84);
     font-size: 11px;
 }
 
@@ -616,7 +623,6 @@ body {
     color: rgba(255, 255, 255, .60);
 }
 
-/* full-width stat rows */
 .stat-full {
     grid-column: 1 / -1;
     display: flex;
@@ -808,13 +814,14 @@ table {
 }
 
 thead th {
-    padding: 10px;
+    padding: 11px 10px;
     border-bottom: 1px solid var(--border);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(0, 0, 0, 0)),
-        rgba(20, 22, 32, .95);
-    color: rgba(255, 255, 255, .75);
+        linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(0, 0, 0, 0)),
+        rgba(20, 22, 32, .97);
+    color: rgba(255, 255, 255, .76);
     font-size: 12px;
+    font-weight: 800;
     text-align: left;
     white-space: nowrap;
     cursor: pointer;
@@ -830,7 +837,7 @@ thead th .sort {
 }
 
 tbody td {
-    padding: 10px;
+    padding: 11px 10px;
     border-bottom: 1px solid rgba(255, 255, 255, .05);
     color: rgba(255, 255, 255, .92);
     font-size: 13px;
@@ -840,11 +847,11 @@ tbody td {
 }
 
 tbody tr:nth-child(even) td {
-    background: rgba(255, 255, 255, .01);
+    background: rgba(255, 255, 255, .015);
 }
 
 tbody tr:hover td {
-    background: rgba(255, 255, 255, .04);
+    background: rgba(255, 255, 255, .05);
     transition: background .15s ease, box-shadow .15s ease;
 }
 
@@ -1021,7 +1028,7 @@ td[data-label="Opponent"] .opp-emoji {
     overflow: hidden;
     padding: 10px;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     background: var(--surface);
     flex: 0 0 auto;
 }
@@ -1051,11 +1058,13 @@ td[data-label="Opponent"] .opp-emoji {
 .awards-page {
     display: none;
     margin-top: 14px;
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     background:
+        radial-gradient(700px 260px at 0% 0%, rgba(204, 0, 0, .10), transparent 60%),
+        radial-gradient(700px 260px at 100% 100%, rgba(80, 120, 255, .08), transparent 60%),
         linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
         var(--panel);
 }
@@ -1067,14 +1076,16 @@ td[data-label="Opponent"] .opp-emoji {
 .awards-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    gap: 20px;
 }
 
 .award-card {
     overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 18px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02)),
+        rgba(255, 255, 255, .03);
     display: flex;
     flex-direction: column;
     transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
@@ -1092,17 +1103,18 @@ td[data-label="Opponent"] .opp-emoji {
     height: 260px;
     object-fit: contain;
     background: transparent;
-    padding: 12px;
+    padding: 16px 16px 8px;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22));
 }
 
 .award-card-text {
-    padding: 12px 14px 14px;
+    padding: 10px 16px 16px;
     text-align: center;
 }
 
 .award-card-title {
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 17px;
+    font-weight: 900;
     color: #fff;
     line-height: 1.3;
 }
@@ -1114,7 +1126,7 @@ td[data-label="Opponent"] .opp-emoji {
 }
 
 /* ========================================
-   16) SECTION VISIBILITY HELPERS
+   16) SECTION HELPERS
 ======================================== */
 .section {
     display: none;
@@ -1137,7 +1149,7 @@ td[data-label="Opponent"] .opp-emoji {
 }
 
 /* ========================================
-   17) RESPONSIVE - LARGE / DESKTOP TABLE
+   17) RESPONSIVE - DESKTOP TABLES
 ======================================== */
 @media (min-width: 861px) {
     #battingTable,
@@ -1266,7 +1278,7 @@ td[data-label="Opponent"] .opp-emoji {
 }
 
 /* ========================================
-   20) RESPONSIVE - TABLET / SMALL LAYOUT
+   20) RESPONSIVE - TABLET / SMALL
 ======================================== */
 @media (max-width: 700px) {
     .tab-right {
