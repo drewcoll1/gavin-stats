@@ -8,6 +8,9 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
+/* ========================================
+   1) THEME TOKENS / GLOBAL VARIABLES
+======================================== */
 :root {
     --bg: #0e0f12;
     --panel: #171922;
@@ -15,14 +18,25 @@
     --text: #ffffff;
     --muted: #a8adbd;
     --accent: #cc0000;
+
     --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    --shadow-lg: 0 14px 34px rgba(0, 0, 0, .34);
+
     --radius: 14px;
+    --radius-lg: 18px;
+
     --border: rgba(255, 255, 255, .08);
     --border-soft: rgba(255, 255, 255, .10);
+    --border-strong: rgba(255, 255, 255, .14);
+
     --surface: rgba(0, 0, 0, .18);
     --surface-2: rgba(255, 255, 255, .05);
+    --surface-3: rgba(255, 255, 255, .07);
 }
 
+/* ========================================
+   2) RESET / BASE
+======================================== */
 * {
     box-sizing: border-box;
 }
@@ -51,7 +65,9 @@ body {
     position: relative;
 }
 
-/* Tooltip */
+/* ========================================
+   3) TOOLTIP
+======================================== */
 .tooltip {
     position: absolute;
     z-index: 9999;
@@ -91,18 +107,7 @@ body {
     gap: 14px;
     margin: 3px 0;
 }
-.selected-game-logo-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.selected-game-layout {
-    grid-column: 1 / -1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}     
 .tip-row .k {
     color: rgba(255, 255, 255, .68);
 }
@@ -118,14 +123,16 @@ body {
     font-size: 11px;
 }
 
-/* Hero */
+/* ========================================
+   4) HERO
+======================================== */
 .hero {
     position: relative;
     overflow: hidden;
     padding: 18px;
     border: 1px solid rgba(255, 255, 255, .06);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     background:
         linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
         linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
@@ -166,6 +173,7 @@ body {
     object-fit: cover;
     object-position: center top;
     flex: 0 0 auto;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .28);
 }
 
 .hero-identity {
@@ -192,11 +200,6 @@ body {
     letter-spacing: 2.5px;
 }
 
-#battingBody tr.selected-game td,
-#fieldingBody tr.selected-game td {
-    background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
-    color: #fff !important;
-}
 .last-name {
     font-size: 37px;
     font-weight: 700;
@@ -238,32 +241,6 @@ body {
 .player-meta .sub strong {
     font-weight: 900;
     color: #fff;
-}
-
-.hero-awards {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin: 0 0 20px;
-}
-
-.award {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: fit-content;
-    padding: 4px 8px;
-    border: 1px solid rgba(255, 255, 255, .12);
-    border-radius: 8px;
-    background: rgba(0, 0, 0, .25);
-    color: #fff;
-    font-size: 11px;
-}
-
-.award-logo {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
 }
 
 .hero-right {
@@ -316,38 +293,38 @@ body {
     color: rgba(255, 255, 255, .60);
 }
 
-/* Full stat block */
-.stat-full {
-    grid-column: 1 / -1;
+/* ========================================
+   5) HERO AWARDS / INLINE AWARD CHIPS
+======================================== */
+.hero-awards {
     display: flex;
     flex-direction: column;
+    gap: 4px;
+    margin: 0 0 20px;
+}
+
+.award {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 12px 14px;
+    gap: 6px;
+    width: fit-content;
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, .25);
+    color: #fff;
+    font-size: 11px;
 }
 
-.stat-full .k,
-.stat-full .v,
-.stat-full .s {
-    width: 100%;
-    text-align: center;
+.award-logo {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
-.stat-full .k {
-    margin-bottom: 6px;
-}
-
-.stat-full .v {
-    font-size: 22px;
-    font-weight: 900;
-}
-
-.stat-full .s {
-    margin-top: 6px;
-}
-
-/* Tabs */
+/* ========================================
+   6) TABS / TOP ACTION ROW
+======================================== */
 .tabs {
     display: flex;
     flex-wrap: wrap;
@@ -356,31 +333,48 @@ body {
 }
 
 .tab {
-    padding: 10px 12px;
-    border: 1px solid var(--border-soft);
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, .12);
     border-radius: 12px;
     background: rgba(255, 255, 255, .04);
-    color: rgba(255, 255, 255, .85);
+    color: rgba(255, 255, 255, .88);
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     user-select: none;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+
+.tab:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, .18);
+    background: rgba(255, 255, 255, .07);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .18);
 }
 
 .tab.active {
-    border-color: rgba(204, 0, 0, .45);
-    background: linear-gradient(180deg, rgba(204, 0, 0, .35), rgba(255, 255, 255, .05));
+    border-color: rgba(204, 0, 0, .42);
+    background: linear-gradient(180deg, rgba(204, 0, 0, .34), rgba(255, 255, 255, .06));
+    box-shadow: 0 10px 22px rgba(204, 0, 0, .14);
 }
 
-/* Summary bar */
+.tab-right {
+    margin-left: auto;
+}
+
+/* ========================================
+   7) TOP SUMMARY BAR
+======================================== */
 .summary-bar {
     margin-top: 14px;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    padding: 16px 16px 14px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     background:
-        linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(204, 0, 0, .55)),
+        radial-gradient(700px 220px at 0% 0%, rgba(204, 0, 0, .14), transparent 60%),
+        radial-gradient(700px 220px at 100% 100%, rgba(80, 120, 255, .08), transparent 60%),
+        linear-gradient(90deg, rgba(0, 0, 0, .76), rgba(204, 0, 0, .48)),
         linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
 }
 
@@ -398,7 +392,7 @@ body {
     font-size: 15px;
     letter-spacing: .3px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, .94);
 }
 
 .summary-bar-sub {
@@ -416,6 +410,22 @@ body {
     width: 100%;
     justify-content: flex-start;
     -webkit-overflow-scrolling: touch;
+}
+
+.team-record-strip .stat {
+    flex: 0 0 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.team-record-strip .stat .k,
+.team-record-strip .stat .v,
+.team-record-strip .stat .s {
+    width: 100%;
+    text-align: center;
 }
 
 .team-record-strip::-webkit-scrollbar,
@@ -441,23 +451,9 @@ body {
     background: linear-gradient(90deg, rgba(204, 0, 0, 1), rgba(204, 0, 0, .7));
 }
 
-.team-record-strip .stat {
-    flex: 0 0 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.team-record-strip .stat .k,
-.team-record-strip .stat .v,
-.team-record-strip .stat .s {
-    width: 100%;
-    text-align: center;
-}
-
-/* Layout */
+/* ========================================
+   8) MAIN PAGE LAYOUT / PANELS
+======================================== */
 .grid {
     display: grid;
     grid-template-columns: 1.25fr .75fr;
@@ -470,12 +466,13 @@ body {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    overflow: visible;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
+        radial-gradient(700px 260px at 0% 0%, rgba(204, 0, 0, .08), transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, .06), transparent 45%),
         var(--panel);
 }
 
@@ -485,8 +482,9 @@ body {
     align-items: flex-end;
     justify-content: space-between;
     gap: 12px;
-    padding: 14px 14px 10px;
-    border-bottom: 1px solid var(--border);
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .03), transparent);
 }
 
 .panel-title {
@@ -494,7 +492,7 @@ body {
     font-size: 15px;
     letter-spacing: .3px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, .92);
 }
 
 .panel-sub {
@@ -516,7 +514,9 @@ body {
     display: none !important;
 }
 
-/* Shared UI */
+/* ========================================
+   9) SHARED UI / TAGS / PILLS / STATS
+======================================== */
 .tag {
     display: inline-flex;
     align-items: center;
@@ -545,13 +545,20 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 10px;
+    padding: 7px 12px;
     border: 1px solid rgba(255, 255, 255, .14);
     border-radius: 999px;
-    background: rgba(0, 0, 0, .25);
-    color: rgba(255, 255, 255, .85);
+    background: rgba(255, 255, 255, .05);
+    color: rgba(255, 255, 255, .88);
     font-size: 12px;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+
+.pill:hover {
+    border-color: rgba(255, 255, 255, .20);
+    background: rgba(255, 255, 255, .07);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .15);
 }
 
 .stat-strip {
@@ -609,6 +616,37 @@ body {
     color: rgba(255, 255, 255, .60);
 }
 
+/* full-width stat rows */
+.stat-full {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 14px;
+}
+
+.stat-full .k,
+.stat-full .v,
+.stat-full .s {
+    width: 100%;
+    text-align: center;
+}
+
+.stat-full .k {
+    margin-bottom: 6px;
+}
+
+.stat-full .v {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.stat-full .s {
+    margin-top: 6px;
+}
+
 .divider {
     height: 1px;
     margin: 12px 0;
@@ -632,7 +670,9 @@ body {
     text-align: right;
 }
 
-/* Controls */
+/* ========================================
+   10) INPUTS / SELECTS / BUTTONS / CONTROLS
+======================================== */
 .controls {
     display: flex;
     flex: 0 0 auto;
@@ -641,7 +681,7 @@ body {
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 10px;
-    padding: 10px 14px 0;
+    padding: 12px 14px 0;
 }
 
 .left-controls,
@@ -659,7 +699,13 @@ body {
     padding: 9px 10px;
     border: 1px solid var(--border-soft);
     border-radius: 12px;
-    background: rgba(0, 0, 0, .25);
+    background: rgba(255, 255, 255, .04);
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+
+.input:hover {
+    border-color: rgba(255, 255, 255, .16);
+    background: rgba(255, 255, 255, .06);
 }
 
 .input label {
@@ -715,58 +761,30 @@ select option {
     color: #fff;
     background: linear-gradient(180deg, rgba(204, 0, 0, .95), rgba(204, 0, 0, .65));
     box-shadow: 0 10px 20px rgba(204, 0, 0, .18);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 24px rgba(204, 0, 0, .22);
+    filter: brightness(1.03);
 }
 
 .btn.secondary {
     border: 1px solid var(--border-soft);
     background: rgba(255, 255, 255, .06);
     box-shadow: none;
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, .92);
 }
 
-/* Sections */
-.section {
-    display: none;
+.btn.secondary:hover {
+    background: rgba(255, 255, 255, .10);
+    border-color: rgba(255, 255, 255, .18);
 }
 
-.section.active {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
-}
-
-/* Charts */
-.chart-wrap {
-    position: relative;
-    overflow: hidden;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--surface);
-    flex: 0 0 auto;
-}
-
-.chart-wrap::before {
-    content: "";
-    position: absolute;
-    inset: -18px;
-    pointer-events: none;
-    filter: blur(10px);
-    background:
-        radial-gradient(420px 220px at 35% 55%, rgba(255, 80, 80, .20), transparent 60%),
-        radial-gradient(320px 220px at 35% 55%, rgba(120, 180, 255, .12), transparent 55%),
-        radial-gradient(320px 220px at 80% 45%, rgba(155, 89, 255, .10), transparent 55%);
-}
-
-#hitTypeChart,
-#vsOppHitTypeChart {
-    display: block;
-    width: 100%;
-    height: 220px;
-}
-
-/* Tables */
+/* ========================================
+   11) TABLES / LOGS
+======================================== */
 .table-wrap {
     flex: 1 1 auto;
     width: 100%;
@@ -784,95 +802,9 @@ table {
     border-spacing: 0;
 }
 
-        .tab-right {
-    margin-left: auto;
-}
-
-.summary-logo-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 14px 0 10px;
-}
-
-.summary-logo {
-    width: 90px;
-    height: 90px;
-    object-fit: cover; /* fills tighter than contain */
-    border-radius: 12px;
-}
-        
-.selected-game-top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 4px 0 14px;
-    text-align: center;
-}
-
-.selected-game-date {
-    font-size: 16px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: .3px;
-}
-
-.selected-game-team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-}
-
-.selected-game-logo {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    border-radius: 12px;
-    padding: 6px;
-    
-}
-
-.selected-game-logo.fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 800;
-    color: #111;
-}
-
-.selected-game-team-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: rgba(255,255,255,.88);
-}
-
-.selected-game-result {
-    font-size: 15px;
-    font-weight: 900;
-    color: #fff;
-}
-
 #battingTable,
 #fieldingTable {
     min-width: 640px;
-}
-        .selected-game-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    width: 100%;
-}
-
-.selected-game-stats .stat {
-    width: 100%;
-}
-
-.selected-game-stats .stat-full {
-    grid-column: 1 / -1;
 }
 
 thead th {
@@ -889,11 +821,6 @@ thead th {
     user-select: none;
     overflow: visible;
     text-overflow: clip;
-}
-        @media (max-width: 700px) {
-    .tab-right {
-        margin-left: 0;
-    }
 }
 
 thead th .sort {
@@ -921,81 +848,20 @@ tbody tr:hover td {
     transition: background .15s ease, box-shadow .15s ease;
 }
 
-        .awards-page {
-    display: none;
-    margin-top: 14px;
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
-        var(--panel);
-}
-
-.awards-page.active {
-    display: block;
-}
-
-.awards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-}
-
-.award-card {
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-}
-
-.award-card img {
-    display: block;
-    width: 100%;
-    height: 260px;
-    object-fit: contain;
-    background: transparent;
-    padding: 12px;
-}
-
-.award-card-text {
-    padding: 12px 14px 14px;
-    text-align: center;
-}
-
-.award-card-title {
-    font-size: 16px;
-    font-weight: 800;
-    color: #fff;
-}
-
-.award-card-date {
-    margin-top: 6px;
-    font-size: 13px;
-    color: var(--muted);
-}
-
-@media (max-width: 700px) {
-    .awards-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .award-card img {
-        height: 220px;
-    }
-}
-
-
-
 #battingBody tr,
 #fieldingBody tr {
     cursor: pointer;
 }
 
-/* Opponent / logo */
+#battingBody tr.selected-game td,
+#fieldingBody tr.selected-game td {
+    background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
+    color: #fff !important;
+}
+
+/* ========================================
+   12) OPPONENT / LOGO CELLS
+======================================== */
 .opp,
 td[data-label="Opponent"] .opp,
 td[data-label="Opponent"] .opp-main {
@@ -1049,8 +915,217 @@ td[data-label="Opponent"] .opp-emoji {
     white-space: nowrap;
 }
 
-/* Expanded game detail */
+/* ========================================
+   13) SELECTED GAME / RIGHT PANEL DETAILS
+======================================== */
+.selected-game-logo-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.selected-game-layout {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.selected-game-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 4px 0 14px;
+    text-align: center;
+}
+
+.selected-game-date {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: .3px;
+}
+
+.selected-game-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.selected-game-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 12px;
+    padding: 6px;
+}
+
+.selected-game-logo.fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #111;
+}
+
+.selected-game-team-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,.88);
+}
+
+.selected-game-result {
+    font-size: 15px;
+    font-weight: 900;
+    color: #fff;
+}
+
+.selected-game-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.selected-game-stats .stat {
+    width: 100%;
+}
+
+.selected-game-stats .stat-full {
+    grid-column: 1 / -1;
+}
+
+.summary-logo-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 14px 0 10px;
+}
+
+.summary-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ========================================
+   14) CHARTS
+======================================== */
+.chart-wrap {
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    flex: 0 0 auto;
+}
+
+.chart-wrap::before {
+    content: "";
+    position: absolute;
+    inset: -18px;
+    pointer-events: none;
+    filter: blur(10px);
+    background:
+        radial-gradient(420px 220px at 35% 55%, rgba(255, 80, 80, .20), transparent 60%),
+        radial-gradient(320px 220px at 35% 55%, rgba(120, 180, 255, .12), transparent 55%),
+        radial-gradient(320px 220px at 80% 45%, rgba(155, 89, 255, .10), transparent 55%);
+}
+
+#hitTypeChart,
+#vsOppHitTypeChart {
+    display: block;
+    width: 100%;
+    height: 220px;
+}
+
+/* ========================================
+   15) AWARDS PAGE
+======================================== */
+.awards-page {
+    display: none;
+    margin-top: 14px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
+        var(--panel);
+}
+
+.awards-page.active {
+    display: block;
+}
+
+.awards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.award-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .03);
+    display: flex;
+    flex-direction: column;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.award-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, .16);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, .28);
+}
+
+.award-card img {
+    display: block;
+    width: 100%;
+    height: 260px;
+    object-fit: contain;
+    background: transparent;
+    padding: 12px;
+}
+
+.award-card-text {
+    padding: 12px 14px 14px;
+    text-align: center;
+}
+
+.award-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.3;
+}
+
+.award-card-date {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* ========================================
+   16) SECTION VISIBILITY HELPERS
+======================================== */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
 
 #rowCountTag,
 .note,
@@ -1061,10 +1136,9 @@ td[data-label="Opponent"] .opp-emoji {
     flex: 0 0 auto;
 }
 
-/* =========================
-   MEDIA QUERIES
-   ========================= */
-
+/* ========================================
+   17) RESPONSIVE - LARGE / DESKTOP TABLE
+======================================== */
 @media (min-width: 861px) {
     #battingTable,
     #fieldingTable {
@@ -1095,6 +1169,9 @@ td[data-label="Opponent"] .opp-emoji {
     }
 }
 
+/* ========================================
+   18) RESPONSIVE - MID WIDTH TABLE STICKY
+======================================== */
 @media (max-width: 1200px) {
     #battingTable,
     #fieldingTable {
@@ -1171,6 +1248,9 @@ td[data-label="Opponent"] .opp-emoji {
     }
 }
 
+/* ========================================
+   19) RESPONSIVE - STACK PANELS
+======================================== */
 @media (max-width: 980px) {
     .grid {
         grid-template-columns: 1fr;
@@ -1185,7 +1265,14 @@ td[data-label="Opponent"] .opp-emoji {
     }
 }
 
+/* ========================================
+   20) RESPONSIVE - TABLET / SMALL LAYOUT
+======================================== */
 @media (max-width: 700px) {
+    .tab-right {
+        margin-left: 0;
+    }
+
     .panel {
         overflow: visible;
     }
@@ -1226,13 +1313,18 @@ td[data-label="Opponent"] .opp-emoji {
         white-space: nowrap !important;
     }
 
-    /* =========================
-       OPENED GAME ROW ONLY
-       ========================= */
+    .awards-grid {
+        grid-template-columns: 1fr;
+    }
 
-   
+    .award-card img {
+        height: 220px;
+    }
 }
 
+/* ========================================
+   21) RESPONSIVE - MOBILE
+======================================== */
 @media (max-width: 600px) {
     .controls {
         flex-wrap: nowrap;
