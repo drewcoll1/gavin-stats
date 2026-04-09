@@ -1510,7 +1510,7 @@ td[data-label="Opponent"] .opp-emoji {
             <div class="panel">
                 <div class="panel-head">
                     <div>
-                        <h2 class="panel-title">Season Summary</h2>
+                        <h2 class="panel-title" id="summaryPanelTitle">Season Summary</h2>
                         <p class="panel-sub">Batting and fielding at a glance.
                         </p>
                     </div>
@@ -3113,6 +3113,10 @@ function setTab(tabName) {
         $("#heroStatsSeason").textContent = currentSeason;
         $("#heroStatsSuffix").textContent = "Season Stats";
     }
+    if ($("#summaryPanelTitle")) {
+    $("#summaryPanelTitle").textContent =
+        (currentSeason === "career") ? "Career Summary" : "Season Summary";
+}
             if (currentSeason === "career") {
     battingLog = careerBattingLog;
     fieldingLog = careerFieldingLog;
