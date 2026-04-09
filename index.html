@@ -12,31 +12,31 @@
    1) BRAND TOKENS
 ======================================== */
 :root {
-    --bg: #0b1020;
-    --bg-2: #10172b;
+    --bg: #f7f8fb;
+    --bg-2: #ffffff;
 
-    --panel: #0f1f4d;
-    --panel-2: #13275f;
-    --panel-3: #162f73;
+    --panel: #ffffff;
+    --panel-2: #f3f5f9;
+    --panel-3: #e9edf5;
 
-    --text: #ffffff;
-    --muted: #c2cada;
-    --muted-2: rgba(255, 255, 255, .74);
+    --text: #14213d;
+    --muted: #5f6b85;
+    --muted-2: rgba(20, 33, 61, .72);
 
     --penn-blue: #011f5b;
-    --penn-blue-2: #0f2c6f;
+    --penn-blue-2: #173a7a;
     --penn-red: #a51e36;
     --penn-red-2: #8f1a2f;
 
     --accent: var(--penn-red);
 
-    --border: rgba(255, 255, 255, .10);
-    --border-soft: rgba(255, 255, 255, .14);
-    --border-strong: rgba(255, 255, 255, .18);
+    --border: rgba(1, 31, 91, .10);
+    --border-soft: rgba(1, 31, 91, .14);
+    --border-strong: rgba(1, 31, 91, .20);
 
-    --shadow-sm: 0 6px 14px rgba(0, 0, 0, .16);
-    --shadow: 0 12px 28px rgba(0, 0, 0, .24);
-    --shadow-lg: 0 18px 36px rgba(0, 0, 0, .30);
+    --shadow-sm: 0 6px 14px rgba(11, 16, 32, .08);
+    --shadow: 0 12px 28px rgba(11, 16, 32, .10);
+    --shadow-lg: 0 18px 36px rgba(11, 16, 32, .12);
 
     --radius: 14px;
     --radius-lg: 18px;
@@ -81,10 +81,10 @@ body {
     max-width: 360px;
     padding: 10px 12px;
     border-radius: 12px;
-    background: #0a0f1d;
-    border: 1px solid var(--border-soft);
+    background: #0d1b3d;
+    border: 1px solid rgba(255, 255, 255, .14);
     box-shadow: var(--shadow);
-    color: rgba(255, 255, 255, .94);
+    color: #ffffff;
     font-size: 12px;
     line-height: 1.35;
 }
@@ -100,7 +100,7 @@ body {
     font-weight: 900;
     letter-spacing: .25px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .96);
+    color: #ffffff;
 }
 
 .tip-row {
@@ -111,17 +111,17 @@ body {
 }
 
 .tip-row .k {
-    color: rgba(255, 255, 255, .68);
+    color: rgba(255, 255, 255, .72);
 }
 
 .tip-row .v {
     font-weight: 800;
-    color: rgba(255, 255, 255, .96);
+    color: #ffffff;
 }
 
 .tip-sub {
     margin-top: 8px;
-    color: rgba(255, 255, 255, .62);
+    color: rgba(255, 255, 255, .68);
     font-size: 11px;
 }
 
@@ -132,10 +132,11 @@ body {
     position: relative;
     overflow: hidden;
     padding: 22px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, .10);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     background: var(--penn-blue);
+    color: #ffffff;
 }
 
 .hero-row {
@@ -157,7 +158,7 @@ body {
 .player-photo {
     width: 200px;
     height: 250px;
-    border: 2px solid rgba(255, 255, 255, .72);
+    border: 2px solid rgba(255, 255, 255, .75);
     border-radius: 16px;
     object-fit: cover;
     object-position: center top;
@@ -188,6 +189,7 @@ body {
     font-weight: 500;
     letter-spacing: 2.4px;
     text-transform: uppercase;
+    color: #ffffff;
 }
 
 .last-name {
@@ -195,6 +197,7 @@ body {
     font-weight: 900;
     letter-spacing: 2.4px;
     text-transform: uppercase;
+    color: #ffffff;
 }
 
 .penn-logo {
@@ -233,7 +236,7 @@ body {
 }
 
 .hero-stats-bar {
-    color: #fff;
+    color: #ffffff;
     font-size: 13px;
     font-weight: 900;
     letter-spacing: .5px;
@@ -253,7 +256,6 @@ body {
     padding: 0;
     border: none;
     background: none;
-    border-radius: 0;
     box-shadow: none;
 }
 
@@ -270,6 +272,7 @@ body {
     font-size: 34px;
     font-weight: 900;
     letter-spacing: .45px;
+    color: #ffffff;
 }
 
 .hero-stat-item .hint {
@@ -294,10 +297,10 @@ body {
     gap: 6px;
     width: fit-content;
     padding: 5px 9px;
-    border: 1px solid var(--border-soft);
+    border: 1px solid rgba(255, 255, 255, .18);
     border-radius: 8px;
-    background: #0b173d;
-    color: #fff;
+    background: rgba(255, 255, 255, .08);
+    color: #ffffff;
     font-size: 11px;
 }
 
@@ -323,24 +326,25 @@ body {
     padding: 10px 15px;
     border: 1px solid var(--border-soft);
     border-radius: 10px;
-    background: #18284f;
-    color: rgba(255, 255, 255, .94);
+    background: #ffffff;
+    color: var(--penn-blue);
     font-size: 13px;
     font-weight: 800;
     cursor: pointer;
     user-select: none;
-    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+    transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
 }
 
 .tab:hover {
-    background: #22366a;
-    border-color: rgba(255, 255, 255, .24);
+    background: #eef3fb;
+    border-color: rgba(1, 31, 91, .22);
     transform: translateY(-1px);
 }
 
 .tab.active {
     background: var(--penn-red);
-    border-color: rgba(255, 255, 255, .18);
+    border-color: var(--penn-red);
+    color: #ffffff;
 }
 
 .tab-right {
@@ -356,7 +360,7 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    background: #121f45;
+    background: #ffffff;
 }
 
 .summary-bar-head {
@@ -374,7 +378,7 @@ body {
     font-weight: 900;
     letter-spacing: .45px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .96);
+    color: var(--penn-blue);
 }
 
 .summary-bar-sub {
@@ -412,14 +416,14 @@ body {
 .team-record-strip::-webkit-scrollbar-track,
 .table-wrap::-webkit-scrollbar-track {
     border-radius: 10px;
-    background: rgba(255, 255, 255, .05);
+    background: rgba(1, 31, 91, .06);
 }
 
 .team-record-strip::-webkit-scrollbar-thumb,
 .table-wrap::-webkit-scrollbar-thumb {
-    border: 2px solid rgba(0, 0, 0, .25);
+    border: 2px solid rgba(255, 255, 255, .55);
     border-radius: 10px;
-    background: #a51e36;
+    background: var(--penn-red);
 }
 
 .team-record-strip::-webkit-scrollbar-thumb:hover,
@@ -446,7 +450,7 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    background: #111b3b;
+    background: #ffffff;
 }
 
 .panel-head {
@@ -456,8 +460,8 @@ body {
     justify-content: space-between;
     gap: 12px;
     padding: 16px 16px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
-    background: #162753;
+    border-bottom: 1px solid rgba(1, 31, 91, .08);
+    background: #f3f5f9;
 }
 
 .panel-title {
@@ -466,7 +470,7 @@ body {
     font-weight: 900;
     letter-spacing: .45px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .94);
+    color: var(--penn-blue);
 }
 
 .panel-sub {
@@ -496,15 +500,16 @@ body {
     align-items: center;
     gap: 6px;
     padding: 5px 9px;
-    border: 1px solid var(--border-soft);
+    border: 1px solid rgba(1, 31, 91, .14);
     border-radius: 999px;
-    background: #19315f;
-    color: rgba(255, 255, 255, .90);
+    background: #edf2fb;
+    color: var(--penn-blue);
     font-size: 11px;
+    font-weight: 700;
 }
 
 .tag b {
-    color: #fff;
+    color: var(--penn-red);
 }
 
 .pill-row {
@@ -520,17 +525,17 @@ body {
     align-items: center;
     gap: 8px;
     padding: 7px 12px;
-    border: 1px solid var(--border-soft);
+    border: 1px solid rgba(1, 31, 91, .14);
     border-radius: 999px;
-    background: #162753;
-    color: rgba(255, 255, 255, .92);
+    background: #f6f8fc;
+    color: var(--penn-blue);
     font-size: 12px;
     transition: background .15s ease, border-color .15s ease;
 }
 
 .pill:hover {
-    background: #22366a;
-    border-color: rgba(255, 255, 255, .24);
+    background: #edf2fb;
+    border-color: rgba(1, 31, 91, .24);
 }
 
 .stat-strip {
@@ -567,7 +572,7 @@ body {
     font-size: 11px;
     letter-spacing: .38px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .68);
+    color: var(--muted);
 }
 
 .stat .v {
@@ -578,6 +583,7 @@ body {
     font-size: 32px;
     font-weight: 900;
     letter-spacing: .2px;
+    color: var(--penn-blue);
 }
 
 .stat .s {
@@ -586,7 +592,7 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 12px;
-    color: rgba(255, 255, 255, .60);
+    color: var(--muted);
 }
 
 .stat-full {
@@ -597,20 +603,20 @@ body {
 .divider {
     height: 1px;
     margin: 14px 0;
-    background: rgba(255,255,255,.08);
+    background: rgba(1, 31, 91, .08);
     flex: 0 0 auto;
 }
 
 .note {
     margin-top: 10px;
-    color: rgba(255, 255, 255, .62);
+    color: var(--muted);
     font-size: 12px;
     line-height: 1.35;
     flex: 0 0 auto;
 }
 
 .muted {
-    color: rgba(255, 255, 255, .65);
+    color: var(--muted);
 }
 
 .right {
@@ -644,29 +650,30 @@ body {
     align-items: center;
     gap: 8px;
     padding: 9px 10px;
-    border: 1px solid var(--border-soft);
+    border: 1px solid rgba(1, 31, 91, .14);
     border-radius: 10px;
-    background: #162753;
+    background: #f6f8fc;
     transition: background .15s ease, border-color .15s ease;
 }
 
 .input:hover {
-    border-color: rgba(255, 255, 255, .20);
-    background: #22366a;
+    border-color: rgba(1, 31, 91, .20);
+    background: #edf2fb;
 }
 
 .input label {
     white-space: nowrap;
     font-size: 12px;
-    color: rgba(255, 255, 255, .78);
+    color: var(--penn-blue);
+    font-weight: 700;
 }
 
 input[type="text"],
 select {
     padding: 6px 12px;
-    border: 1px solid rgba(255, 255, 255, .12);
+    border: 1px solid rgba(1, 31, 91, .12);
     border-radius: 999px;
-    background: #111b3b;
+    background: #ffffff;
     color: var(--text);
     font-size: 13px;
     outline: none;
@@ -680,13 +687,13 @@ select {
 
 input[type="text"]:focus,
 select:focus {
-    background: #0f1730;
+    background: #ffffff;
     border-color: rgba(165, 30, 54, .70);
-    box-shadow: 0 0 0 2px rgba(165, 30, 54, .22);
+    box-shadow: 0 0 0 2px rgba(165, 30, 54, .16);
 }
 
 input::placeholder {
-    color: rgba(255, 255, 255, .45);
+    color: rgba(20, 33, 61, .42);
 }
 
 select {
@@ -694,8 +701,8 @@ select {
 }
 
 select option {
-    background-color: #171922;
-    color: #fff;
+    background-color: #ffffff;
+    color: var(--text);
 }
 
 .btn {
@@ -704,8 +711,8 @@ select option {
     border-radius: 10px;
     cursor: pointer;
     font-weight: 800;
-    color: #fff;
-    background: #a51e36;
+    color: #ffffff;
+    background: var(--penn-red);
     box-shadow: none;
     transition: transform .15s ease, background .15s ease;
 }
@@ -716,15 +723,15 @@ select option {
 }
 
 .btn.secondary {
-    border: 1px solid var(--border-soft);
-    background: #19315f;
+    border: 1px solid rgba(1, 31, 91, .14);
+    background: #edf2fb;
     box-shadow: none;
-    color: rgba(255, 255, 255, .94);
+    color: var(--penn-blue);
 }
 
 .btn.secondary:hover {
-    background: #24457f;
-    border-color: rgba(255, 255, 255, .22);
+    background: #dfe8f7;
+    border-color: rgba(1, 31, 91, .22);
 }
 
 /* ========================================
@@ -754,9 +761,9 @@ table {
 
 thead th {
     padding: 11px 10px;
-    border-bottom: 1px solid var(--border);
-    background: #162753;
-    color: rgba(255, 255, 255, .82);
+    border-bottom: 1px solid rgba(1, 31, 91, .12);
+    background: #edf2fb;
+    color: var(--penn-blue);
     font-size: 12px;
     font-weight: 800;
     text-align: left;
@@ -775,8 +782,8 @@ thead th .sort {
 
 tbody td {
     padding: 11px 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, .05);
-    color: rgba(255, 255, 255, .93);
+    border-bottom: 1px solid rgba(1, 31, 91, .06);
+    color: var(--text);
     font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
@@ -784,11 +791,11 @@ tbody td {
 }
 
 tbody tr:nth-child(even) td {
-    background: rgba(255, 255, 255, .012);
+    background: rgba(1, 31, 91, .018);
 }
 
 tbody tr:hover td {
-    background: rgba(255, 255, 255, .06);
+    background: rgba(1, 31, 91, .05);
     transition: background .15s ease;
 }
 
@@ -799,7 +806,7 @@ tbody tr:hover td {
 
 #battingBody tr.selected-game td,
 #fieldingBody tr.selected-game td {
-    background: #7f172b !important;
+    background: var(--penn-red) !important;
     color: #fff !important;
 }
 
@@ -823,7 +830,7 @@ td[data-label="Opponent"] .opp-main {
 td[data-label="Opponent"] .logo {
     width: 22px;
     height: 22px;
-    border: 1px solid rgba(255, 255, 255, .10);
+    border: 1px solid rgba(1, 31, 91, .10);
     border-radius: 6px;
     padding: 2px;
     background: #ffffff;
@@ -836,7 +843,7 @@ td[data-label="Opponent"] .logo {
     align-items: center;
     justify-content: center;
     font-size: 10px;
-    color: rgba(255, 255, 255, .8);
+    color: var(--penn-blue);
 }
 
 td[data-label="Opponent"] .opp-name {
@@ -888,7 +895,7 @@ td[data-label="Opponent"] .opp-emoji {
 .selected-game-date {
     font-size: 16px;
     font-weight: 800;
-    color: #fff;
+    color: var(--penn-blue);
     letter-spacing: .3px;
 }
 
@@ -913,19 +920,19 @@ td[data-label="Opponent"] .opp-emoji {
     justify-content: center;
     font-size: 13px;
     font-weight: 800;
-    color: #111;
+    color: var(--penn-blue);
 }
 
 .selected-game-team-name {
     font-size: 14px;
     font-weight: 700;
-    color: rgba(255,255,255,.88);
+    color: var(--text);
 }
 
 .selected-game-result {
     font-size: 15px;
     font-weight: 900;
-    color: #fff;
+    color: var(--penn-red);
 }
 
 .selected-game-stats {
@@ -964,9 +971,9 @@ td[data-label="Opponent"] .opp-emoji {
     position: relative;
     overflow: hidden;
     padding: 10px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(1, 31, 91, .12);
     border-radius: 14px;
-    background: #162753;
+    background: #f6f8fc;
     flex: 0 0 auto;
 }
 
@@ -980,7 +987,7 @@ td[data-label="Opponent"] .opp-emoji {
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow);
-    background: #111b3b;
+    background: #ffffff;
 }
 
 .awards-page.active {
@@ -995,9 +1002,9 @@ td[data-label="Opponent"] .opp-emoji {
 
 .award-card {
     overflow: hidden;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(1, 31, 91, .12);
     border-radius: 18px;
-    background: #162753;
+    background: #f8faff;
     display: flex;
     flex-direction: column;
     transition: transform .18s ease, border-color .18s ease;
@@ -1005,7 +1012,7 @@ td[data-label="Opponent"] .opp-emoji {
 
 .award-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, .18);
+    border-color: rgba(1, 31, 91, .20);
 }
 
 .award-card img {
@@ -1025,7 +1032,7 @@ td[data-label="Opponent"] .opp-emoji {
 .award-card-title {
     font-size: 17px;
     font-weight: 900;
-    color: #fff;
+    color: var(--penn-blue);
     line-height: 1.3;
 }
 
@@ -1111,7 +1118,7 @@ td[data-label="Opponent"] .opp-emoji {
         position: sticky;
         left: 0;
         z-index: 5;
-        background-color: #171922 !important;
+        background-color: #ffffff !important;
         background-image: none;
     }
 
@@ -1122,15 +1129,8 @@ td[data-label="Opponent"] .opp-emoji {
         position: sticky;
         left: 72px;
         z-index: 5;
-        background-color: #171922 !important;
+        background-color: #ffffff !important;
         background-image: none;
-    }
-
-    #battingTable td:first-child,
-    #battingTable td:nth-child(2),
-    #fieldingTable td:first-child,
-    #fieldingTable td:nth-child(2) {
-        backdrop-filter: none !important;
     }
 
     #battingTable thead th:first-child,
@@ -1138,7 +1138,7 @@ td[data-label="Opponent"] .opp-emoji {
     #fieldingTable thead th:first-child,
     #fieldingTable thead th:nth-child(2) {
         z-index: 5;
-        background: #162753;
+        background: #edf2fb;
     }
 
     #battingTable td:first-child,
@@ -1149,7 +1149,7 @@ td[data-label="Opponent"] .opp-emoji {
     #battingTable th:nth-child(2),
     #fieldingTable td:nth-child(2),
     #fieldingTable th:nth-child(2) {
-        box-shadow: 1px 0 0 rgba(255, 255, 255, .08);
+        box-shadow: 1px 0 0 rgba(1, 31, 91, .08);
     }
 
     td[data-label="Opponent"] .opp {
@@ -1159,7 +1159,7 @@ td[data-label="Opponent"] .opp-emoji {
 
 @media (max-width: 1100px) {
     .table-wrap {
-        background: #111b3b;
+        background: #ffffff;
         overflow-x: auto;
         overflow-y: hidden;
     }
