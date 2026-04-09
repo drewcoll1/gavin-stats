@@ -1720,7 +1720,7 @@ td[data-label="Opponent"] .opp-emoji {
                             <div class="left-controls">
                                 <div class="input">
                                     <label for="searchFld">Search</label>
-                                    <input id="searchFld" type="text" placeholder="opponent, etc." />
+                                    <input id="searchFld" type="text" placeholder="" />
                                 </div>
                                 <div class="input">
                                     <label for="oppFld">Opponent</label>
@@ -3353,13 +3353,13 @@ function setTab(tabName) {
         document.getElementById("section-batting").classList.add("active");
         document.getElementById("summary-batting").classList.add("active");
         $("#panelTitle").textContent = "Batting • Game Log";
-        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+        $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshBatting();
     } else if (tabName === "fielding") {
         document.getElementById("section-fielding").classList.add("active");
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
-        $("#panelSub").textContent = "Click any column header to sort. Use search + opponent filter to narrow the log.";
+        $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshFielding();
     } else if (tabName === "awards") {
         awardsPage.classList.add("active");
