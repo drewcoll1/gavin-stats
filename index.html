@@ -3482,5 +3482,42 @@ if (teamSummaryTitle) {
             setTab("batting");
         })();
     </script>
+    <script>
+const awardsTab = document.querySelector('[data-tab="awards"]');
+const awardsSection = document.getElementById('section-awards-page');
+
+const battingSection = document.getElementById('section-batting');
+const fieldingSection = document.getElementById('section-fielding');
+const summaryPanel = document.querySelector('.grid'); // main content
+
+let awardsActive = false;
+
+awardsTab.addEventListener('click', () => {
+
+    // TOGGLE OFF
+    if (awardsActive) {
+        awardsActive = false;
+
+        awardsTab.classList.remove('active');
+        awardsSection.classList.remove('active');
+
+        // bring back normal layout
+        summaryPanel.style.display = '';
+        document.getElementById('teamSummaryBar').style.display = '';
+
+        return;
+    }
+
+    // TOGGLE ON
+    awardsActive = true;
+
+    awardsTab.classList.add('active');
+    awardsSection.classList.add('active');
+
+    // hide main content
+    summaryPanel.style.display = 'none';
+    document.getElementById('teamSummaryBar').style.display = 'none';
+});
+</script>
 
 </html>
