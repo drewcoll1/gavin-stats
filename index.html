@@ -1525,7 +1525,8 @@ td[data-label="Opponent"] .opp-emoji {
    
 </head>
 <body>
-   <div class="container">
+ 
+<div class="container">
     <div id="tooltip" class="tooltip"></div>
 
     <!-- HERO -->
@@ -1560,7 +1561,8 @@ td[data-label="Opponent"] .opp-emoji {
 
             <div class="hero-right">
                 <div class="hero-stats-bar">
-                    <span id="heroStatsSeason">2026</span> Season Stats
+                    <span id="heroStatsSeason">2026</span>
+                    <span id="heroStatsSuffix">Season Stats</span>
                 </div>
 
                 <div class="hero-stats-grid">
@@ -1586,78 +1588,147 @@ td[data-label="Opponent"] .opp-emoji {
             <div class="pill">
                 Season:
                 <select id="seasonSelect">
-                    <option>2024</option>
-                    <option>2025</option>
-                    <option selected>2026</option>
-                    <option>Career</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option>
+                    <option value="career">Career</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <!-- TEAM SUMMARY BAR -->
-    <div class="summary-bar">
-        <h2 class="summary-bar-title">Season Team Summary</h2>
-        <div class="team-record-strip"></div>
+    <!-- TEAM SUMMARY -->
+    <div class="summary-bar" id="teamSummaryBar">
+        <div class="summary-bar-head">
+            <h2 class="summary-bar-title" id="teamSummaryTitle">Season Team Summary</h2>
+        </div>
+        <div class="team-record-strip" id="teamRecordStrip"></div>
     </div>
 
-    <!-- MAIN GRID -->
+    <!-- GRID -->
     <div class="grid">
 
         <!-- LEFT: GAME LOG -->
         <div class="panel">
-            <div class="panel-head">
-                <h2 class="panel-title">Batting • Game Log</h2>
+            <div class="panel-head game-log-head">
+                <div class="game-log-head-left">
+                    <h2 class="panel-title" id="panelTitle">Batting • Game Log</h2>
+                    <p class="panel-sub" id="panelSub">Click any column header to sort.</p>
+                </div>
+
+                <div class="game-log-tabs">
+                    <div class="tab active" data-tab="batting">Batting</div>
+                    <div class="tab" data-tab="fielding">Fielding</div>
+                </div>
+
+                <div class="tag" id="rowCountTag"><b>—</b> rows</div>
             </div>
 
             <div class="panel-body">
-                <div class="table-wrap">
-                    <table id="battingTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Opponent</th>
-                                <th>Result</th>
-                                <th>H</th>
-                                <th>AB</th>
-                                <th>R</th>
-                                <th>HR</th>
-                                <th>RBI</th>
-                            </tr>
-                        </thead>
-                        <tbody id="battingBody"></tbody>
-                    </table>
+
+                <!-- BATTING -->
+                <div class="section active" id="section-batting">
+
+                    <div class="controls">
+                        <div class="left-controls">
+                            <div class="input">
+                                <label>Search</label>
+                                <input id="searchBat" />
+                            </div>
+
+                            <div class="input">
+                                <label>Opponent</label>
+                                <select id="oppBat"></select>
+                            </div>
+                        </div>
+
+                        <div class="right-controls">
+                            <button class="btn secondary" id="resetBat">Reset</button>
+                        </div>
+                    </div>
+
+                    <div id="vsOppWrap" style="display:none;">
+                        <div class="tag"><span id="vsOppLabel"></span></div>
+                        <div class="stat-strip" id="vsOppStrip"></div>
+                        <div class="chart-wrap">
+                            <canvas id="vsOppHitTypeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table id="battingTable">
+                            <thead>
+                                <tr>
+                                    <th data-key="dateValue">Date</th>
+                                    <th data-key="opponent">Opponent</th>
+                                    <th data-key="result">Result</th>
+                                    <th data-key="H">H</th>
+                                    <th data-key="AB">AB</th>
+                                    <th data-key="R">R</th>
+                                    <th data-key="HR">HR</th>
+                                    <th data-key="RBI">RBI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="battingBody"></tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <!-- FIELDING -->
+                <div class="section" id="section-fielding">
+                    <div class="table-wrap">
+                        <table id="fieldingTable">
+                            <thead>
+                                <tr>
+                                    <th data-key="dateValue">Date</th>
+                                    <th data-key="opponent">Opponent</th>
+                                    <th data-key="result">Result</th>
+                                    <th data-key="TC">TC</th>
+                                    <th data-key="PO">PO</th>
+                                    <th data-key="A">A</th>
+                                    <th data-key="E">E</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fieldingBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <!-- MIDDLE: SEASON SUMMARY -->
+        <!-- MIDDLE: SUMMARY -->
         <div class="panel">
             <div class="panel-head">
-                <h2 class="panel-title">Season Summary</h2>
+                <h2 class="panel-title" id="summaryPanelTitle">Season Summary</h2>
             </div>
 
             <div class="panel-body">
 
-                <div class="tag">Batting</div>
+                <div class="section active" id="summary-batting">
+                    <div class="summary-logo-wrap" id="summaryLogoBatting">
+                        <img src="logo.png" class="summary-logo">
+                    </div>
 
-                <div class="summary-logo-wrap">
-                    <img src="logo.png" class="summary-logo">
+                    <div class="stat-strip" id="summaryStrip"></div>
+
+                    <div class="chart-wrap">
+                        <canvas id="hitTypeChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="stat-strip" id="summaryStrip"></div>
+                <div class="section" id="summary-fielding">
+                    <div class="summary-logo-wrap" id="summaryLogoFielding">
+                        <img src="logo.png" class="summary-logo">
+                    </div>
 
-                <div class="divider"></div>
-
-                <div class="tag">Hit Type Breakdown</div>
-
-                <div class="chart-wrap">
-                    <canvas id="hitTypeChart"></canvas>
+                    <div class="stat-strip" id="fieldingStrip"></div>
                 </div>
+
             </div>
         </div>
 
-        <!-- RIGHT: CAREER AWARDS COLUMN -->
+        <!-- RIGHT: AWARDS -->
         <div class="panel awards-column">
 
             <div class="panel-head">
@@ -1670,37 +1741,27 @@ td[data-label="Opponent"] .opp-emoji {
 
                     <div class="award-card">
                         <img src="ivy.png">
-                        <div class="award-card-text">
-                            2025 First-Team All-Ivy
-                        </div>
+                        <div class="award-card-text">First-Team All-Ivy</div>
                     </div>
 
                     <div class="award-card">
                         <img src="ivy.png">
-                        <div class="award-card-text">
-                            Ivy League Player of the Week
-                        </div>
+                        <div class="award-card-text">Player of the Week</div>
                     </div>
 
                     <div class="award-card">
                         <img src="ivy.png">
-                        <div class="award-card-text">
-                            Ivy League Rookie of the Week
-                        </div>
+                        <div class="award-card-text">Rookie of the Week</div>
                     </div>
 
                     <div class="award-card">
                         <img src="ivytourney2.png">
-                        <div class="award-card-text">
-                            Ivy League Champions
-                        </div>
+                        <div class="award-card-text">Ivy Champions</div>
                     </div>
 
                     <div class="award-card">
                         <img src="worldseries.avif">
-                        <div class="award-card-text">
-                            College World Series Bid
-                        </div>
+                        <div class="award-card-text">CWS Bid</div>
                     </div>
 
                 </div>
