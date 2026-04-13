@@ -443,10 +443,11 @@ body {
 ========================================================= */
 .grid {
     display: grid;
-    grid-template-columns: 1.25fr .75fr;
+    grid-template-columns: 1.2fr 0.8fr 0.7fr;
     gap: 14px;
     min-width: 0;
     margin-top: 14px;
+    align-items: stretch;
 }
 
 .panel {
@@ -493,6 +494,42 @@ body {
     flex-direction: column;
     min-height: 0;
     padding: 0;
+}
+
+.career-awards-panel .panel-body {
+    padding: 14px;
+}
+
+.career-awards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+}
+
+.career-awards-list .award-card {
+    flex: 1 1 auto;
+}
+
+.career-awards-list .award-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    padding: 12px;
+}
+
+.career-awards-panel {
+    height: 100%;
+}
+
+.career-awards-panel .panel-head {
+    flex: 0 0 auto;
+}
+
+.career-awards-panel .panel-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 
@@ -1291,8 +1328,8 @@ td[data-label="Opponent"] .opp-emoji {
         justify-content: flex-start;
     }
 
-    .quick-card {
-        max-width: none;
+    .career-awards-list .award-card img {
+        height: 220px;
     }
 }
 
@@ -1586,52 +1623,6 @@ td[data-label="Opponent"] .opp-emoji {
                         <option value="career">Career</option>
                     </select>
                 </div>
-
-                <div class="tab tab-right" data-tab="awards">Career Awards</div>
-            </div>
-        </div>
-
-        <div class="awards-page section" id="section-awards-page">
-            <div class="awards-grid">
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 1">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 2">
-                    <div class="award-card-text">
-                        <div class="award-card-title">Ivy League Player of the Week</div>
-                        <div class="award-card-date">04/15/2025</div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 3">
-                    <div class="award-card-text">
-                        <div class="award-card-title">Ivy League Rookie of the Week</div>
-                        <div class="award-card-date">03/25/2024</div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivytourney2.png" alt="Award 4">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2024 Ivy League Baseball Tournament Champions </div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="worldseries.avif" alt="Award 5">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2024 Men's College World Series Bid</div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1803,6 +1794,56 @@ td[data-label="Opponent"] .opp-emoji {
                     </div>
                 </div>
             </div>
+            <!-- FAR RIGHT: CAREER AWARDS -->
+<div class="panel career-awards-panel">
+    <div class="panel-head">
+        <div>
+            <h2 class="panel-title">Career Awards</h2>
+            <p class="panel-sub">Honors and achievements.</p>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="career-awards-list">
+            <div class="award-card">
+                <img src="ivy.png" alt="Award 1">
+                <div class="award-card-text">
+                    <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivy.png" alt="Award 2">
+                <div class="award-card-text">
+                    <div class="award-card-title">Ivy League Player of the Week</div>
+                    <div class="award-card-date">04/15/2025</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivy.png" alt="Award 3">
+                <div class="award-card-text">
+                    <div class="award-card-title">Ivy League Rookie of the Week</div>
+                    <div class="award-card-date">03/25/2024</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivytourney2.png" alt="Award 4">
+                <div class="award-card-text">
+                    <div class="award-card-title">2024 Ivy League Baseball Tournament Champions</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="worldseries.avif" alt="Award 5">
+                <div class="award-card-text">
+                    <div class="award-card-title">2024 Men's College World Series Bid</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 
