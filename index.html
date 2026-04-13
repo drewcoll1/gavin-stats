@@ -446,17 +446,20 @@ body {
 ========================================================= */
 .grid {
     display: grid;
-    grid-template-columns: 1.25fr .75fr;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, .72fr) minmax(240px, .45fr);
     gap: 14px;
     min-width: 0;
     margin-top: 14px;
+    align-items: stretch;
 }
 
 .panel {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    overflow: visible;
+    min-height: 100%;
+    height: 100%;
+    overflow: hidden;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -464,7 +467,6 @@ body {
         linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
         var(--panel);
 }
-
 .panel-head {
     display: flex;
     flex-wrap: wrap;
@@ -1076,8 +1078,14 @@ td[data-label="Opponent"] .opp-emoji {
 /* =========================================================
    15. AWARDS IN RIGHT PANEL
 ========================================================= */
-.awards-side-section {
-    padding: 0 14px 14px;
+.awards-column {
+    align-self: stretch;
+}
+
+.awards-column-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 14px;
 }
 
 .awards-grid {
@@ -1087,7 +1095,7 @@ td[data-label="Opponent"] .opp-emoji {
 }
 
 .awards-grid-side {
-    margin-top: 4px;
+    margin-top: 0;
 }
 
 .award-card {
@@ -1103,7 +1111,7 @@ td[data-label="Opponent"] .opp-emoji {
 .award-card img {
     display: block;
     width: 100%;
-    height: 210px;
+    height: 150px;
     padding: 12px;
     background: transparent;
     object-fit: contain;
@@ -1276,7 +1284,7 @@ td[data-label="Opponent"] .opp-emoji {
     }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1100px) {
     .grid {
         grid-template-columns: 1fr;
     }
@@ -1287,6 +1295,10 @@ td[data-label="Opponent"] .opp-emoji {
 
     .quick-card {
         max-width: none;
+    }
+
+    .awards-column-body {
+        overflow: visible;
     }
 }
 
@@ -1513,292 +1525,191 @@ td[data-label="Opponent"] .opp-emoji {
    
 </head>
 <body>
-    <div class="container">
-        <div id="tooltip" class="tooltip"></div>
+   <div class="container">
+    <div id="tooltip" class="tooltip"></div>
 
-        <div class="hero">
-            <div class="hero-row">
-                <div class="hero-left">
-                    <img class="player-photo" src="gavin.png" alt="Gavin Collins" />
-                    <div class="player-meta">
-                        <div class="hero-identity">
-                            <img class="penn-logo" src="logo.png" alt="Penn logo" />
-                            <div class="identity-text">
-                                <h1 class="player-name">
-                                    <span class="first-name">Gavin</span>
-                                    <span class="last-name">Collins</span>
-                                </h1>
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-row">
+            <div class="hero-left">
+                <img class="player-photo" src="gavin.png" />
 
-                                <div class="identity-school">
-                                    <strong><em>University of Pennsylvania Quakers</em></strong>
-                                </div>
+                <div class="player-meta">
+                    <div class="hero-identity">
+                        <img class="penn-logo" src="logo.png" />
 
-                                <div class="player-meta-inline">
-                                    <span><strong>#16</strong> • RF • B/T: R/L</span>
-                                    <span class="meta-divider">•</span>
-                                    <span id="heroSeasonText">2025</span> Game Log
-                                </div>
+                        <div class="identity-text">
+                            <h1 class="player-name">
+                                <span class="first-name">Gavin</span>
+                                <span class="last-name">Collins</span>
+                            </h1>
+
+                            <div class="identity-school">
+                                <strong><em>University of Pennsylvania Quakers</em></strong>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="hero-right">
-                    <div class="hero-stats-bar">
-                        <span id="heroStatsSeason">2026</span> <span id="heroStatsSuffix">Season Stats</span>
-                    </div>
-
-                    <div class="hero-stats-grid">
-                        <div class="hero-stat-item">
-                            <div class="label">AVG</div>
-                            <div class="value" id="heroAVG">—</div>
-                            <div class="hint">Batting Average</div>
-                        </div>
-
-                        <div class="hero-stat-item">
-                            <div class="label">OBP</div>
-                            <div class="value" id="heroOBP">—</div>
-                            <div class="hint">On-Base Percentage</div>
-                        </div>
-
-                        <div class="hero-stat-item">
-                            <div class="label">IVY AVG</div>
-                            <div class="value" id="heroIvyAVG">—</div>
-                            <div class="hint">AVG vs Ivy League</div>
+                            <div class="player-meta-inline">
+                                <span><strong>#16</strong> • RF • B/T: R/L</span>
+                                <span class="meta-divider">•</span>
+                                <span id="heroSeasonText">2025</span> Game Log
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tabs" role="tablist" aria-label="Stat sections">
-                <div class="pill">
-                    Season:
-                    <select id="seasonSelect" aria-label="Select season">
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                        <option value="2026" selected>2026</option>
-                        <option value="career">Career</option>
-                    </select>
+            <div class="hero-right">
+                <div class="hero-stats-bar">
+                    <span id="heroStatsSeason">2026</span> Season Stats
+                </div>
+
+                <div class="hero-stats-grid">
+                    <div class="hero-stat-item">
+                        <div class="label">AVG</div>
+                        <div class="value" id="heroAVG">—</div>
+                    </div>
+
+                    <div class="hero-stat-item">
+                        <div class="label">OBP</div>
+                        <div class="value" id="heroOBP">—</div>
+                    </div>
+
+                    <div class="hero-stat-item">
+                        <div class="label">IVY AVG</div>
+                        <div class="value" id="heroIvyAVG">—</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="summary-bar" id="teamSummaryBar">
-            <div class="summary-bar-head">
-                <div>
-                    <h2 class="summary-bar-title" id="teamSummaryTitle">Season Team Summary</h2>
-                </div>
+        <div class="tabs">
+            <div class="pill">
+                Season:
+                <select id="seasonSelect">
+                    <option>2024</option>
+                    <option>2025</option>
+                    <option selected>2026</option>
+                    <option>Career</option>
+                </select>
             </div>
-            <div class="team-record-strip" id="teamRecordStrip"></div>
-        </div>
-
-        <div class="grid">
-            <!-- LEFT -->
-            <div class="panel">
-                <div class="panel-head game-log-head">
-                    <div class="game-log-head-left">
-                        <h2 class="panel-title" id="panelTitle">Batting • Game Log</h2>
-                        <p class="panel-sub" id="panelSub">Click any column header to sort. Use search + opponent filter to narrow the log.</p>
-                    </div>
-
-                    <div class="game-log-tabs" role="tablist" aria-label="Game log sections">
-                        <div class="tab active" data-tab="batting">Batting</div>
-                        <div class="tab" data-tab="fielding">Fielding</div>
-                    </div>
-
-                    <div class="tag" id="rowCountTag"><b>—</b> rows</div>
-                </div>
-
-                <div class="panel-body">
-                    <!-- Batting -->
-                    <div class="section active" id="section-batting">
-                        <div class="controls">
-                            <div class="left-controls">
-                                <div class="input">
-                                    <label for="searchBat">Search</label>
-                                    <input id="searchBat" type="text" placeholder="" />
-                                </div>
-                                <div class="input">
-                                    <label for="oppBat">Opponent</label>
-                                    <select id="oppBat"></select>
-                                </div>
-                            </div>
-                            <div class="right-controls">
-                                <button class="btn secondary" id="resetBat">Reset</button>
-                            </div>
-                        </div>
-
-                        <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
-                            <div class="tag" style="margin-bottom:10px;">
-                                <span id="vsOppLabel">—</span>
-                            </div>
-
-                            <div class="stat-strip" id="vsOppStrip"></div>
-
-                            <div class="divider"></div>
-
-                            <div class="tag" style="margin-bottom:10px;">Hit Type vs <b id="vsOppName2">—</b></div>
-                            <div class="chart-wrap">
-                                <canvas id="vsOppHitTypeChart" width="600" height="220"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="table-wrap">
-                            <table id="battingTable">
-                                <thead>
-                                    <tr>
-                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
-                                        <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
-                                        <th class="right" data-key="H">H <span class="sort">↕</span></th>
-                                        <th class="right" data-key="AB">AB <span class="sort">↕</span></th>
-                                        <th class="right" data-key="R">R <span class="sort">↕</span></th>
-                                        <th class="right" data-key="2B">2B <span class="sort">↕</span></th>
-                                        <th class="right" data-key="3B">3B <span class="sort">↕</span></th>
-                                        <th class="right" data-key="HR">HR <span class="sort">↕</span></th>
-                                        <th class="right" data-key="RBI">RBI <span class="sort">↕</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="battingBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Fielding -->
-                    <div class="section" id="section-fielding">
-                        <div class="controls">
-                            <div class="left-controls">
-                                <div class="input">
-                                    <label for="searchFld">Search</label>
-                                    <input id="searchFld" type="text" placeholder="" />
-                                </div>
-                                <div class="input">
-                                    <label for="oppFld">Opponent</label>
-                                    <select id="oppFld"></select>
-                                </div>
-                            </div>
-                            <div class="right-controls">
-                                <button class="btn secondary" id="resetFld">Reset</button>
-                            </div>
-                        </div>
-
-                        <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
-                            <div class="tag" style="margin-bottom:10px;">
-                                <span id="vsOppLabelFld">—</span>
-                            </div>
-                            <div class="stat-strip" id="vsOppStripFld"></div>
-                        </div>
-
-                        <div class="table-wrap">
-                            <table id="fieldingTable">
-                                <thead>
-                                    <tr>
-                                        <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
-                                        <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                        <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
-                                        <th class="right" data-key="TC" style="width: 6ch;">TC <span class="sort">↕</span></th>
-                                        <th class="right" data-key="PO" style="width: 6ch;">PO <span class="sort">↕</span></th>
-                                        <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span></th>
-                                        <th class="right" data-key="E" style="width: 6ch;">E <span class="sort">↕</span></th>
-                                        <th class="right" data-key="FPCT" style="width: 8ch;">FPCT <span class="sort">↕</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="fieldingBody"></tbody>
-                            </table>
-                        </div>
-
-                        <div class="note">Fielding % = (PO + A) / (PO + A + E). If a row has 0 chances, FPCT shows “—”.</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="panel">
-                <div class="panel-head">
-                    <div>
-                        <h2 class="panel-title" id="summaryPanelTitle">Season Summary</h2>
-                        <p class="panel-sub">Batting and fielding at a glance.</p>
-                    </div>
-                </div>
-
-               <div class="panel-body">
-    <!-- Batting Summary -->
-    <div class="section active" id="summary-batting">
-        <div class="tag" style="margin: 10px 0 10px;">Batting</div>
-
-        <div class="summary-logo-wrap" id="summaryLogoBatting">
-            <img src="logo.png" class="summary-logo" alt="Penn logo">
-        </div>
-
-        <div class="stat-strip" id="summaryStrip"></div>
-
-        <div class="divider"></div>
-
-        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-        <div class="chart-wrap">
-            <canvas id="hitTypeChart" width="600" height="220"></canvas>
         </div>
     </div>
 
-    <!-- Fielding Summary -->
-    <div class="section" id="summary-fielding">
-        <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
-
-        <div class="summary-logo-wrap" id="summaryLogoFielding">
-            <img src="logo.png" class="summary-logo" alt="Penn logo">
-        </div>
-
-        <div class="stat-strip" id="fieldingStrip"></div>
+    <!-- TEAM SUMMARY BAR -->
+    <div class="summary-bar">
+        <h2 class="summary-bar-title">Season Team Summary</h2>
+        <div class="team-record-strip"></div>
     </div>
 
-    <div class="divider"></div>
+    <!-- MAIN GRID -->
+    <div class="grid">
 
-    <div class="awards-side-section">
-        <div class="tag" style="margin: 10px 0 10px;">Career Awards</div>
-
-        <div class="awards-grid awards-grid-side">
-            <div class="award-card">
-                <img src="ivy.png" alt="Award 1">
-                <div class="award-card-text">
-                    <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
-                    <div class="award-card-date"></div>
-                </div>
+        <!-- LEFT: GAME LOG -->
+        <div class="panel">
+            <div class="panel-head">
+                <h2 class="panel-title">Batting • Game Log</h2>
             </div>
 
-            <div class="award-card">
-                <img src="ivy.png" alt="Award 2">
-                <div class="award-card-text">
-                    <div class="award-card-title">Ivy League Player of the Week</div>
-                    <div class="award-card-date">04/15/2025</div>
-                </div>
-            </div>
-
-            <div class="award-card">
-                <img src="ivy.png" alt="Award 3">
-                <div class="award-card-text">
-                    <div class="award-card-title">Ivy League Rookie of the Week</div>
-                    <div class="award-card-date">03/25/2024</div>
-                </div>
-            </div>
-
-            <div class="award-card">
-                <img src="ivytourney2.png" alt="Award 4">
-                <div class="award-card-text">
-                    <div class="award-card-title">2024 Ivy League Baseball Tournament Champions</div>
-                    <div class="award-card-date"></div>
-                </div>
-            </div>
-
-            <div class="award-card">
-                <img src="worldseries.avif" alt="Award 5">
-                <div class="award-card-text">
-                    <div class="award-card-title">2024 Men's College World Series Bid</div>
-                    <div class="award-card-date"></div>
+            <div class="panel-body">
+                <div class="table-wrap">
+                    <table id="battingTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Opponent</th>
+                                <th>Result</th>
+                                <th>H</th>
+                                <th>AB</th>
+                                <th>R</th>
+                                <th>HR</th>
+                                <th>RBI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="battingBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
+
+        <!-- MIDDLE: SEASON SUMMARY -->
+        <div class="panel">
+            <div class="panel-head">
+                <h2 class="panel-title">Season Summary</h2>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="tag">Batting</div>
+
+                <div class="summary-logo-wrap">
+                    <img src="logo.png" class="summary-logo">
+                </div>
+
+                <div class="stat-strip" id="summaryStrip"></div>
+
+                <div class="divider"></div>
+
+                <div class="tag">Hit Type Breakdown</div>
+
+                <div class="chart-wrap">
+                    <canvas id="hitTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: CAREER AWARDS COLUMN -->
+        <div class="panel awards-column">
+
+            <div class="panel-head">
+                <h2 class="panel-title">Career Awards</h2>
+            </div>
+
+            <div class="panel-body awards-column-body">
+
+                <div class="awards-grid">
+
+                    <div class="award-card">
+                        <img src="ivy.png">
+                        <div class="award-card-text">
+                            2025 First-Team All-Ivy
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="ivy.png">
+                        <div class="award-card-text">
+                            Ivy League Player of the Week
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="ivy.png">
+                        <div class="award-card-text">
+                            Ivy League Rookie of the Week
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="ivytourney2.png">
+                        <div class="award-card-text">
+                            Ivy League Champions
+                        </div>
+                    </div>
+
+                    <div class="award-card">
+                        <img src="worldseries.avif">
+                        <div class="award-card-text">
+                            College World Series Bid
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
-</div>
+</div> 
           
 
     <script>
