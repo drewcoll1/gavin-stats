@@ -55,6 +55,9 @@ body {
 }
 
 
+
+
+
 /* =========================================================
    2. TOOLTIP
 ========================================================= */
@@ -1071,45 +1074,36 @@ td[data-label="Opponent"] .opp-emoji {
 
 
 /* =========================================================
-   15. AWARDS PAGE
+   15. AWARDS IN RIGHT PANEL
 ========================================================= */
-.awards-page {
-    display: none;
-    margin-top: 14px;
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
-        var(--panel);
-}
-
-.awards-page.active {
-    display: block;
+.awards-side-section {
+    padding: 0 14px 14px;
 }
 
 .awards-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.awards-grid-side {
+    margin-top: 4px;
 }
 
 .award-card {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    /* border: 2px solid #000000 !important;  */
     border-radius: 14px;
-   background:
-    linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(1, 31, 91, .55)),
-    linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(1, 31, 91, .55)),
+        linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
 }
 
 .award-card img {
     display: block;
     width: 100%;
-    height: 260px;
+    height: 210px;
     padding: 12px;
     background: transparent;
     object-fit: contain;
@@ -1121,7 +1115,7 @@ td[data-label="Opponent"] .opp-emoji {
 }
 
 .award-card-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     color: #ffffff;
 }
@@ -1586,52 +1580,6 @@ td[data-label="Opponent"] .opp-emoji {
                         <option value="career">Career</option>
                     </select>
                 </div>
-
-                <div class="tab tab-right" data-tab="awards">Career Awards</div>
-            </div>
-        </div>
-
-        <div class="awards-page section" id="section-awards-page">
-            <div class="awards-grid">
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 1">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 2">
-                    <div class="award-card-text">
-                        <div class="award-card-title">Ivy League Player of the Week</div>
-                        <div class="award-card-date">04/15/2025</div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 3">
-                    <div class="award-card-text">
-                        <div class="award-card-title">Ivy League Rookie of the Week</div>
-                        <div class="award-card-date">03/25/2024</div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivytourney2.png" alt="Award 4">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2024 Ivy League Baseball Tournament Champions </div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="worldseries.avif" alt="Award 5">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2024 Men's College World Series Bid</div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1773,39 +1721,85 @@ td[data-label="Opponent"] .opp-emoji {
                     </div>
                 </div>
 
-                <div class="panel-body">
-                    <!-- Batting Summary -->
-                    <div class="section active" id="summary-batting">
-                        <div class="tag" style="margin: 10px 0 10px;">Batting</div>
+               <div class="panel-body">
+    <!-- Batting Summary -->
+    <div class="section active" id="summary-batting">
+        <div class="tag" style="margin: 10px 0 10px;">Batting</div>
 
-                        <div class="summary-logo-wrap" id="summaryLogoBatting">
-                            <img src="logo.png" class="summary-logo" alt="Penn logo">
-                        </div>
+        <div class="summary-logo-wrap" id="summaryLogoBatting">
+            <img src="logo.png" class="summary-logo" alt="Penn logo">
+        </div>
 
-                        <div class="stat-strip" id="summaryStrip"></div>
+        <div class="stat-strip" id="summaryStrip"></div>
 
-                        <div class="divider"></div>
+        <div class="divider"></div>
 
-                        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
-                        <div class="chart-wrap">
-                            <canvas id="hitTypeChart" width="600" height="220"></canvas>
-                        </div>
-                    </div>
+        <div class="tag" style="margin-bottom:10px;">Hit Type Breakdown</div>
+        <div class="chart-wrap">
+            <canvas id="hitTypeChart" width="600" height="220"></canvas>
+        </div>
+    </div>
 
-                    <div class="section" id="summary-fielding">
-                        <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
+    <!-- Fielding Summary -->
+    <div class="section" id="summary-fielding">
+        <div class="tag" style="margin: 10px 0 10px;">Fielding</div>
 
-                        <div class="summary-logo-wrap" id="summaryLogoFielding">
-                            <img src="logo.png" class="summary-logo" alt="Penn logo">
-                        </div>
+        <div class="summary-logo-wrap" id="summaryLogoFielding">
+            <img src="logo.png" class="summary-logo" alt="Penn logo">
+        </div>
 
-                        <div class="stat-strip" id="fieldingStrip"></div>
-                    </div>
+        <div class="stat-strip" id="fieldingStrip"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="awards-side-section">
+        <div class="tag" style="margin: 10px 0 10px;">Career Awards</div>
+
+        <div class="awards-grid awards-grid-side">
+            <div class="award-card">
+                <img src="ivy.png" alt="Award 1">
+                <div class="award-card-text">
+                    <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
+                    <div class="award-card-date"></div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivy.png" alt="Award 2">
+                <div class="award-card-text">
+                    <div class="award-card-title">Ivy League Player of the Week</div>
+                    <div class="award-card-date">04/15/2025</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivy.png" alt="Award 3">
+                <div class="award-card-text">
+                    <div class="award-card-title">Ivy League Rookie of the Week</div>
+                    <div class="award-card-date">03/25/2024</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivytourney2.png" alt="Award 4">
+                <div class="award-card-text">
+                    <div class="award-card-title">2024 Ivy League Baseball Tournament Champions</div>
+                    <div class="award-card-date"></div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="worldseries.avif" alt="Award 5">
+                <div class="award-card-text">
+                    <div class="award-card-title">2024 Men's College World Series Bid</div>
+                    <div class="award-card-date"></div>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
+          
 
     <script>
         /* ------------ LOGO LOCATIONS ------------ */
@@ -3546,49 +3540,7 @@ if (teamSummaryTitle) {
         })();
     </script>
 
-    <script>
-const awardsTab = document.querySelector('[data-tab="awards"]');
-const awardsSection = document.getElementById('section-awards-page');
-
-const mainGrid = document.querySelector('.grid');
-const teamSummaryBar = document.getElementById('teamSummaryBar');
-const seasonSelect = document.getElementById('seasonSelect');
-
-let awardsActive = false;
-
-awardsTab.addEventListener('click', () => {
-
-    // ===== TOGGLE OFF (GO BACK TO DEFAULT) =====
-    if (awardsActive) {
-        awardsActive = false;
-
-        awardsTab.classList.remove('active');
-        awardsSection.classList.remove('active');
-
-        // restore layout
-        mainGrid.style.display = '';
-        teamSummaryBar.style.display = '';
-
-        // 🔥 RESET SEASON TO 2026
-        seasonSelect.value = "2026";
-
-        // 🔥 TRIGGER YOUR EXISTING LOGIC
-        seasonSelect.dispatchEvent(new Event('change'));
-
-        return;
-    }
-
-    // ===== TOGGLE ON =====
-    awardsActive = true;
-
-    awardsTab.classList.add('active');
-    awardsSection.classList.add('active');
-
-    // hide main content
-    mainGrid.style.display = 'none';
-    teamSummaryBar.style.display = 'none';
-});
-</script>
+   
     
 
 </html>
