@@ -2771,16 +2771,16 @@ function renderBattingTable(rows) {
         tr.dataset.result = r.result || "";
 
         tr.innerHTML = `
-            <td class="muted" data-label="Date">${r.date}</td>
-            <td data-label="Opponent">${opponentCellHTML(r)}</td>
-            <td data-label="Result">${r.result || ""}</td>
-            <td class="right" data-label="H">${r.H}</td>
-            <td class="right" data-label="AB">${r.AB}</td>
-            <td class="right" data-label="R">${r.R}</td>
-            <td class="right" data-label="2B">${r["2B"]}</td>
-            <td class="right" data-label="3B">${r["3B"]}</td>
-            <td class="right" data-label="HR">${r.HR}</td>
-            <td class="right" data-label="RBI">${r.RBI}</td>
+          <td class="muted" data-label="Date">${r.date}</td>
+          <td data-label="Opponent">${opponentCellHTML(r)}</td>
+          <td data-label="Result">${r.result || ""}</td>
+          <td class="right" data-label="H">${r.H}</td>
+          <td class="right" data-label="AB">${r.AB}</td>
+          <td class="right" data-label="R">${r.R}</td>
+          <td class="right" data-label="2B">${r["2B"]}</td>
+          <td class="right" data-label="3B">${r["3B"]}</td>
+          <td class="right" data-label="HR">${r.HR}</td>
+          <td class="right" data-label="RBI">${r.RBI}</td>
         `;
 
         tr.addEventListener("click", () => {
@@ -2811,14 +2811,14 @@ function renderFieldingTable(rows) {
         tr.dataset.result = r.result || "";
 
         tr.innerHTML = `
-            <td class="muted" data-label="Date">${r.date}</td>
-            <td data-label="Opponent">${opponentCellHTML(r)}</td>
-            <td data-label="Result">${r.result || ""}</td>
-            <td class="right" data-label="TC">${r.TC}</td>
-            <td class="right" data-label="PO">${r.PO}</td>
-            <td class="right" data-label="A">${r.A}</td>
-            <td class="right" data-label="E">${r.E}</td>
-            <td class="right" data-label="FPCT">${fp}</td>
+          <td class="muted" data-label="Date">${r.date}</td>
+          <td data-label="Opponent">${opponentCellHTML(r)}</td>
+          <td data-label="Result">${r.result || ""}</td>
+          <td class="right" data-label="TC">${r.TC}</td>
+          <td class="right" data-label="PO">${r.PO}</td>
+          <td class="right" data-label="A">${r.A}</td>
+          <td class="right" data-label="E">${r.E}</td>
+          <td class="right" data-label="FPCT">${fp}</td>
         `;
 
         tr.addEventListener("click", () => {
@@ -2836,29 +2836,31 @@ function renderFieldingTable(rows) {
     restoreSelectedRows();
 }
 
-const battingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
-const fieldingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
-
 function sortRows(rows, key, dir) {
     const mult = dir === "asc" ? 1 : -1;
+
     return [...rows].sort((a, b) => {
-        const av = a[key], bv = b[key];
+        const av = a[key];
+        const bv = b[key];
+
         if (key === "FPCT") {
-            const aNan = !isFinite(av), bNan = !isFinite(bv);
+            const aNan = !isFinite(av);
+            const bNan = !isFinite(bv);
             if (aNan && bNan) return 0;
             if (aNan) return 1;
             if (bNan) return -1;
             return (av - bv) * mult;
         }
+
         if (typeof av === "number" && typeof bv === "number") {
             if (av < bv) return -1 * mult;
             if (av > bv) return 1 * mult;
             return 0;
         }
+
         return String(av).localeCompare(String(bv)) * mult;
     });
 }
-
 function hideGameTip() {
     document.getElementById("tooltip").classList.remove("show");
 }
