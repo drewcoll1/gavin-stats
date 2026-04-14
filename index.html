@@ -1073,20 +1073,60 @@ td[data-label="Opponent"] .opp-emoji {
 /* =========================================================
    15. AWARDS PAGE
 ========================================================= */
-.awards-page {
-    display: none;
-    margin-top: 14px;
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, .05), transparent 45%),
-        var(--panel);
+.three-panel-layout {
+    grid-template-columns: 1.2fr 0.75fr 0.7fr;
+    align-items: start;
 }
 
-.awards-page.active {
+.awards-panel {
+    height: 100%;
+}
+
+.awards-panel-body {
+    padding: 12px;
+}
+
+.permanent-awards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.award-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 14px;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, .75), rgba(1, 31, 91, .55)),
+        linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
+}
+
+.award-card img {
     display: block;
+    width: 100%;
+    height: 180px;
+    padding: 12px;
+    background: transparent;
+    object-fit: contain;
+}
+
+.award-card-text {
+    padding: 12px 14px 14px;
+    text-align: center;
+}
+
+.award-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.3;
+}
+
+.award-card-date {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #ffffff;
 }
 
 .awards-grid {
@@ -1132,6 +1172,29 @@ td[data-label="Opponent"] .opp-emoji {
     color: #ffffff;
 }
 
+    @media (max-width: 1200px) {
+    .three-panel-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .awards-panel {
+        order: 3;
+    }
+
+    .permanent-awards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .permanent-awards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .award-card img {
+        height: 200px;
+    }
+}
 
 /* =========================================================
    16. SHARED FLEX FIXES
@@ -1586,52 +1649,6 @@ td[data-label="Opponent"] .opp-emoji {
                         <option value="career">Career</option>
                     </select>
                 </div>
-
-                <div class="tab tab-right" data-tab="awards">Career Awards</div>
-            </div>
-        </div>
-
-        <div class="awards-page section" id="section-awards-page">
-            <div class="awards-grid">
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 1">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 2">
-                    <div class="award-card-text">
-                        <div class="award-card-title">Ivy League Player of the Week</div>
-                        <div class="award-card-date">04/15/2025</div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivy.png" alt="Award 3">
-                    <div class="award-card-text">
-                        <div class="award-card-title">Ivy League Rookie of the Week</div>
-                        <div class="award-card-date">03/25/2024</div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="ivytourney2.png" alt="Award 4">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2024 Ivy League Baseball Tournament Champions </div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
-
-                <div class="award-card">
-                    <img src="worldseries.avif" alt="Award 5">
-                    <div class="award-card-text">
-                        <div class="award-card-title">2024 Men's College World Series Bid</div>
-                        <div class="award-card-date"></div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1644,7 +1661,7 @@ td[data-label="Opponent"] .opp-emoji {
             <div class="team-record-strip" id="teamRecordStrip"></div>
         </div>
 
-        <div class="grid">
+        <div class="grid three-panel-layout">
             <!-- LEFT -->
             <div class="panel">
                 <div class="panel-head game-log-head">
@@ -1803,6 +1820,56 @@ td[data-label="Opponent"] .opp-emoji {
                     </div>
                 </div>
             </div>
+
+            <div class="panel awards-panel">
+    <div class="panel-head">
+        <div>
+            <h2 class="panel-title">Career Awards</h2>
+            <p class="panel-sub">Honors, championships, and major career recognitions.</p>
+        </div>
+    </div>
+
+    <div class="panel-body awards-panel-body">
+        <div class="awards-grid permanent-awards-grid">
+            <div class="award-card">
+                <img src="ivy.png" alt="2025 First-Team All-Ivy">
+                <div class="award-card-text">
+                    <div class="award-card-title">2025 First-Team All-Ivy (OF)</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivy.png" alt="Ivy League Player of the Week">
+                <div class="award-card-text">
+                    <div class="award-card-title">Ivy League Player of the Week</div>
+                    <div class="award-card-date">04/15/2025</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivy.png" alt="Ivy League Rookie of the Week">
+                <div class="award-card-text">
+                    <div class="award-card-title">Ivy League Rookie of the Week</div>
+                    <div class="award-card-date">03/25/2024</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="ivytourney2.png" alt="2024 Ivy League Baseball Tournament Champions">
+                <div class="award-card-text">
+                    <div class="award-card-title">2024 Ivy League Baseball Tournament Champions</div>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <img src="worldseries.avif" alt="2024 Men's College World Series Bid">
+                <div class="award-card-text">
+                    <div class="award-card-title">2024 Men's College World Series Bid</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 
@@ -3349,13 +3416,7 @@ function setTab(tabName) {
     document.getElementById("summary-batting").classList.remove("active");
     document.getElementById("summary-fielding").classList.remove("active");
 
-    const awardsPage = document.getElementById("section-awards-page");
-    const teamSummaryBar = document.getElementById("teamSummaryBar");
-    const mainGrid = document.querySelector(".grid");
-
-    awardsPage.classList.remove("active");
-    teamSummaryBar.style.display = "";
-    mainGrid.style.display = "";
+   
 
     if (tabName === "batting") {
         document.getElementById("section-batting").classList.add("active");
@@ -3369,11 +3430,7 @@ function setTab(tabName) {
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshFielding();
-    } else if (tabName === "awards") {
-        awardsPage.classList.add("active");
-        teamSummaryBar.style.display = "none";
-        mainGrid.style.display = "none";
-    }
+    } 
 }
          
                             
@@ -3546,49 +3603,7 @@ if (teamSummaryTitle) {
         })();
     </script>
 
-    <script>
-const awardsTab = document.querySelector('[data-tab="awards"]');
-const awardsSection = document.getElementById('section-awards-page');
-
-const mainGrid = document.querySelector('.grid');
-const teamSummaryBar = document.getElementById('teamSummaryBar');
-const seasonSelect = document.getElementById('seasonSelect');
-
-let awardsActive = false;
-
-awardsTab.addEventListener('click', () => {
-
-    // ===== TOGGLE OFF (GO BACK TO DEFAULT) =====
-    if (awardsActive) {
-        awardsActive = false;
-
-        awardsTab.classList.remove('active');
-        awardsSection.classList.remove('active');
-
-        // restore layout
-        mainGrid.style.display = '';
-        teamSummaryBar.style.display = '';
-
-        // 🔥 RESET SEASON TO 2026
-        seasonSelect.value = "2026";
-
-        // 🔥 TRIGGER YOUR EXISTING LOGIC
-        seasonSelect.dispatchEvent(new Event('change'));
-
-        return;
-    }
-
-    // ===== TOGGLE ON =====
-    awardsActive = true;
-
-    awardsTab.classList.add('active');
-    awardsSection.classList.add('active');
-
-    // hide main content
-    mainGrid.style.display = 'none';
-    teamSummaryBar.style.display = 'none';
-});
-</script>
+    
     
 
 </html>
