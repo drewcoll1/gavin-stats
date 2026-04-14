@@ -2969,8 +2969,8 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         const rightEls = getRightPanelEls();
         if (rightEls.title) {
     rightEls.title.textContent = (currentSeason === "career")
-        ? "Career Summary"
-        : `${currentSeason} Summary`;
+        ? "Career Stats"
+        : `${currentSeason} Stats`;
 }
         if (rightEls.sub) {
             rightEls.sub.textContent = "Batting and fielding at a glance.";
@@ -3290,8 +3290,8 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         const teamSummaryTitle = document.getElementById("teamSummaryTitle");
 if (teamSummaryTitle) {
     teamSummaryTitle.textContent = (currentSeason === "career")
-        ? "Career Team Summary"
-        : `${currentSeason} Team Summary`;
+        ? "Career Team Record"
+        : `${currentSeason} Team Record`;
 }
 
         if ($("#summaryPanelTitle")) {
