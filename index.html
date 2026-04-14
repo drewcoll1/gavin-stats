@@ -2353,8 +2353,19 @@ function findRowByGame(tbodyId, game) {
 
 function showSelectedBattingGame(r) {
     selectedBattingGame = r;
+
+    const battingRow = findRowByGame("battingBody", r);
+    if (battingRow) setSelectedRow("battingBody", battingRow);
+
+    const matchingFieldingGame = findMatchingFieldingGame(r);
+    if (matchingFieldingGame) {
+        selectedFieldingGame = matchingFieldingGame;
+        const fieldingRow = findRowByGame("fieldingBody", matchingFieldingGame);
+        if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
+    }
+
     const summaryLogoBatting = document.getElementById("summaryLogoBatting");
-if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
+    if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
     const totals = computeBattingTotals([r]);
     const rates = computeAdvancedFromLog(totals);
@@ -2398,69 +2409,34 @@ if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
             </div>
 
             <div class="stat">
-                <div class="k">2B</div>
-                <div class="v">${r["2B"]}</div>
-                <div class="s">Doubles</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">3B</div>
-                <div class="v">${r["3B"]}</div>
-                <div class="s">Triples</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">HR</div>
-                <div class="v">${r.HR}</div>
-                <div class="s">Home Runs</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">TB</div>
-                <div class="v">${totals.TB}</div>
-                <div class="s">Total Bases</div>
-            </div>
-
-            <div class="stat">
                 <div class="k">AVG</div>
-                <div class="v">${fmt3(rates.AVG)}</div>
-                <div class="s">H / AB</div>
+                <div class="v">${isFinite(opsObj.avg) ? fmt3(opsObj.avg) : "—"}</div>
+                <div class="s">Batting Average</div>
             </div>
 
             <div class="stat">
-                <div class="k">SLG</div>
-                <div class="v">${fmt3(opsObj.slg)}</div>
-                <div class="s">Slugging %</div>
+                <div class="k">OBP</div>
+                <div class="v">${isFinite(rates.OBP) ? fmt3(rates.OBP) : "—"}</div>
+                <div class="s">On-Base Percentage</div>
             </div>
 
             <div class="stat">
                 <div class="k">OPS</div>
-                <div class="v">${fmt3(opsObj.ops)}</div>
-                <div class="s">On-base + Slugging %</div>
+                <div class="v">${isFinite(opsObj.ops) ? fmt3(opsObj.ops) : "—"}</div>
+                <div class="s">On-Base + Slugging</div>
             </div>
         </div>
-        </div>
+    </div>
     `;
 
-    const tag = document.querySelector("#summary-batting .tag");
-    if (tag) tag.textContent = "Selected Game";
+    const els = getRightPanelEls();
+    if (els.title) els.title.textContent = "Game Summary";
+    if (els.sub) els.sub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
+    if (els.battingTag) els.battingTag.textContent = "Selected Game";
 
-    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-
-    if (panelTitle) panelTitle.textContent = "Game Summary";
-    if (panelSub) panelSub.textContent = `${r.date} • ${r.opponent} • ${r.result}`;
-
-    const divider = document.querySelector("#summary-batting .divider");
-    const chartTags = document.querySelectorAll("#summary-batting .tag");
     const chartWrap = document.querySelector("#summary-batting .chart-wrap");
     const chartCanvas = document.getElementById("hitTypeChart");
-
-    if (divider) divider.style.display = "";
-    if (chartTags[1]) chartTags[1].textContent = "Hit Type Breakdown";
-    if (chartTags[1]) chartTags[1].style.display = "";
     if (chartWrap) chartWrap.style.display = "";
-
     if (chartCanvas) {
         seasonHitPie.render(
             chartCanvas,
@@ -2472,9 +2448,19 @@ if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
 function showSelectedFieldingGame(r, tr = null) {
     selectedFieldingGame = r;
+
+    const fieldingRow = tr || findRowByGame("fieldingBody", r);
+    if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
+
+    const matchingBattingGame = findMatchingBattingGame(r);
+    if (matchingBattingGame) {
+        selectedBattingGame = matchingBattingGame;
+        const battingRow = findRowByGame("battingBody", matchingBattingGame);
+        if (battingRow) setSelectedRow("battingBody", battingRow);
+    }
+
     const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
-    if (tr) setSelectedRow("fieldingBody", tr);
+    if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
 
     const logoSrc = logoMap[r.opponent] || "";
     const logoHTML = logoSrc
