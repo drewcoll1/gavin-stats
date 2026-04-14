@@ -1586,10 +1586,6 @@ td[data-label="Opponent"] .opp-emoji {
                             <div class="controls">
                                 <div class="left-controls">
                                     <div class="input">
-                                        <label for="searchBat">Search</label>
-                                        <input id="searchBat" type="text" placeholder="" />
-                                    </div>
-                                    <div class="input">
                                         <label for="oppBat">Opponent</label>
                                         <select id="oppBat"></select>
                                     </div>
@@ -3310,9 +3306,6 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         resetState(battingState);
         resetState(fieldingState);
 
-        $("#searchBat").value = "";
-        $("#searchFld").value = "";
-
         renderOpponentSelect($("#oppBat"), battingLog);
         renderOpponentSelect($("#oppFld"), fieldingLog);
 
@@ -3442,22 +3435,15 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         $("#resetBat").addEventListener("click", () => {
             clearSelectedGameSummary();
             resetState(battingState);
-            $("#searchBat").value = "";
             setSharedOpponent("");
         });
 
-        $("#searchFld").addEventListener("input", (e) => {
-            clearSelectedGameSummary();
-            fieldingState.search = e.target.value;
-            refreshFielding();
-        });
 
         $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
 
         $("#resetFld").addEventListener("click", () => {
             clearSelectedGameSummary();
             resetState(fieldingState);
-            $("#searchFld").value = "";
             setSharedOpponent("");
         });
 
