@@ -2472,17 +2472,28 @@ if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
 function showSelectedFieldingGame(r, tr = null) {
     selectedFieldingGame = r;
+
+    const fieldingRow = tr || findRowByGame("fieldingBody", r);
+    if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
+
+    const matchingBattingGame = findMatchingBattingGame(r);
+    if (matchingBattingGame) {
+        selectedBattingGame = matchingBattingGame;
+        const battingRow = findRowByGame("battingBody", matchingBattingGame);
+        if (battingRow) battingRow.classList.add("selected-game");
+    }
+
     const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
-    if (tr) setSelectedRow("fieldingBody", tr);
+    if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
+
+    const fpct = (r.TC > 0) ? ((r.PO + r.A) / r.TC) : NaN;
 
     const logoSrc = logoMap[r.opponent] || "";
     const logoHTML = logoSrc
         ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
         : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
 
-    const strip = $("#fieldingStrip");
-    strip.innerHTML = `
+    $("#fieldingStrip").innerHTML = `
         <div class="selected-game-layout">
             <div class="selected-game-top">
                 <div class="selected-game-date">${r.date}</div>
@@ -2491,14 +2502,14 @@ if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
                     ${logoHTML}
                 </div>
 
-                <div class="selected-game-result">${r.result || "—"}</div>
+                <div class="selected-game-result">${r.result}</div>
             </div>
 
             <div class="selected-game-stats">
                 <div class="stat">
                     <div class="k">TC</div>
                     <div class="v">${r.TC}</div>
-                    <div class="s">Total chances</div>
+                    <div class="s">Total Chances</div>
                 </div>
 
                 <div class="stat">
@@ -2521,17 +2532,20 @@ if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
 
                 <div class="stat">
                     <div class="k">FPCT</div>
-                    <div class="v">${isFinite(r.FPCT) ? fmt3(r.FPCT) : "—"}</div>
-                    <div class="s">(PO + A) / (PO + A + E)</div>
+                    <div class="v">${isFinite(fpct) ? fmt3(fpct) : "—"}</div>
+                    <div class="s">Fielding Percentage</div>
                 </div>
             </div>
         </div>
     `;
 
-    const els = getRightPanelEls();
-    if (els.title) els.title.textContent = "Game Summary";
-    if (els.sub) els.sub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
-    if (els.fieldingTag) els.fieldingTag.textContent = "Selected Game";
+    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+
+    if (panelTitle) panelTitle.textContent = "Game Summary";
+    if (panelSub) panelSub.textContent = `${r.date} • ${r.opponent} • ${r.result}`;
+
+    restoreSelectedRows();
 }
         function setSharedOpponent(opp) {
             // Update both states
@@ -3341,13 +3355,11 @@ function setTab(tabName) {
         $("#panelTitle").textContent = "Batting • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
 
-        // keep the selected batting game if it already exists,
-        // otherwise derive it from the selected fielding game
         if (!selectedBattingGame && selectedFieldingGame) {
             selectedBattingGame = findMatchingBattingGame(selectedFieldingGame);
         }
-        if (selectedBattingGame) {
-            selectedFieldingGame = findMatchingFieldingGame(selectedBattingGame) || selectedFieldingGame;
+        if (selectedBattingGame && !selectedFieldingGame) {
+            selectedFieldingGame = findMatchingFieldingGame(selectedBattingGame);
         }
 
         refreshBatting();
@@ -3355,36 +3367,34 @@ function setTab(tabName) {
         if (selectedBattingGame) {
             showSelectedBattingGame(selectedBattingGame);
         } else {
-            restoreSelectedRows();
             renderSummary();
+            restoreSelectedRows();
         }
-    } else if (tabName === "fielding") {
+    }
+
+    if (tabName === "fielding") {
         document.getElementById("section-fielding").classList.add("active");
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
 
-        // keep the selected fielding game if it already exists,
-        // otherwise derive it from the selected batting game
         if (!selectedFieldingGame && selectedBattingGame) {
             selectedFieldingGame = findMatchingFieldingGame(selectedBattingGame);
         }
-        if (selectedFieldingGame) {
-            selectedBattingGame = findMatchingBattingGame(selectedFieldingGame) || selectedBattingGame;
+        if (selectedFieldingGame && !selectedBattingGame) {
+            selectedBattingGame = findMatchingBattingGame(selectedFieldingGame);
         }
 
         refreshFielding();
 
         if (selectedFieldingGame) {
-            const tr = findRowByGame("fieldingBody", selectedFieldingGame);
-            showSelectedFieldingGame(selectedFieldingGame, tr);
+            showSelectedFieldingGame(selectedFieldingGame);
         } else {
-            restoreSelectedRows();
             renderSummary();
+            restoreSelectedRows();
         }
     }
-}              
-
+}
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
 
