@@ -3340,18 +3340,22 @@ function setTab(tabName) {
         document.getElementById("summary-batting").classList.add("active");
         $("#panelTitle").textContent = "Batting • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
+
+        // keep the selected batting game if it already exists,
+        // otherwise derive it from the selected fielding game
+        if (!selectedBattingGame && selectedFieldingGame) {
+            selectedBattingGame = findMatchingBattingGame(selectedFieldingGame);
+        }
+        if (selectedBattingGame) {
+            selectedFieldingGame = findMatchingFieldingGame(selectedBattingGame) || selectedFieldingGame;
+        }
+
         refreshBatting();
 
-        const match = selectedFieldingGame
-            ? findMatchingBattingGame(selectedFieldingGame)
-            : selectedBattingGame;
-
-        if (match) {
-            selectedBattingGame = match;
-            const tr = findRowByGame("battingBody", match);
-            if (tr) setSelectedRow("battingBody", tr);
-            showSelectedBattingGame(match);
+        if (selectedBattingGame) {
+            showSelectedBattingGame(selectedBattingGame);
         } else {
+            restoreSelectedRows();
             renderSummary();
         }
     } else if (tabName === "fielding") {
@@ -3359,22 +3363,27 @@ function setTab(tabName) {
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
+
+        // keep the selected fielding game if it already exists,
+        // otherwise derive it from the selected batting game
+        if (!selectedFieldingGame && selectedBattingGame) {
+            selectedFieldingGame = findMatchingFieldingGame(selectedBattingGame);
+        }
+        if (selectedFieldingGame) {
+            selectedBattingGame = findMatchingBattingGame(selectedFieldingGame) || selectedBattingGame;
+        }
+
         refreshFielding();
 
-        const match = selectedBattingGame
-            ? findMatchingFieldingGame(selectedBattingGame)
-            : selectedFieldingGame;
-
-        if (match) {
-            selectedFieldingGame = match;
-            const tr = findRowByGame("fieldingBody", match);
-            if (tr) setSelectedRow("fieldingBody", tr);
-            showSelectedFieldingGame(match, tr);
+        if (selectedFieldingGame) {
+            const tr = findRowByGame("fieldingBody", selectedFieldingGame);
+            showSelectedFieldingGame(selectedFieldingGame, tr);
         } else {
+            restoreSelectedRows();
             renderSummary();
         }
     }
-}                    
+}              
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
