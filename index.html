@@ -1638,10 +1638,6 @@ td[data-label="Opponent"] .opp-emoji {
                             <div class="controls">
                                 <div class="left-controls">
                                     <div class="input">
-                                        <label for="searchFld">Search</label>
-                                        <input id="searchFld" type="text" placeholder="" />
-                                    </div>
-                                    <div class="input">
                                         <label for="oppFld">Opponent</label>
                                         <select id="oppFld"></select>
                                     </div>
@@ -2681,8 +2677,8 @@ const opponentHitPie = createHitPie();
     let selectedBattingGame = null;
     let selectedFieldingGame = null;
 
-    const battingState = { search: "", opponent: "", sortKey: "dateValue", sortDir: "asc" };
-    const fieldingState = { search: "", opponent: "", sortKey: "dateValue", sortDir: "asc" };
+    const battingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
+const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
 
     function resetState(state) {
         state.search = "";
@@ -3439,12 +3435,6 @@ const opponentHitPie = createHitPie();
 
         document.querySelectorAll(".tab").forEach(t => {
             t.addEventListener("click", () => setTab(t.dataset.tab));
-        });
-
-        $("#searchBat").addEventListener("input", (e) => {
-            clearSelectedGameSummary();
-            battingState.search = e.target.value;
-            refreshBatting();
         });
 
         $("#oppBat").addEventListener("change", (e) => setSharedOpponent(e.target.value));
