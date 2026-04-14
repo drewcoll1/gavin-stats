@@ -2214,116 +2214,115 @@ td[data-label="Opponent"] .opp-emoji {
             }
         };
 
-        /* ------------ HELPERS ------------ */
-        const $ = (sel) => document.querySelector(sel);
+        <script>
+/* ------------ HELPERS ------------ */
+const $ = (sel) => document.querySelector(sel);
 
-        function parseHAB(hab) {
-            const parts = String(hab).split("-");
-            return { H: Number(parts[0] || 0), AB: Number(parts[1] || 0) };
-        }
+function parseHAB(hab) {
+    const parts = String(hab).split("-");
+    return { H: Number(parts[0] || 0), AB: Number(parts[1] || 0) };
+}
 
-        function toDateValue(mmddyyyy) {
-            const [m, d, y] = mmddyyyy.split("/").map(n => n.padStart(2, "0"));
-            return `${y}-${m}-${d}`;
-        }
-        function fmt3(x) {
-            if (!isFinite(x)) return "—";
-            const v = Math.round(x * 1000) / 1000;
-            return (v < 1 ? v.toFixed(3).replace("0.", ".") : v.toFixed(3));
-        }
-        function safeDiv(a, b) { return b === 0 ? NaN : (a / b); }
-        function logoFor(opponent) { return logoMap[opponent] || ""; }
+function toDateValue(mmddyyyy) {
+    const [m, d, y] = mmddyyyy.split("/").map(n => n.padStart(2, "0"));
+    return `${y}-${m}-${d}`;
+}
 
-        function initials(opponent) {
-            const clean = opponent.replace(/\(.*?\)/g, "").replace(/[^A-Za-z\s']/g, "").trim();
-            const parts = clean.split(/\s+/).filter(Boolean);
-            const a = parts[0]?.[0] || "?";
-            const b = parts[1]?.[0] || "";
-            return (a + b).toUpperCase();
-        }
+function fmt3(x) {
+    if (!isFinite(x)) return "—";
+    const v = Math.round(x * 1000) / 1000;
+    return (v < 1 ? v.toFixed(3).replace("0.", ".") : v.toFixed(3));
+}
 
-        function computeBattingTotals(rows) {
-            const t = { H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
-            for (const g of rows) {
-                t.H += g.H; t.AB += g.AB; t.R += g.R;
-                t["2B"] += g["2B"]; t["3B"] += g["3B"]; t.HR += g.HR; t.RBI += g.RBI;
-                t.TB += g.TB;
-            }
-            return t;
-        }
-        function computeHitTypeTotals(rows) {
-            let singles = 0, doubles = 0, triples = 0, hrs = 0;
-            for (const g of rows) {
-                doubles += (g["2B"] || 0);
-                triples += (g["3B"] || 0);
-                hrs += (g.HR || 0);
-                // singles per game: H - 2B - 3B - HR (never below 0)
-                const s = (g.H || 0) - (g["2B"] || 0) - (g["3B"] || 0) - (g.HR || 0);
-                singles += Math.max(0, s);
-            }
-            return { singles, doubles, triples, hrs };
-        }
+function safeDiv(a, b) {
+    return b === 0 ? NaN : (a / b);
+}
+
+function logoFor(opponent) {
+    return logoMap[opponent] || "";
+}
+
+function initials(opponent) {
+    const clean = opponent.replace(/\(.*?\)/g, "").replace(/[^A-Za-z\s']/g, "").trim();
+    const parts = clean.split(/\s+/).filter(Boolean);
+    const a = parts[0]?.[0] || "?";
+    const b = parts[1]?.[0] || "";
+    return (a + b).toUpperCase();
+}
+
+function computeBattingTotals(rows) {
+    const t = { H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
+    for (const g of rows) {
+        t.H += g.H;
+        t.AB += g.AB;
+        t.R += g.R;
+        t["2B"] += g["2B"];
+        t["3B"] += g["3B"];
+        t.HR += g.HR;
+        t.RBI += g.RBI;
+        t.TB += g.TB;
+    }
+    return t;
+}
+
+function computeHitTypeTotals(rows) {
+    let singles = 0, doubles = 0, triples = 0, hrs = 0;
+    for (const g of rows) {
+        doubles += (g["2B"] || 0);
+        triples += (g["3B"] || 0);
+        hrs += (g.HR || 0);
+        const s = (g.H || 0) - (g["2B"] || 0) - (g["3B"] || 0) - (g.HR || 0);
+        singles += Math.max(0, s);
+    }
+    return { singles, doubles, triples, hrs };
+}
 
 function computeAdvancedFromLog(t) {
-            return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
-        }
+    return {
+        AVG: safeDiv(t.H, t.AB),
+        SLG: safeDiv(t.TB, t.AB),
+        OBP: NaN
+    };
+}
 
-        function getRightPanelEls() {
-            const panel = document.querySelector(".grid > .panel:last-child");
-            return {
-                title: panel?.querySelector(".panel-title"),
-                sub: panel?.querySelector(".panel-sub"),
-                battingTag: document.querySelector("#summary-batting .tag"),
-                fieldingTag: document.querySelector("#summary-fielding .tag"),
-                battingDivider: document.querySelector("#summary-batting .divider"),
-                battingTags: document.querySelectorAll("#summary-batting .tag"),
-                battingChartWrap: document.querySelector("#summary-batting .chart-wrap")
-            };
-        }
+function computeOPSFromTotals(t) {
+    const avg = safeDiv(t.H, t.AB);
+    const slg = safeDiv(t.TB, t.AB);
+    const ops = (isFinite(avg) && isFinite(slg)) ? (avg + slg) : NaN;
+    return { avg, slg, ops };
+}
 
-        function clearSelectedRows() {
-            document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => row.classList.remove("selected-game"));
-        }
+function getRightPanelEls() {
+    const panel = document.querySelector(".grid > .panel:last-child");
+    return {
+        title: panel?.querySelector(".panel-title"),
+        sub: panel?.querySelector(".panel-sub"),
+        battingTag: document.querySelector("#summary-batting .tag"),
+        fieldingTag: document.querySelector("#summary-fielding .tag"),
+        battingDivider: document.querySelector("#summary-batting .divider"),
+        battingTags: document.querySelectorAll("#summary-batting .tag"),
+        battingChartWrap: document.querySelector("#summary-batting .chart-wrap")
+    };
+}
 
-        function setSelectedRow(tbodyId, tr) {
-            document.querySelectorAll(`#${tbodyId} tr`).forEach(row => row.classList.remove("selected-game"));
-            if (tr) tr.classList.add("selected-game");
-        }
-
- function clearSelectedGameSummary() {
-    selectedBattingGame = null;
-    selectedFieldingGame = null;
-
+function clearSelectedRows() {
     document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => {
         row.classList.remove("selected-game");
     });
-
-    const rightTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    const rightSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-    const battingTag = document.querySelector("#summary-batting .tag");
-    const fieldingTag = document.querySelector("#summary-fielding .tag");
-
-    if (rightTitle) {
-    rightTitle.textContent =
-        (currentSeason === "career") ? "Career Summary" : "Season Summary";
 }
-    if (rightSub) rightSub.textContent = "Batting and fielding at a glance.";
-    if (battingTag) battingTag.textContent = "Batting";
-    if (fieldingTag) fieldingTag.textContent = "Fielding";
 
-    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
-    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-
-    if (summaryLogoBatting) summaryLogoBatting.style.display = "flex";
-    if (summaryLogoFielding) summaryLogoFielding.style.display = "flex";
-
-    renderSummary();
+function setSelectedRow(tbodyId, tr) {
+    document.querySelectorAll(`#${tbodyId} tr`).forEach(row => {
+        row.classList.remove("selected-game");
+    });
+    if (tr) tr.classList.add("selected-game");
 }
+
 function sameGame(a, b) {
     if (!a || !b) return false;
     return a.date === b.date &&
-           a.opponent === b.opponent &&
-           (a.result || "") === (b.result || "");
+        a.opponent === b.opponent &&
+        (a.result || "") === (b.result || "");
 }
 
 function findMatchingBattingGame(fieldingGame) {
@@ -2351,6 +2350,43 @@ function findRowByGame(tbodyId, game) {
     return null;
 }
 
+function restoreSelectedRows() {
+    document.querySelectorAll("#battingBody tr").forEach(row => row.classList.remove("selected-game"));
+    document.querySelectorAll("#fieldingBody tr").forEach(row => row.classList.remove("selected-game"));
+
+    const battingRow = findRowByGame("battingBody", selectedBattingGame);
+    const fieldingRow = findRowByGame("fieldingBody", selectedFieldingGame);
+
+    if (battingRow) battingRow.classList.add("selected-game");
+    if (fieldingRow) fieldingRow.classList.add("selected-game");
+}
+
+function clearSelectedGameSummary() {
+    selectedBattingGame = null;
+    selectedFieldingGame = null;
+    clearSelectedRows();
+
+    const rightTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const rightSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+    const battingTag = document.querySelector("#summary-batting .tag");
+    const fieldingTag = document.querySelector("#summary-fielding .tag");
+
+    if (rightTitle) {
+        rightTitle.textContent = (currentSeason === "career") ? "Career Summary" : "Season Summary";
+    }
+    if (rightSub) rightSub.textContent = "Batting and fielding at a glance.";
+    if (battingTag) battingTag.textContent = "Batting";
+    if (fieldingTag) fieldingTag.textContent = "Fielding";
+
+    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
+    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
+
+    if (summaryLogoBatting) summaryLogoBatting.style.display = "flex";
+    if (summaryLogoFielding) summaryLogoFielding.style.display = "flex";
+
+    renderSummary();
+}
+
 function showSelectedBattingGame(r) {
     selectedBattingGame = r;
 
@@ -2361,14 +2397,13 @@ function showSelectedBattingGame(r) {
     if (matchingFieldingGame) {
         selectedFieldingGame = matchingFieldingGame;
         const fieldingRow = findRowByGame("fieldingBody", matchingFieldingGame);
-        if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
+        if (fieldingRow) fieldingRow.classList.add("selected-game");
     }
 
     const summaryLogoBatting = document.getElementById("summaryLogoBatting");
     if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
     const totals = computeBattingTotals([r]);
-    const rates = computeAdvancedFromLog(totals);
     const opsObj = computeOPSFromTotals(totals);
     const hitTypes = computeHitTypeTotals([r]);
 
@@ -2378,55 +2413,53 @@ function showSelectedBattingGame(r) {
         : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
 
     $("#summaryStrip").innerHTML = `
-    <div class="selected-game-layout">
-        <div class="selected-game-top">
-            <div class="selected-game-date">${r.date}</div>
-
-            <div class="selected-game-logo-wrap">
-                ${logoHTML}
+        <div class="selected-game-layout">
+            <div class="selected-game-top">
+                <div class="selected-game-date">${r.date}</div>
+                <div class="selected-game-logo-wrap">
+                    ${logoHTML}
+                </div>
+                <div class="selected-game-result">${r.result}</div>
             </div>
 
-            <div class="selected-game-result">${r.result}</div>
+            <div class="selected-game-stats">
+                <div class="stat stat-full">
+                    <div class="k">H / AB</div>
+                    <div class="v">${r.H} / ${r.AB}</div>
+                    <div class="s">Hits / At Bats</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">R</div>
+                    <div class="v">${r.R}</div>
+                    <div class="s">Runs</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">RBI</div>
+                    <div class="v">${r.RBI}</div>
+                    <div class="s">Runs Batted In</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">AVG</div>
+                    <div class="v">${isFinite(opsObj.avg) ? fmt3(opsObj.avg) : "—"}</div>
+                    <div class="s">Batting Average</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">SLG</div>
+                    <div class="v">${isFinite(opsObj.slg) ? fmt3(opsObj.slg) : "—"}</div>
+                    <div class="s">Slugging Percentage</div>
+                </div>
+
+                <div class="stat">
+                    <div class="k">OPS</div>
+                    <div class="v">${isFinite(opsObj.ops) ? fmt3(opsObj.ops) : "—"}</div>
+                    <div class="s">On-Base + Slugging</div>
+                </div>
+            </div>
         </div>
-
-        <div class="selected-game-stats">
-            <div class="stat stat-full">
-                <div class="k">H / AB</div>
-                <div class="v">${r.H} / ${r.AB}</div>
-                <div class="s">Hits / At Bats</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">R</div>
-                <div class="v">${r.R}</div>
-                <div class="s">Runs</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">RBI</div>
-                <div class="v">${r.RBI}</div>
-                <div class="s">Runs Batted In</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">AVG</div>
-                <div class="v">${isFinite(opsObj.avg) ? fmt3(opsObj.avg) : "—"}</div>
-                <div class="s">Batting Average</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">OBP</div>
-                <div class="v">${isFinite(rates.OBP) ? fmt3(rates.OBP) : "—"}</div>
-                <div class="s">On-Base Percentage</div>
-            </div>
-
-            <div class="stat">
-                <div class="k">OPS</div>
-                <div class="v">${isFinite(opsObj.ops) ? fmt3(opsObj.ops) : "—"}</div>
-                <div class="s">On-Base + Slugging</div>
-            </div>
-        </div>
-    </div>
     `;
 
     const els = getRightPanelEls();
@@ -2444,6 +2477,8 @@ function showSelectedBattingGame(r) {
             [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
         );
     }
+
+    restoreSelectedRows();
 }
 
 function showSelectedFieldingGame(r, tr = null) {
@@ -2456,7 +2491,7 @@ function showSelectedFieldingGame(r, tr = null) {
     if (matchingBattingGame) {
         selectedBattingGame = matchingBattingGame;
         const battingRow = findRowByGame("battingBody", matchingBattingGame);
-        if (battingRow) setSelectedRow("battingBody", battingRow);
+        if (battingRow) battingRow.classList.add("selected-game");
     }
 
     const summaryLogoFielding = document.getElementById("summaryLogoFielding");
@@ -2472,11 +2507,9 @@ function showSelectedFieldingGame(r, tr = null) {
         <div class="selected-game-layout">
             <div class="selected-game-top">
                 <div class="selected-game-date">${r.date}</div>
-
                 <div class="selected-game-logo-wrap">
                     ${logoHTML}
                 </div>
-
                 <div class="selected-game-result">${r.result || "—"}</div>
             </div>
 
@@ -2518,255 +2551,254 @@ function showSelectedFieldingGame(r, tr = null) {
     if (els.title) els.title.textContent = "Game Summary";
     if (els.sub) els.sub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
     if (els.fieldingTag) els.fieldingTag.textContent = "Selected Game";
+
+    restoreSelectedRows();
 }
-        function setSharedOpponent(opp) {
-            // Update both states
-            battingState.opp = opp;
-            fieldingState.opp = opp;
 
-            // Update both dropdowns (only if that opponent exists in the dropdown)
-            const batSelect = $("#oppBat");
-            const fldSelect = $("#oppFld");
+function setSharedOpponent(opp) {
+    battingState.opp = opp;
+    fieldingState.opp = opp;
 
-            const batHas = Array.from(batSelect.options).some(o => o.value === opp);
-            const fldHas = Array.from(fldSelect.options).some(o => o.value === opp);
+    const batSelect = $("#oppBat");
+    const fldSelect = $("#oppFld");
 
-            batSelect.value = batHas ? opp : "";
-            fldSelect.value = fldHas ? opp : "";
+    const batHas = Array.from(batSelect.options).some(o => o.value === opp);
+    const fldHas = Array.from(fldSelect.options).some(o => o.value === opp);
 
-            // Refresh both tables (even if you can’t see one tab, keeps state consistent)
-            clearSelectedGameSummary();
-            refreshBatting();
-            refreshFielding();
+    batSelect.value = batHas ? opp : "";
+    fldSelect.value = fldHas ? opp : "";
 
-            // Update the “vs opponent” strips
-            renderVsOpponentAllTime(battingState.opp);
-            renderVsOpponentFieldingAllTime(fieldingState.opp);
-        }
+    clearSelectedGameSummary();
+    refreshBatting();
+    refreshFielding();
 
-        function computeFieldingTotals(rows) {
-            const t = { TC: 0, PO: 0, A: 0, E: 0 };
-            for (const g of rows) {
-                t.TC += g.TC; t.PO += g.PO; t.A += g.A; t.E += g.E;
-            }
-            const denom = (t.PO + t.A + t.E);
-            const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
-            return { ...t, FPCT };
-        }
-        function sumOfficialTotals(keys) {
-            const tot = { AB: 0, H: 0, TB: 0, BB: 0, HBP: 0, SF: 0, SO: 0 };
-            for (const k of keys) {
-                const s = officialTotals[k];
-                if (!s) continue;
-                tot.AB += (s.AB || 0);
-                tot.H += (s.H || 0);
-                tot.TB += (s.TB || 0);
-                tot.BB += (s.BB || 0);
-                tot.HBP += (s.HBP || 0);
-                tot.SF += (s.SF || 0);
-                tot.SO += (s.SO || 0);
-            }
-            return tot;
-        }
+    renderVsOpponentAllTime(battingState.opp);
+    renderVsOpponentFieldingAllTime(fieldingState.opp);
+}
 
-        function computeRateStatsFromOfficial(t) {
-            const AVG = safeDiv(t.H, t.AB);
-            const SLG = safeDiv(t.TB, t.AB);
-            const OBP = safeDiv((t.H + t.BB + t.HBP), (t.AB + t.BB + t.HBP + t.SF));
-            const OPS = (isFinite(OBP) && isFinite(SLG)) ? (OBP + SLG) : NaN;
-            return { AVG, OBP, SLG, OPS };
-        }
+function computeFieldingTotals(rows) {
+    const t = { TC: 0, PO: 0, A: 0, E: 0 };
+    for (const g of rows) {
+        t.TC += g.TC;
+        t.PO += g.PO;
+        t.A += g.A;
+        t.E += g.E;
+    }
+    const denom = (t.PO + t.A + t.E);
+    const FPCT = denom === 0 ? NaN : (t.PO + t.A) / denom;
+    return { ...t, FPCT };
+}
 
-        function renderOpponentSelect(selectEl, rows) {
-            const opponents = Array.from(new Set(rows.map(r => r.opponent))).sort((a, b) => a.localeCompare(b));
-            selectEl.innerHTML = "";
-            const optAll = document.createElement("option");
-            optAll.value = "";
-            optAll.textContent = "All opponents";
-            selectEl.appendChild(optAll);
-            for (const opp of opponents) {
-                const o = document.createElement("option");
-                o.value = opp;
-                o.textContent = opp;
-                selectEl.appendChild(o);
-            }
-        }
-        function renderVsOpponentFieldingAllTime(opponent) {
-            const wrap = $("#vsOppWrapFld");
+function sumOfficialTotals(keys) {
+    const tot = { AB: 0, H: 0, TB: 0, BB: 0, HBP: 0, SF: 0, SO: 0 };
+    for (const k of keys) {
+        const s = officialTotals[k];
+        if (!s) continue;
+        tot.AB += (s.AB || 0);
+        tot.H += (s.H || 0);
+        tot.TB += (s.TB || 0);
+        tot.BB += (s.BB || 0);
+        tot.HBP += (s.HBP || 0);
+        tot.SF += (s.SF || 0);
+        tot.SO += (s.SO || 0);
+    }
+    return tot;
+}
 
-            const strip = $("#vsOppStripFld");
-            if (!wrap || !strip) return;
+function computeRateStatsFromOfficial(t) {
+    const AVG = safeDiv(t.H, t.AB);
+    const SLG = safeDiv(t.TB, t.AB);
+    const OBP = safeDiv((t.H + t.BB + t.HBP), (t.AB + t.BB + t.HBP + t.SF));
+    const OPS = (isFinite(OBP) && isFinite(SLG)) ? (OBP + SLG) : NaN;
+    return { AVG, OBP, SLG, OPS };
+}
 
-            if (!opponent) {
-                wrap.style.display = "none";
-                const label = $("#vsOppLabelFld");
-                if (label) label.textContent = "—";
-                strip.innerHTML = "";
-                return;
-            }
+function renderOpponentSelect(selectEl, rows) {
+    const opponents = Array.from(new Set(rows.map(r => r.opponent))).sort((a, b) => a.localeCompare(b));
+    selectEl.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "";
+    optAll.textContent = "All opponents";
+    selectEl.appendChild(optAll);
+    for (const opp of opponents) {
+        const o = document.createElement("option");
+        o.value = opp;
+        o.textContent = opp;
+        selectEl.appendChild(o);
+    }
+}
 
-            // All-time = CAREER fielding logs
-            // ✅ Use current season logs (or career logs if in Career mode)
-            const baseLog = (currentSeason === "career") ? careerFieldingLog : fieldingLog;
-            const rows = baseLog.filter(r => r.opponent === opponent);
+function renderVsOpponentFieldingAllTime(opponent) {
+    const wrap = $("#vsOppWrapFld");
+    const strip = $("#vsOppStripFld");
+    if (!wrap || !strip) return;
 
-            // Totals + FPCT using your existing helper
-            const t = computeFieldingTotals(rows);
+    if (!opponent) {
+        wrap.style.display = "none";
+        const label = $("#vsOppLabelFld");
+        if (label) label.textContent = "—";
+        strip.innerHTML = "";
+        return;
+    }
 
-            const label = $("#vsOppLabelFld");
-            if (label) {
-                const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
-                label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-            }
-            wrap.style.display = "block";
+    const baseLog = (currentSeason === "career") ? careerFieldingLog : fieldingLog;
+    const rows = baseLog.filter(r => r.opponent === opponent);
 
-            const items = [
-                { k: "G", v: rows.length, s: "Games vs opponent" },
-                { k: "TC", v: t.TC, s: "Total chances" },
-                { k: "PO", v: t.PO, s: "Putouts" },
-                { k: "A", v: t.A, s: "Assists" },
-                { k: "E", v: t.E, s: "Errors" },
-                { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
-            ];
+    const t = computeFieldingTotals(rows);
 
-            strip.innerHTML = items.map(x => `
-    <div class="stat">
-      <div class="k">${x.k}</div>
-      <div class="v">${x.v}</div>
-      <div class="s">${x.s}</div>
-    </div>
-  `).join("");
-        }
+    const label = $("#vsOppLabelFld");
+    if (label) {
+        const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
+        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+    }
+    wrap.style.display = "block";
 
-        function opponentCellHTML(r) {
-            if (r.logo) {
-                return `
-          <div class="opp">
-            <img class="logo" src="${r.logo}" alt="${r.opponent} logo"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-            <span class="logo fallback" style="display:none;">${initials(r.opponent)}</span>
-            <span>${r.opponent}</span>
-          </div>
-        `;
-            }
-            return `
-        <div class="opp">
-          <span class="logo fallback">${initials(r.opponent)}</span>
-          <span>${r.opponent}</span>
+    const items = [
+        { k: "G", v: rows.length, s: "Games vs opponent" },
+        { k: "TC", v: t.TC, s: "Total chances" },
+        { k: "PO", v: t.PO, s: "Putouts" },
+        { k: "A", v: t.A, s: "Assists" },
+        { k: "E", v: t.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(t.FPCT), s: "(PO + A) / (PO + A + E)" },
+    ];
+
+    strip.innerHTML = items.map(x => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
         </div>
-      `;
-        }
+    `).join("");
+}
 
-        /* ------------ STATE ------------ */
-        let currentSeason = "2025";
-        let battingLog = [];
-        let fieldingLog = [];
-        let careerBattingLog = [];
-        let careerFieldingLog = [];
-        let selectedBattingGame = null;
-        let selectedFieldingGame = null;
+function opponentCellHTML(r) {
+    if (r.logo) {
+        return `
+            <div class="opp">
+                <img class="logo" src="${r.logo}" alt="${r.opponent} logo"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+                <span class="logo fallback" style="display:none;">${initials(r.opponent)}</span>
+                <span>${r.opponent}</span>
+            </div>
+        `;
+    }
+    return `
+        <div class="opp">
+            <span class="logo fallback">${initials(r.opponent)}</span>
+            <span>${r.opponent}</span>
+        </div>
+    `;
+}
 
-        function buildSeasonLogs(seasonKey) {
-            const season = seasonsRaw[seasonKey];
+/* ------------ STATE ------------ */
+let currentSeason = "2025";
+let battingLog = [];
+let fieldingLog = [];
+let careerBattingLog = [];
+let careerFieldingLog = [];
+let selectedBattingGame = null;
+let selectedFieldingGame = null;
 
-            const bat = season.batting.map(r => {
-                const { H, AB } = parseHAB(r[2]);
-                const R = Number(r[3]);
-                const DB = Number(r[4]);
-                const TR = Number(r[5]);
-                const HR = Number(r[6]);
-                const RBI = Number(r[7]);
-                const singles = H - DB - TR - HR;
-                const TB = singles + 2 * DB + 3 * TR + 4 * HR;
-                const result = r[8] || ""; // score string like "W, 7-2"
+function buildSeasonLogs(seasonKey) {
+    const season = seasonsRaw[seasonKey];
 
-                return {
-                    date: r[0],
-                    dateValue: toDateValue(r[0]),
-                    opponent: r[1],
-                    logo: logoFor(r[1]),
-                    H, AB, R, "2B": DB, "3B": TR, HR, RBI, TB,
-                    result
-                };
-            });
+    const bat = season.batting.map(r => {
+        const { H, AB } = parseHAB(r[2]);
+        const R = Number(r[3]);
+        const DB = Number(r[4]);
+        const TR = Number(r[5]);
+        const HR = Number(r[6]);
+        const RBI = Number(r[7]);
+        const singles = H - DB - TR - HR;
+        const TB = singles + 2 * DB + 3 * TR + 4 * HR;
+        const result = r[8] || "";
 
-            const fld = season.fielding.map(r => {
-                const TC = Number(r[2]);
-                const PO = Number(r[3]);
-                const A = Number(r[4]);
-                const E = Number(r[5]);
-                const denom = (PO + A + E);
-                const fp = denom === 0 ? NaN : (PO + A) / denom;
-                const result = r[6] || ""; // score string like "W, 7-2"
+        return {
+            date: r[0],
+            dateValue: toDateValue(r[0]),
+            opponent: r[1],
+            logo: logoFor(r[1]),
+            H, AB, R, "2B": DB, "3B": TR, HR, RBI, TB,
+            result
+        };
+    });
 
-                return {
-                    date: r[0],
-                    dateValue: toDateValue(r[0]),
-                    opponent: r[1],
-                    logo: logoFor(r[1]),
-                    TC, PO, A, E, FPCT: fp,
-                    result
-                };
-            });
+    const fld = season.fielding.map(r => {
+        const TC = Number(r[2]);
+        const PO = Number(r[3]);
+        const A = Number(r[4]);
+        const E = Number(r[5]);
+        const denom = (PO + A + E);
+        const fp = denom === 0 ? NaN : (PO + A) / denom;
+        const result = r[6] || "";
 
-            return { bat, fld };
-        }
+        return {
+            date: r[0],
+            dateValue: toDateValue(r[0]),
+            opponent: r[1],
+            logo: logoFor(r[1]),
+            TC, PO, A, E, FPCT: fp,
+            result
+        };
+    });
 
-        function buildCareer() {
-            careerBattingLog = [];
-            careerFieldingLog = [];
+    return { bat, fld };
+}
 
-            for (const s of Object.keys(seasonsRaw)) {
-                const { bat, fld } = buildSeasonLogs(s);
-                careerBattingLog.push(...bat.map(x => ({ ...x, season: s })));
-                careerFieldingLog.push(...fld.map(x => ({ ...x, season: s })));
-            }
+function buildCareer() {
+    careerBattingLog = [];
+    careerFieldingLog = [];
 
-            careerBattingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
-            careerFieldingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
-        }
+    for (const s of Object.keys(seasonsRaw)) {
+        const { bat, fld } = buildSeasonLogs(s);
+        careerBattingLog.push(...bat.map(x => ({ ...x, season: s })));
+        careerFieldingLog.push(...fld.map(x => ({ ...x, season: s })));
+    }
 
-        /* ------------ TABLE RENDER ------------ */
-    
-        
-        
-    function renderBattingTable(rows) {
+    careerBattingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
+    careerFieldingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
+}
+
+/* ------------ TABLE RENDER ------------ */
+function renderBattingTable(rows) {
     const body = $("#battingBody");
     body.innerHTML = "";
 
     for (const r of rows) {
         const tr = document.createElement("tr");
+        tr.dataset.date = r.date;
+        tr.dataset.opponent = r.opponent;
+        tr.dataset.result = r.result || "";
 
         tr.innerHTML = `
-          <td class="muted" data-label="Date">${r.date}</td>
-          <td data-label="Opponent">${opponentCellHTML(r)}</td>
-          <td data-label="Result">${r.result || ""}</td>
-          <td class="right" data-label="H">${r.H}</td>
-          <td class="right" data-label="AB">${r.AB}</td>
-          <td class="right" data-label="R">${r.R}</td>
-          <td class="right" data-label="2B">${r["2B"]}</td>
-          <td class="right" data-label="3B">${r["3B"]}</td>
-          <td class="right" data-label="HR">${r.HR}</td>
-          <td class="right" data-label="RBI">${r.RBI}</td>
+            <td class="muted" data-label="Date">${r.date}</td>
+            <td data-label="Opponent">${opponentCellHTML(r)}</td>
+            <td data-label="Result">${r.result || ""}</td>
+            <td class="right" data-label="H">${r.H}</td>
+            <td class="right" data-label="AB">${r.AB}</td>
+            <td class="right" data-label="R">${r.R}</td>
+            <td class="right" data-label="2B">${r["2B"]}</td>
+            <td class="right" data-label="3B">${r["3B"]}</td>
+            <td class="right" data-label="HR">${r.HR}</td>
+            <td class="right" data-label="RBI">${r.RBI}</td>
         `;
 
         tr.addEventListener("click", () => {
-    if (selectedBattingGame === r) {
-        clearSelectedGameSummary();
-        return;
-    }
-
-    setSelectedRow("battingBody", tr);
-    showSelectedBattingGame(r);
-});
+            if (selectedBattingGame && sameGame(selectedBattingGame, r)) {
+                clearSelectedGameSummary();
+                return;
+            }
+            showSelectedBattingGame(r);
+        });
 
         body.appendChild(tr);
     }
 
     $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+    restoreSelectedRows();
 }
 
- function renderFieldingTable(rows) {
+function renderFieldingTable(rows) {
     const body = $("#fieldingBody");
     body.innerHTML = "";
 
@@ -2774,543 +2806,534 @@ function showSelectedFieldingGame(r, tr = null) {
         const tr = document.createElement("tr");
         const fp = isFinite(r.FPCT) ? fmt3(r.FPCT) : "—";
 
+        tr.dataset.date = r.date;
+        tr.dataset.opponent = r.opponent;
+        tr.dataset.result = r.result || "";
+
         tr.innerHTML = `
-          <td class="muted" data-label="Date">${r.date}</td>
-          <td data-label="Opponent">${opponentCellHTML(r)}</td>
-          <td data-label="Result">${r.result || ""}</td>
-          <td class="right" data-label="TC">${r.TC}</td>
-          <td class="right" data-label="PO">${r.PO}</td>
-          <td class="right" data-label="A">${r.A}</td>
-          <td class="right" data-label="E">${r.E}</td>
-          <td class="right" data-label="FPCT">${fp}</td>
+            <td class="muted" data-label="Date">${r.date}</td>
+            <td data-label="Opponent">${opponentCellHTML(r)}</td>
+            <td data-label="Result">${r.result || ""}</td>
+            <td class="right" data-label="TC">${r.TC}</td>
+            <td class="right" data-label="PO">${r.PO}</td>
+            <td class="right" data-label="A">${r.A}</td>
+            <td class="right" data-label="E">${r.E}</td>
+            <td class="right" data-label="FPCT">${fp}</td>
         `;
 
         tr.addEventListener("click", () => {
-    if (selectedFieldingGame === r) {
-        clearSelectedGameSummary();
-        return;
-    }
-
-    setSelectedRow("fieldingBody", tr);
-    showSelectedFieldingGame(r, tr);
-});
+            if (selectedFieldingGame && sameGame(selectedFieldingGame, r)) {
+                clearSelectedGameSummary();
+                return;
+            }
+            showSelectedFieldingGame(r, tr);
+        });
 
         body.appendChild(tr);
     }
 
     $("#rowCountTag").innerHTML = `<b>${rows.length}</b> rows`;
+    restoreSelectedRows();
 }
 
-        const battingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
-        const fieldingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
+const battingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
+const fieldingState = { key: "dateValue", dir: "asc", search: "", opp: "" };
 
-        function sortRows(rows, key, dir) {
-            const mult = dir === "asc" ? 1 : -1;
-            return [...rows].sort((a, b) => {
-                const av = a[key], bv = b[key];
-                if (key === "FPCT") {
-                    const aNan = !isFinite(av), bNan = !isFinite(bv);
-                    if (aNan && bNan) return 0;
-                    if (aNan) return 1;
-                    if (bNan) return -1;
-                    return (av - bv) * mult;
-                }
-                if (typeof av === "number" && typeof bv === "number") {
-                    if (av < bv) return -1 * mult;
-                    if (av > bv) return 1 * mult;
-                    return 0;
-                }
-                return String(av).localeCompare(String(bv)) * mult;
-            });
+function sortRows(rows, key, dir) {
+    const mult = dir === "asc" ? 1 : -1;
+    return [...rows].sort((a, b) => {
+        const av = a[key], bv = b[key];
+        if (key === "FPCT") {
+            const aNan = !isFinite(av), bNan = !isFinite(bv);
+            if (aNan && bNan) return 0;
+            if (aNan) return 1;
+            if (bNan) return -1;
+            return (av - bv) * mult;
         }
-
+        if (typeof av === "number" && typeof bv === "number") {
+            if (av < bv) return -1 * mult;
+            if (av > bv) return 1 * mult;
+            return 0;
+        }
+        return String(av).localeCompare(String(bv)) * mult;
+    });
+}
 
 function hideGameTip() {
     document.getElementById("tooltip").classList.remove("show");
 }
 
-        function filterRows(rows, state) {
-            const q = state.search.trim().toLowerCase();
-            return rows.filter(r => {
-                const matchOpp = !state.opp || r.opponent === state.opp;
-                if (!q) return matchOpp;
-                const hay = Object.values(r).join(" ").toLowerCase();
-                return matchOpp && hay.includes(q);
-            });
+function filterRows(rows, state) {
+    const q = state.search.trim().toLowerCase();
+    return rows.filter(r => {
+        const matchOpp = !state.opp || r.opponent === state.opp;
+        if (!q) return matchOpp;
+        const hay = Object.values(r).join(" ").toLowerCase();
+        return matchOpp && hay.includes(q);
+    });
+}
+
+function refreshBatting() {
+    const filtered = filterRows(battingLog, battingState);
+    const sorted = sortRows(filtered, battingState.key, battingState.dir);
+    renderBattingTable(sorted);
+}
+
+function refreshFielding() {
+    const filtered = filterRows(fieldingLog, fieldingState);
+    const sorted = sortRows(filtered, fieldingState.key, fieldingState.dir);
+    renderFieldingTable(sorted);
+}
+
+function hookTableSort(tableSelector, state, refreshFn) {
+    const table = document.querySelector(tableSelector);
+    table.querySelectorAll("thead th").forEach(th => {
+        th.addEventListener("click", () => {
+            const key = th.getAttribute("data-key");
+            if (!key) return;
+            if (state.key === key) state.dir = (state.dir === "asc") ? "desc" : "asc";
+            else {
+                state.key = key;
+                state.dir = "asc";
+            }
+            refreshFn();
+        });
+    });
+}
+
+/* ------------ SUMMARY ------------ */
+function resetState(state) {
+    state.key = "dateValue";
+    state.dir = "asc";
+    state.search = "";
+    state.opp = "";
+}
+
+function createHitPie() {
+    let state = {
+        canvas: null,
+        ctx: null,
+        labels: [],
+        values: [],
+        slices: [],
+        hoveredIndex: -1,
+        hoverAnim: 0,
+        hoverTarget: 0,
+        introT: 0,
+        fadeT: 0,
+        raf: null
+    };
+
+    const palette = [
+        ["#C41E3A", "#8B0000"],
+        ["#1F3A93", "#0B1E3F"],
+        ["#2E8B57", "#1F5C3A"],
+        ["#F4A300", "#C77C00"]
+    ];
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeOutExpo(t) { return t === 1 ? t : 1 - Math.pow(2, -10 * t); }
+    function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+
+    function setupCanvas(canvas) {
+        const ctx = canvas.getContext("2d");
+        state.canvas = canvas;
+        state.ctx = ctx;
+
+        if (!canvas.__hitPieBound) {
+            canvas.addEventListener("mousemove", onMove);
+            canvas.addEventListener("mouseleave", onLeave);
+            canvas.__hitPieBound = true;
+        }
+    }
+
+    function resizeToDPR() {
+        const { canvas, ctx } = state;
+        if (!canvas || !ctx) return;
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
+        const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 240;
+
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { w: cssW, h: cssH };
+    }
+
+    function buildSlices(w, h, introRotation) {
+        const total = state.values.reduce((a, b) => a + b, 0);
+        state.slices = [];
+        if (!total) return { total: 0 };
+
+        const cx = w * 0.32;
+        const cy = h * 0.55;
+        const r = Math.min(w, h) * 0.36;
+
+        let start = (-Math.PI / 2) + introRotation;
+        for (let i = 0; i < state.values.length; i++) {
+            const v = state.values[i];
+            const angle = (v / total) * Math.PI * 2;
+            const end = start + angle;
+            state.slices.push({ i, label: state.labels[i], value: v, pct: v / total, start, end, cx, cy, r });
+            start = end;
+        }
+        return { total, cx, cy, r };
+    }
+
+    function drawBackgroundGlow(ctx, cx, cy, r) {
+        const glow = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 1.35);
+        glow.addColorStop(0, "rgba(196,30,58,.18)");
+        glow.addColorStop(0.4, "rgba(31,58,147,.14)");
+        glow.addColorStop(0.7, "rgba(244,163,0,.10)");
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.28, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawSlice(ctx, s, hoverPop, isHovered) {
+        const { cx, cy, r } = s;
+        const mid = (s.start + s.end) / 2;
+        const pop = hoverPop * (isHovered ? 14 : 0);
+        const ox = Math.cos(mid) * pop;
+        const oy = Math.sin(mid) * pop;
+
+        const grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+        grad.addColorStop(0, palette[s.i][0]);
+        grad.addColorStop(1, palette[s.i][1]);
+
+        ctx.shadowColor = "rgba(0,0,0,.45)";
+        ctx.shadowBlur = isHovered ? 18 : 12;
+        ctx.shadowOffsetY = isHovered ? 9 : 6;
+
+        ctx.beginPath();
+        ctx.moveTo(cx + ox, cy + oy);
+        ctx.arc(cx + ox, cy + oy, r, s.start, s.end);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+
+        ctx.strokeStyle = isHovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.14)";
+        ctx.lineWidth = isHovered ? 2.4 : 2;
+        ctx.stroke();
+    }
+
+    function drawLegend(ctx, w, h, total) {
+        const lx = w * 0.62;
+        const ly = h * 0.30;
+        const rowH = 28;
+
+        ctx.textAlign = "left";
+        ctx.fillStyle = "rgba(255,255,255,.85)";
+        ctx.font = "800 12px ui-sans-serif";
+
+        for (let i = 0; i < state.labels.length; i++) {
+            const y = ly + i * rowH;
+
+            ctx.fillStyle = palette[i][0];
+            ctx.beginPath();
+            ctx.arc(lx, y - 6, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "rgba(255,255,255,.92)";
+            ctx.font = "700 14px ui-sans-serif";
+            ctx.fillText(state.labels[i], lx + 16, y);
+
+            const v = state.values[i] || 0;
+            const pct = total ? ((v / total) * 100).toFixed(1) : "0.0";
+            ctx.fillStyle = "rgba(255,255,255,.65)";
+            ctx.font = "13px ui-sans-serif";
+            ctx.fillText(`${v} (${pct}%)`, lx + 78, y);
+        }
+    }
+
+    function drawCenter(ctx, cx, cy, total) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 44, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0,0,0,.35)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,.10)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(255,255,255,.95)";
+        ctx.font = "900 22px ui-sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(total, cx, cy + 7);
+
+        ctx.fillStyle = "rgba(255,255,255,.60)";
+        ctx.font = "12px ui-sans-serif";
+        ctx.fillText("Total Hits", cx, cy + 25);
+    }
+
+    function renderFrame() {
+        if (!state.canvas || !state.ctx) return;
+        const ctx = state.ctx;
+
+        const { w, h } = resizeToDPR() || { w: 600, h: 240 };
+        ctx.clearRect(0, 0, w, h);
+
+        state.introT = clamp01(state.introT + 0.035);
+        state.fadeT = clamp01(state.fadeT + 0.06);
+        state.hoverAnim += (state.hoverTarget - state.hoverAnim) * 0.18;
+
+        const introEase = easeOutExpo(state.introT);
+        const fade = easeOutCubic(state.fadeT);
+        const introRotation = (1 - introEase) * (Math.PI * 0.20);
+
+        const { total, cx, cy, r } = buildSlices(w, h, introRotation);
+        ctx.globalAlpha = fade;
+
+        if (!total) {
+            ctx.fillStyle = "rgba(255,255,255,.75)";
+            ctx.font = "15px ui-sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("No hit data available", w / 2, h / 2);
+            ctx.globalAlpha = 1;
+            cancelIfDone();
+            return;
         }
 
-        function refreshBatting() {
-            const filtered = filterRows(battingLog, battingState);
-            const sorted = sortRows(filtered, battingState.key, battingState.dir);
-            renderBattingTable(sorted);
+        drawBackgroundGlow(ctx, cx, cy, r);
+
+        const hoverIndex = state.hoveredIndex;
+        for (const s of state.slices) {
+            if (s.i === hoverIndex) continue;
+            drawSlice(ctx, s, state.hoverAnim, false);
+        }
+        if (hoverIndex >= 0 && state.slices[hoverIndex]) {
+            drawSlice(ctx, state.slices[hoverIndex], state.hoverAnim, true);
         }
 
-        function refreshFielding() {
-            const filtered = filterRows(fieldingLog, fieldingState);
-            const sorted = sortRows(filtered, fieldingState.key, fieldingState.dir);
-            renderFieldingTable(sorted);
+        drawCenter(ctx, cx, cy, total);
+        drawLegend(ctx, w, h, total);
+
+        ctx.globalAlpha = 1;
+        cancelIfDone();
+    }
+
+    function cancelIfDone() {
+        const still =
+            state.introT < 1 ||
+            state.fadeT < 1 ||
+            Math.abs(state.hoverAnim - state.hoverTarget) > 0.01;
+
+        if (still) state.raf = requestAnimationFrame(renderFrame);
+        else state.raf = null;
+    }
+
+    function ensureRAF() {
+        if (!state.raf) state.raf = requestAnimationFrame(renderFrame);
+    }
+
+    function getMousePos(evt) {
+        const rect = state.canvas.getBoundingClientRect();
+        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    }
+
+    function hitTest(pos) {
+        for (const s of state.slices) {
+            const dx = pos.x - s.cx;
+            const dy = pos.y - s.cy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > s.r) continue;
+
+            let a = Math.atan2(dy, dx);
+            const to0_2pi = (ang) => (ang < 0 ? ang + Math.PI * 2 : ang);
+
+            const an = to0_2pi(a);
+            const sn = to0_2pi(s.start);
+            const en = to0_2pi(s.end);
+
+            const inside = (sn <= en) ? (an >= sn && an <= en) : (an >= sn || an <= en);
+            if (inside) return s.i;
         }
-
-        function hookTableSort(tableSelector, state, refreshFn) {
-            const table = document.querySelector(tableSelector);
-            table.querySelectorAll("thead th").forEach(th => {
-                th.addEventListener("click", () => {
-                    const key = th.getAttribute("data-key");
-                    if (!key) return;
-                    if (state.key === key) state.dir = (state.dir === "asc") ? "desc" : "asc";
-                    else { state.key = key; state.dir = "asc"; }
-                    refreshFn();
-                });
-            });
-        }
-
-        /* ------------ SUMMARY (dropdown controls season/career) ------------ */
-        function resetState(state) {
-            state.key = "dateValue";
-            state.dir = "asc";
-            state.search = "";
-            state.opp = "";
-        }
-
-
-
-        function createHitPie() {
-            let state = {
-                canvas: null,
-                ctx: null,
-                labels: [],
-                values: [],
-                slices: [],
-                hoveredIndex: -1,
-                hoverAnim: 0,
-                hoverTarget: 0,
-                introT: 0,
-                fadeT: 0,
-                raf: null
-            };
-
-            // Your “obvious but not crazy” baseball palette
-            const palette = [
-                ["#C41E3A", "#8B0000"],  // 1B – red
-                ["#1F3A93", "#0B1E3F"],  // 2B – navy
-                ["#2E8B57", "#1F5C3A"],  // 3B – green
-                ["#F4A300", "#C77C00"]   // HR – gold
-            ];
-
-            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-            function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-            function clamp01(x) { return Math.max(0, Math.min(1, x)); }
-
-            function setupCanvas(canvas) {
-                const ctx = canvas.getContext("2d");
-                state.canvas = canvas;
-                state.ctx = ctx;
-
-                if (!canvas.__hitPieBound) {
-                    canvas.addEventListener("mousemove", onMove);
-                    canvas.addEventListener("mouseleave", onLeave);
-                    canvas.__hitPieBound = true;
-                }
-            }
-
-            function resizeToDPR() {
-                const { canvas, ctx } = state;
-                if (!canvas || !ctx) return;
-
-                const dpr = window.devicePixelRatio || 1;
-                const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
-                const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 240;
-
-                canvas.width = Math.round(cssW * dpr);
-                canvas.height = Math.round(cssH * dpr);
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-                return { w: cssW, h: cssH };
-            }
-
-            function buildSlices(w, h, introRotation) {
-                const total = state.values.reduce((a, b) => a + b, 0);
-                state.slices = [];
-                if (!total) return { total: 0 };
-
-                const cx = w * 0.32;
-                const cy = h * 0.55;
-                const r = Math.min(w, h) * 0.36;
-
-                let start = (-Math.PI / 2) + introRotation;
-                for (let i = 0; i < state.values.length; i++) {
-                    const v = state.values[i];
-                    const angle = (v / total) * Math.PI * 2;
-                    const end = start + angle;
-
-                    state.slices.push({ i, label: state.labels[i], value: v, pct: v / total, start, end, cx, cy, r });
-                    start = end;
-                }
-                return { total, cx, cy, r };
-            }
-
-            function drawBackgroundGlow(ctx, cx, cy, r) {
-                const glow = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 1.35);
-                glow.addColorStop(0, "rgba(196,30,58,.18)");
-                glow.addColorStop(0.4, "rgba(31,58,147,.14)");
-                glow.addColorStop(0.7, "rgba(244,163,0,.10)");
-                glow.addColorStop(1, "rgba(0,0,0,0)");
-                ctx.fillStyle = glow;
-                ctx.beginPath();
-                ctx.arc(cx, cy, r * 1.28, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            function drawSlice(ctx, s, hoverPop, isHovered) {
-                const { cx, cy, r } = s;
-                const mid = (s.start + s.end) / 2;
-                const pop = hoverPop * (isHovered ? 14 : 0);
-                const ox = Math.cos(mid) * pop;
-                const oy = Math.sin(mid) * pop;
-
-                const grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
-                grad.addColorStop(0, palette[s.i][0]);
-                grad.addColorStop(1, palette[s.i][1]);
-
-                ctx.shadowColor = "rgba(0,0,0,.45)";
-                ctx.shadowBlur = isHovered ? 18 : 12;
-                ctx.shadowOffsetY = isHovered ? 9 : 6;
-
-                ctx.beginPath();
-                ctx.moveTo(cx + ox, cy + oy);
-                ctx.arc(cx + ox, cy + oy, r, s.start, s.end);
-                ctx.closePath();
-                ctx.fillStyle = grad;
-                ctx.fill();
-
-                ctx.shadowBlur = 0;
-                ctx.shadowOffsetY = 0;
-
-                ctx.strokeStyle = isHovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.14)";
-                ctx.lineWidth = isHovered ? 2.4 : 2;
-                ctx.stroke();
-            }
-
-            function drawLegend(ctx, w, h, total) {
-                const lx = w * 0.62;
-                const ly = h * 0.30;
-                const rowH = 28;
-
-                ctx.textAlign = "left";
-                ctx.fillStyle = "rgba(255,255,255,.85)";
-                ctx.font = "800 12px ui-sans-serif";
-                ctx.fillText("", lx, ly - 26);
-
-                for (let i = 0; i < state.labels.length; i++) {
-                    const y = ly + i * rowH;
-
-                    ctx.fillStyle = palette[i][0];
-                    ctx.beginPath();
-                    ctx.arc(lx, y - 6, 6, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    ctx.fillStyle = "rgba(255,255,255,.92)";
-                    ctx.font = "700 14px ui-sans-serif";
-                    ctx.fillText(state.labels[i], lx + 16, y);
-
-                    const v = state.values[i] || 0;
-                    const pct = total ? ((v / total) * 100).toFixed(1) : "0.0";
-                    ctx.fillStyle = "rgba(255,255,255,.65)";
-                    ctx.font = "13px ui-sans-serif";
-                    ctx.fillText(`${v} (${pct}%)`, lx + 78, y);
-                }
-            }
-
-            function drawCenter(ctx, cx, cy, total) {
-                ctx.beginPath();
-                ctx.arc(cx, cy, 44, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(0,0,0,.35)";
-                ctx.fill();
-                ctx.strokeStyle = "rgba(255,255,255,.10)";
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                ctx.fillStyle = "rgba(255,255,255,.95)";
-                ctx.font = "900 22px ui-sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText(total, cx, cy + 7);
-
-                ctx.fillStyle = "rgba(255,255,255,.60)";
-                ctx.font = "12px ui-sans-serif";
-                ctx.fillText("Total Hits", cx, cy + 25);
-            }
-
-            function renderFrame() {
-                if (!state.canvas || !state.ctx) return;
-                const ctx = state.ctx;
-
-                const { w, h } = resizeToDPR() || { w: 600, h: 240 };
-                ctx.clearRect(0, 0, w, h);
-
-                state.introT = clamp01(state.introT + 0.035);
-                state.fadeT = clamp01(state.fadeT + 0.06);
-                state.hoverAnim += (state.hoverTarget - state.hoverAnim) * 0.18;
-
-                const introEase = easeOutExpo(state.introT);
-                const fade = easeOutCubic(state.fadeT);
-                const introRotation = (1 - introEase) * (Math.PI * 0.20);
-
-                const { total, cx, cy, r } = buildSlices(w, h, introRotation);
-
-                ctx.globalAlpha = fade;
-
-                if (!total) {
-                    ctx.fillStyle = "rgba(255,255,255,.75)";
-                    ctx.font = "15px ui-sans-serif";
-                    ctx.textAlign = "center";
-                    ctx.fillText("No hit data available", w / 2, h / 2);
-                    ctx.globalAlpha = 1;
-                    cancelIfDone();
-                    return;
-                }
-
-                drawBackgroundGlow(ctx, cx, cy, r);
-
-                const hoverIndex = state.hoveredIndex;
-                for (const s of state.slices) {
-                    if (s.i === hoverIndex) continue;
-                    drawSlice(ctx, s, state.hoverAnim, false);
-                }
-                if (hoverIndex >= 0 && state.slices[hoverIndex]) {
-                    drawSlice(ctx, state.slices[hoverIndex], state.hoverAnim, true);
-                }
-
-                drawCenter(ctx, cx, cy, total);
-                drawLegend(ctx, w, h, total);
-
-                ctx.globalAlpha = 1;
-                cancelIfDone();
-            }
-
-            function cancelIfDone() {
-                const still =
-                    state.introT < 1 ||
-                    state.fadeT < 1 ||
-                    Math.abs(state.hoverAnim - state.hoverTarget) > 0.01;
-
-                if (still) state.raf = requestAnimationFrame(renderFrame);
-                else state.raf = null;
-            }
-
-            function ensureRAF() {
-                if (!state.raf) state.raf = requestAnimationFrame(renderFrame);
-            }
-
-            function getMousePos(evt) {
-                const rect = state.canvas.getBoundingClientRect();
-                return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-            }
-
-            function hitTest(pos) {
-                for (const s of state.slices) {
-                    const dx = pos.x - s.cx;
-                    const dy = pos.y - s.cy;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist > s.r) continue;
-
-                    let a = Math.atan2(dy, dx);
-                    const to0_2pi = (ang) => (ang < 0 ? ang + Math.PI * 2 : ang);
-
-                    const an = to0_2pi(a);
-                    const sn = to0_2pi(s.start);
-                    const en = to0_2pi(s.end);
-
-                    const inside = (sn <= en) ? (an >= sn && an <= en) : (an >= sn || an <= en);
-                    if (inside) return s.i;
-                }
-                return -1;
-            }
-
-            
-
-            function showTooltip(i, evt) {
-                const tip = document.getElementById("tooltip");
-                if (!tip) return;
-
-                const total = state.values.reduce((a, b) => a + b, 0) || 1;
-                const v = state.values[i] || 0;
-                const pct = ((v / total) * 100).toFixed(1);
-
-                tip.innerHTML = `
-      <div class="tip-title">Hit Type</div>
-      <div class="tip-row"><span class="k">Type</span><span class="v">${state.labels[i]}</span></div>
-      <div class="tip-row"><span class="k">Count</span><span class="v">${v}</span></div>
-      <div class="tip-row"><span class="k">Share</span><span class="v">${pct}%</span></div>
-      <div class="tip-sub">Based on filtered logs</div>
-    `;
-
-                const pad = 14;
-                tip.style.left = (evt.pageX + pad) + "px";
-                tip.style.top = (evt.pageY + pad) + "px";
-                tip.classList.add("show");
-            }
-
-            function hideTooltip() {
-                const tip = document.getElementById("tooltip");
-                if (!tip) return;
-                tip.classList.remove("show");
-            }
-
-            function onMove(evt) {
-                const pos = getMousePos(evt);
-                const idx = hitTest(pos);
-
-                if (idx !== state.hoveredIndex) {
-                    state.hoveredIndex = idx;
-                    state.hoverTarget = (idx >= 0) ? 1 : 0;
-                    ensureRAF();
-                }
-
-                if (idx >= 0) showTooltip(idx, evt);
-                else hideTooltip();
-            }
-
-            function onLeave() {
-                state.hoveredIndex = -1;
-                state.hoverTarget = 0;
-                hideTooltip();
-                ensureRAF();
-            }
-
-            function render(canvas, labels, values) {
-                setupCanvas(canvas);
-                state.labels = labels.slice();
-                state.values = values.slice();
-                state.introT = 0;
-                state.fadeT = 0;
-                ensureRAF();
-            }
-
-            return { render };
-        }
-        const seasonHitPie = createHitPie();
-        const opponentHitPie = createHitPie();
-
-
-        function renderSummary() {
-            const mode = currentSeason === "career" ? "career" : "season";
-            // -------- TEAM RECORD STRIP --------
-            const teamStrip = document.getElementById("teamRecordStrip");
-
-            if (teamStrip) {
-                const rec = teamRecords[currentSeason];
-
-                if (!rec) {
-                    teamStrip.innerHTML = `
-            <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
-            <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
-            
+        return -1;
+    }
+
+    function showTooltip(i, evt) {
+        const tip = document.getElementById("tooltip");
+        if (!tip) return;
+
+        const total = state.values.reduce((a, b) => a + b, 0) || 1;
+        const v = state.values[i] || 0;
+        const pct = ((v / total) * 100).toFixed(1);
+
+        tip.innerHTML = `
+            <div class="tip-title">Hit Type</div>
+            <div class="tip-row"><span class="k">Type</span><span class="v">${state.labels[i]}</span></div>
+            <div class="tip-row"><span class="k">Count</span><span class="v">${v}</span></div>
+            <div class="tip-row"><span class="k">Share</span><span class="v">${pct}%</span></div>
+            <div class="tip-sub">Based on filtered logs</div>
         `;
-                } else {
-                    teamStrip.innerHTML = `
-            <div class="stat"><div class="k">Overall</div><div class="v">${rec.overall}</div><div class="s"></div></div>
-            <div class="stat"><div class="k">Conference</div><div class="v">${rec.conf}</div><div class="s"></div></div>
-            <div class="stat"><div class="k">Home</div><div class="v">${rec.home}</div><div class="s"></div></div>
-            <div class="stat"><div class="k">Away</div><div class="v">${rec.away}</div><div class="s"></div></div>
-            <div class="stat"><div class="k">Neutral</div><div class="v">${rec.neutral}</div><div class="s"></div></div>
-        `;
-                }
-            }
-           $("#heroSeasonText").textContent = (mode === "career") ? "Career" : currentSeason;
-$("#heroStatsSeason").textContent = (mode === "career") ? "Career" : currentSeason;
 
-            const batGames = (mode === "career") ? careerBattingLog : battingLog;
-            const ivyAVG = computeIvyAvg(batGames);
-            const ivyEl = document.getElementById("heroIvyAVG");
-            if (ivyEl) ivyEl.textContent = fmt3(ivyAVG);
-            const fldGames = (mode === "career") ? careerFieldingLog : fieldingLog;
+        const pad = 14;
+        tip.style.left = (evt.pageX + pad) + "px";
+        tip.style.top = (evt.pageY + pad) + "px";
+        tip.classList.add("show");
+    }
 
-            // ✅ Hit type breakdown pie (season/career)
-            const ht = computeHitTypeTotals(batGames);
-            seasonHitPie.render(
-                document.getElementById("hitTypeChart"),
-                ["1B", "2B", "3B", "HR"],
-                [ht.singles, ht.doubles, ht.triples, ht.hrs]
-            );
+    function hideTooltip() {
+        const tip = document.getElementById("tooltip");
+        if (!tip) return;
+        tip.classList.remove("show");
+    }
 
-            const logBatTotals = computeBattingTotals(batGames);
-            const logAdv = computeAdvancedFromLog(logBatTotals);
-            const fldTotals = computeFieldingTotals(fldGames);
+    function onMove(evt) {
+        const pos = getMousePos(evt);
+        const idx = hitTest(pos);
 
-            // hero tiles: official totals for 2024/2025; career uses official combined
-            const offSeason = (currentSeason !== "career") ? officialTotals[currentSeason] : null;
-
-            const careerOffTotals = (currentSeason === "career")
-                ? sumOfficialTotals(["2024", "2025", "2026"])
-                : null;
-
-            const careerRates = careerOffTotals
-                ? computeRateStatsFromOfficial(careerOffTotals)
-                : null;
-
-            $("#heroAVG").textContent = fmt3(offSeason ? offSeason.AVG : (careerRates ? careerRates.AVG : logAdv.AVG));
-            $("#heroOBP").textContent = fmt3(offSeason ? offSeason.OBP : (careerRates ? careerRates.OBP : NaN));
-            
-
-            // Season Summary batting
-            let topBlock;
-
-            if (offSeason) {
-                topBlock = [
-                     { k: "SLG", v: fmt3(offSeason.SLG), s: "Slugging %" },
-                    { k: "OPS", v: fmt3(offSeason.OPS), s: "On-base + Slugging %" },
-                    { k: "BB", v: offSeason.BB, s: "Base on Balls" },
-                    { k: "SO", v: offSeason.SO, s: "Strikeouts" },
-                ];
-            } else if (careerRates && careerOffTotals) {
-                topBlock = [
-                    { k: "SLG", v: fmt3(careerRates.SLG), s: "Slugging %" },
-                    { k: "OPS", v: fmt3(careerRates.OPS), s: "On-base + Slugging %" },
-                    { k: "BB", v: careerOffTotals.BB, s: "Base on Balls" },
-                    { k: "SO", v: careerOffTotals.SO, s: "Strikeouts" },
-                ];
-            } else {
-                topBlock = [
-                    { k: "SLG", v: fmt3(offSeason.SLG), s: "Official" },
-                    { k: "OPS", v: "—", s: "Need OBP + SLG" },
-                    { k: "BB", v: "—", s: "Need BB" },
-                    { k: "SO", v: "—", s: "Need SO" },
-                ];
-            }
-
-            const base = [
-                { k: "Games", v: batGames.length, s: mode === "career" ? "Games Played" : "Games Played" },
-                { k: "R", v: logBatTotals.R, s: "Runs" },
-                { k: "RBI", v: logBatTotals.RBI, s: "Runs Batted In" },
-                { k: "TB", v: logBatTotals.TB, s: "Total Bases" },
-                { k: "Hits / At Bats", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "", full: true },
-            ];
-
-            const strip = $("#summaryStrip");
-strip.innerHTML = [...topBlock, ...base].map(x => `
-    <div class="stat ${x.full ? 'stat-full' : ''}">
-      <div class="k">${x.k}</div>
-      <div class="v">${x.v}</div>
-      <div class="s">${x.s}</div>
-    </div>
-`).join("");
-
-            // Season Summary fielding
-            const fstrip = $("#fieldingStrip");
-            fstrip.innerHTML = [
-                { k: "TC", v: fldTotals.TC, s: "Total chances" },
-                { k: "PO", v: fldTotals.PO, s: "Putouts" },
-                { k: "A", v: fldTotals.A, s: "Assists" },
-                { k: "E", v: fldTotals.E, s: "Errors" },
-                { k: "FPCT", v: fmt3(fldTotals.FPCT), s: "(PO + A) / (PO + A + E)" },
-            ].map(x => `
-    <div class="stat">
-      <div class="k">${x.k}</div>
-      <div class="v">${x.v}</div>
-      <div class="s">${x.s}</div>
-    </div>
-  `).join("");
+        if (idx !== state.hoveredIndex) {
+            state.hoveredIndex = idx;
+            state.hoverTarget = (idx >= 0) ? 1 : 0;
+            ensureRAF();
         }
+
+        if (idx >= 0) showTooltip(idx, evt);
+        else hideTooltip();
+    }
+
+    function onLeave() {
+        state.hoveredIndex = -1;
+        state.hoverTarget = 0;
+        hideTooltip();
+        ensureRAF();
+    }
+
+    function render(canvas, labels, values) {
+        setupCanvas(canvas);
+        state.labels = labels.slice();
+        state.values = values.slice();
+        state.introT = 0;
+        state.fadeT = 0;
+        ensureRAF();
+    }
+
+    return { render };
+}
+
+const seasonHitPie = createHitPie();
+const opponentHitPie = createHitPie();
+
+function renderSummary() {
+    const mode = currentSeason === "career" ? "career" : "season";
+    const teamStrip = document.getElementById("teamRecordStrip");
+
+    if (teamStrip) {
+        const rec = teamRecords[currentSeason];
+
+        if (!rec) {
+            teamStrip.innerHTML = `
+                <div class="stat"><div class="k">Overall</div><div class="v">—</div><div class="s">Team record</div></div>
+                <div class="stat"><div class="k">Conference</div><div class="v">—</div><div class="s">Ivy League</div></div>
+            `;
+        } else {
+            teamStrip.innerHTML = `
+                <div class="stat"><div class="k">Overall</div><div class="v">${rec.overall}</div><div class="s"></div></div>
+                <div class="stat"><div class="k">Conference</div><div class="v">${rec.conf}</div><div class="s"></div></div>
+                <div class="stat"><div class="k">Home</div><div class="v">${rec.home}</div><div class="s"></div></div>
+                <div class="stat"><div class="k">Away</div><div class="v">${rec.away}</div><div class="s"></div></div>
+                <div class="stat"><div class="k">Neutral</div><div class="v">${rec.neutral}</div><div class="s"></div></div>
+            `;
+        }
+    }
+
+    $("#heroSeasonText").textContent = (mode === "career") ? "Career" : currentSeason;
+    $("#heroStatsSeason").textContent = (mode === "career") ? "Career" : currentSeason;
+
+    const batGames = (mode === "career") ? careerBattingLog : battingLog;
+    const ivyAVG = computeIvyAvg(batGames);
+    const ivyEl = document.getElementById("heroIvyAVG");
+    if (ivyEl) ivyEl.textContent = fmt3(ivyAVG);
+
+    const fldGames = (mode === "career") ? careerFieldingLog : fieldingLog;
+
+    const ht = computeHitTypeTotals(batGames);
+    seasonHitPie.render(
+        document.getElementById("hitTypeChart"),
+        ["1B", "2B", "3B", "HR"],
+        [ht.singles, ht.doubles, ht.triples, ht.hrs]
+    );
+
+    const logBatTotals = computeBattingTotals(batGames);
+    const logAdv = computeAdvancedFromLog(logBatTotals);
+    const fldTotals = computeFieldingTotals(fldGames);
+
+    const offSeason = (currentSeason !== "career") ? officialTotals[currentSeason] : null;
+
+    const careerOffTotals = (currentSeason === "career")
+        ? sumOfficialTotals(["2024", "2025", "2026"])
+        : null;
+
+    const careerRates = careerOffTotals
+        ? computeRateStatsFromOfficial(careerOffTotals)
+        : null;
+
+    $("#heroAVG").textContent = fmt3(offSeason ? offSeason.AVG : (careerRates ? careerRates.AVG : logAdv.AVG));
+    $("#heroOBP").textContent = fmt3(offSeason ? offSeason.OBP : (careerRates ? careerRates.OBP : NaN));
+
+    let topBlock;
+
+    if (offSeason) {
+        topBlock = [
+            { k: "SLG", v: fmt3(offSeason.SLG), s: "Slugging %" },
+            { k: "OPS", v: fmt3(offSeason.OPS), s: "On-base + Slugging %" },
+            { k: "BB", v: offSeason.BB, s: "Base on Balls" },
+            { k: "SO", v: offSeason.SO, s: "Strikeouts" },
+        ];
+    } else if (careerRates && careerOffTotals) {
+        topBlock = [
+            { k: "SLG", v: fmt3(careerRates.SLG), s: "Slugging %" },
+            { k: "OPS", v: fmt3(careerRates.OPS), s: "On-base + Slugging %" },
+            { k: "BB", v: careerOffTotals.BB, s: "Base on Balls" },
+            { k: "SO", v: careerOffTotals.SO, s: "Strikeouts" },
+        ];
+    } else {
+        topBlock = [
+            { k: "SLG", v: "—", s: "Need TB / AB" },
+            { k: "OPS", v: "—", s: "Need OBP + SLG" },
+            { k: "BB", v: "—", s: "Need BB" },
+            { k: "SO", v: "—", s: "Need SO" },
+        ];
+    }
+
+    const base = [
+        { k: "Games", v: batGames.length, s: "Games Played" },
+        { k: "R", v: logBatTotals.R, s: "Runs" },
+        { k: "RBI", v: logBatTotals.RBI, s: "Runs Batted In" },
+        { k: "TB", v: logBatTotals.TB, s: "Total Bases" },
+        { k: "Hits / At Bats", v: `${logBatTotals.H} / ${logBatTotals.AB}`, s: "", full: true },
+    ];
+
+    const strip = $("#summaryStrip");
+    strip.innerHTML = [...topBlock, ...base].map(x => `
+        <div class="stat ${x.full ? 'stat-full' : ''}">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+
+    const fstrip = $("#fieldingStrip");
+    fstrip.innerHTML = [
+        { k: "TC", v: fldTotals.TC, s: "Total chances" },
+        { k: "PO", v: fldTotals.PO, s: "Putouts" },
+        { k: "A", v: fldTotals.A, s: "Assists" },
+        { k: "E", v: fldTotals.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(fldTotals.FPCT), s: "(PO + A) / (PO + A + E)" },
+    ].map(x => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
+
 function setTab(tabName) {
     document.querySelectorAll(".tab").forEach(t => {
         t.classList.toggle("active", t.dataset.tab === tabName);
@@ -3326,7 +3349,9 @@ function setTab(tabName) {
         document.getElementById("summary-batting").classList.add("active");
         $("#panelTitle").textContent = "Batting • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
+
         refreshBatting();
+        restoreSelectedRows();
 
         const match = selectedFieldingGame
             ? findMatchingBattingGame(selectedFieldingGame)
@@ -3334,8 +3359,6 @@ function setTab(tabName) {
 
         if (match) {
             selectedBattingGame = match;
-            const tr = findRowByGame("battingBody", match);
-            if (tr) setSelectedRow("battingBody", tr);
             showSelectedBattingGame(match);
         } else {
             renderSummary();
@@ -3345,7 +3368,9 @@ function setTab(tabName) {
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
+
         refreshFielding();
+        restoreSelectedRows();
 
         const match = selectedBattingGame
             ? findMatchingFieldingGame(selectedBattingGame)
@@ -3354,16 +3379,15 @@ function setTab(tabName) {
         if (match) {
             selectedFieldingGame = match;
             const tr = findRowByGame("fieldingBody", match);
-            if (tr) setSelectedRow("fieldingBody", tr);
             showSelectedFieldingGame(match, tr);
         } else {
             renderSummary();
         }
     }
-}                    
+}
 
-        function applySeason(seasonKey) {
-            currentSeason = seasonKey;
+function applySeason(seasonKey) {
+    currentSeason = seasonKey;
 
     if (currentSeason === "career") {
         $("#heroStatsSeason").textContent = "Career";
@@ -3372,162 +3396,158 @@ function setTab(tabName) {
         $("#heroStatsSeason").textContent = currentSeason;
         $("#heroStatsSuffix").textContent = "Season Stats";
     }
+
     const teamSummaryTitle = document.getElementById("teamSummaryTitle");
-if (teamSummaryTitle) {
-    teamSummaryTitle.textContent =
-        (currentSeason === "career") ? "Career Team Summary" : "Season Team Summary";
-}
+    if (teamSummaryTitle) {
+        teamSummaryTitle.textContent = (currentSeason === "career") ? "Career Team Summary" : "Season Team Summary";
+    }
+
     if ($("#summaryPanelTitle")) {
-    $("#summaryPanelTitle").textContent =
-        (currentSeason === "career") ? "Career Summary" : "Season Summary";
+        $("#summaryPanelTitle").textContent = (currentSeason === "career") ? "Career Summary" : "Season Summary";
+    }
+
+    if (currentSeason === "career") {
+        battingLog = careerBattingLog;
+        fieldingLog = careerFieldingLog;
+    } else {
+        const { bat, fld } = buildSeasonLogs(currentSeason);
+        battingLog = bat;
+        fieldingLog = fld;
+    }
+
+    resetState(battingState);
+    resetState(fieldingState);
+
+    $("#searchBat").value = "";
+    $("#searchFld").value = "";
+
+    renderOpponentSelect($("#oppBat"), battingLog);
+    renderOpponentSelect($("#oppFld"), fieldingLog);
+
+    $("#oppBat").value = "";
+    $("#oppFld").value = "";
+    setSharedOpponent("");
+
+    renderVsOpponentAllTime("");
+    renderVsOpponentFieldingAllTime("");
+
+    clearSelectedGameSummary();
+    renderSummary();
+
+    const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
+    setTab(activeTab);
 }
-            if (currentSeason === "career") {
-    battingLog = careerBattingLog;
-    fieldingLog = careerFieldingLog;
-} else {
-                const { bat, fld } = buildSeasonLogs(currentSeason);
-                battingLog = bat;
-                fieldingLog = fld;
-            }
 
-            resetState(battingState);
-            resetState(fieldingState);
+function renderVsOpponentAllTime(opponent) {
+    const wrap = $("#vsOppWrap");
+    const strip = $("#vsOppStrip");
+    if (!wrap || !strip) return;
 
-            $("#searchBat").value = "";
-            $("#searchFld").value = "";
+    if (!opponent) {
+        wrap.style.display = "none";
+        const label = $("#vsOppLabel");
+        if (label) label.textContent = "—";
+        strip.innerHTML = "";
+        return;
+    }
 
-            renderOpponentSelect($("#oppBat"), battingLog);
-            renderOpponentSelect($("#oppFld"), fieldingLog);
+    const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
+    const rows = baseLog.filter(r => r.opponent === opponent);
 
-            $("#oppBat").value = "";
-            $("#oppFld").value = "";
-            setSharedOpponent(""); // best single line to ensure sync + hide strips
-            // Reset vs Opponent section when season changes
-            renderVsOpponentAllTime("");
-            renderVsOpponentFieldingAllTime("");
+    const label = $("#vsOppLabel");
+    if (label) {
+        const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
+        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+    }
+    wrap.style.display = "block";
 
-            clearSelectedGameSummary();
-            renderSummary();
+    const name2 = document.getElementById("vsOppName2");
+    if (name2) name2.textContent = opponent;
 
-            const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
-            setTab(activeTab);
-
+    requestAnimationFrame(() => {
+        const ht = computeHitTypeTotals(rows);
+        const oppCanvas = document.getElementById("vsOppHitTypeChart");
+        if (oppCanvas) {
+            opponentHitPie.render(
+                oppCanvas,
+                ["1B", "2B", "3B", "HR"],
+                [ht.singles, ht.doubles, ht.triples, ht.hrs]
+            );
         }
-        function computeOPSFromTotals(t) {
-            const avg = safeDiv(t.H, t.AB);
-            const slg = safeDiv(t.TB, t.AB);
-            const ops = (isFinite(avg) && isFinite(slg)) ? (avg + slg) : NaN;
-            return { avg, slg, ops };
-        }
+    });
 
-        function renderVsOpponentAllTime(opponent) {
-            const wrap = $("#vsOppWrap");
+    const t = computeBattingTotals(rows);
+    const { avg, slg, ops } = computeOPSFromTotals(t);
 
-            const strip = $("#vsOppStrip");
-            if (!wrap || !strip) return;
+    const items = [
+        { k: "G", v: rows.length, s: "Games vs opponent" },
+        { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
+        { k: "AVG", v: fmt3(avg), s: "H / AB" },
+        { k: "SLG", v: fmt3(slg), s: "TB / AB" },
+        { k: "OPS", v: fmt3(ops), s: "AVG + SLG (from logs)" },
+        { k: "HR", v: t.HR, s: "From logs" },
+        { k: "RBI", v: t.RBI, s: "From logs" },
+        { k: "TB", v: t.TB, s: "From logs" },
+    ];
 
-            if (!opponent) {
-                wrap.style.display = "none";
-                const label = $("#vsOppLabel");
-                if (label) label.textContent = "—";
-                strip.innerHTML = "";
-                return;
-            }
+    strip.innerHTML = items.map(x => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
 
-            // ✅ Use current season logs (or career logs if in Career mode)
-            const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
-            const rows = baseLog.filter(r => r.opponent === opponent);
+/* ------------ INIT ------------ */
+(function init() {
+    buildCareer();
+    applySeason("2026");
 
-            const label = $("#vsOppLabel");
-            if (label) {
-                const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
-                label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-            }
-            wrap.style.display = "block";
+    document.querySelectorAll(".tab").forEach(t => {
+        t.addEventListener("click", () => setTab(t.dataset.tab));
+    });
 
-            const name2 = document.getElementById("vsOppName2");
-            if (name2) name2.textContent = opponent;
+    $("#searchBat").addEventListener("input", (e) => {
+        clearSelectedGameSummary();
+        battingState.search = e.target.value;
+        refreshBatting();
+    });
 
-            // Render the opponent pie after visible
-            requestAnimationFrame(() => {
-                const ht = computeHitTypeTotals(rows);
-                const oppCanvas = document.getElementById("vsOppHitTypeChart");
-                if (oppCanvas) {
-                    opponentHitPie.render(
-                        oppCanvas,
-                        ["1B", "2B", "3B", "HR"],
-                        [ht.singles, ht.doubles, ht.triples, ht.hrs]
-                    );
-                }
-            });
+    $("#oppBat").addEventListener("change", (e) => setSharedOpponent(e.target.value));
 
-            const t = computeBattingTotals(rows);
-            const { avg, slg, ops } = computeOPSFromTotals(t);
+    $("#resetBat").addEventListener("click", () => {
+        clearSelectedGameSummary();
+        resetState(battingState);
+        $("#searchBat").value = "";
+        setSharedOpponent("");
+    });
 
-            const items = [
-                { k: "G", v: rows.length, s: "Games vs opponent" },
-                { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
-                { k: "AVG", v: fmt3(avg), s: "H / AB" },
-                { k: "SLG", v: fmt3(slg), s: "TB / AB" },
-                { k: "OPS", v: fmt3(ops), s: "AVG + SLG (from logs)" },
-                { k: "HR", v: t.HR, s: "From logs" },
-                { k: "RBI", v: t.RBI, s: "From logs" },
-                { k: "TB", v: t.TB, s: "From logs" },
-            ];
+    $("#searchFld").addEventListener("input", (e) => {
+        clearSelectedGameSummary();
+        fieldingState.search = e.target.value;
+        refreshFielding();
+    });
 
-            strip.innerHTML = items.map(x => `
-    <div class="stat">
-      <div class="k">${x.k}</div>
-      <div class="v">${x.v}</div>
-      <div class="s">${x.s}</div>
-    </div>
-  `).join("");
-        }
+    $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
 
+    $("#resetFld").addEventListener("click", () => {
+        clearSelectedGameSummary();
+        resetState(fieldingState);
+        $("#searchFld").value = "";
+        setSharedOpponent("");
+    });
 
-        /* ------------ INIT ------------ */
-        (function init() {
-            buildCareer();
-            applySeason("2026");
+    hookTableSort("#battingTable", battingState, refreshBatting);
+    hookTableSort("#fieldingTable", fieldingState, refreshFielding);
 
-            document.querySelectorAll(".tab").forEach(t => {
-                t.addEventListener("click", () => setTab(t.dataset.tab));
-            });
+    $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
 
-            $("#searchBat").addEventListener("input", (e) => {
-                clearSelectedGameSummary();
-                battingState.search = e.target.value;
-                refreshBatting();
-            });
-            $("#oppBat").addEventListener("change", (e) => setSharedOpponent(e.target.value));
-            $("#resetBat").addEventListener("click", () => {
-                clearSelectedGameSummary();
-                resetState(battingState);
-                $("#searchBat").value = "";
-                setSharedOpponent("");
-            });
-
-            $("#searchFld").addEventListener("input", (e) => {
-                clearSelectedGameSummary();
-                fieldingState.search = e.target.value;
-                refreshFielding();
-            });
-            $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
-            $("#resetFld").addEventListener("click", () => {
-                clearSelectedGameSummary();
-                resetState(fieldingState);
-                $("#searchFld").value = "";
-                setSharedOpponent("");
-            });
-
-            hookTableSort("#battingTable", battingState, refreshBatting);
-            hookTableSort("#fieldingTable", fieldingState, refreshFielding);
-
-            $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
+    setTab("batting");
+})();
 
 
-            setTab("batting");
-        })();
+
     </script>
 
     
