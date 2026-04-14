@@ -1557,7 +1557,7 @@ td[data-label="Opponent"] .opp-emoji {
             <div class="summary-bar" id="teamSummaryBar">
                 <div class="summary-bar-head">
                     <div>
-                        <h2 class="summary-bar-title" id="teamSummaryTitle">Season Team Summary</h2>
+                        <h2 class="summary-bar-title" id="teamSummaryTitle"></h2>
                     </div>
                 </div>
                 <div class="team-record-strip" id="teamRecordStrip"></div>
@@ -1675,7 +1675,7 @@ td[data-label="Opponent"] .opp-emoji {
                 <div class="panel">
                     <div class="panel-head">
                         <div>
-                            <h2 class="panel-title" id="summaryPanelTitle">Season Summary</h2>
+                            <h2 class="panel-title" id="summaryPanelTitle"></h2>
                             <p class="panel-sub">Batting and fielding at a glance.</p>
                         </div>
                     </div>
@@ -2968,8 +2968,10 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
 
         const rightEls = getRightPanelEls();
         if (rightEls.title) {
-            rightEls.title.textContent = (currentSeason === "career") ? "Career Summary" : "Season Summary";
-        }
+    rightEls.title.textContent = (currentSeason === "career")
+        ? "Career Summary"
+        : `${currentSeason} Summary`;
+}
         if (rightEls.sub) {
             rightEls.sub.textContent = "Batting and fielding at a glance.";
         }
@@ -3286,9 +3288,11 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         }
 
         const teamSummaryTitle = document.getElementById("teamSummaryTitle");
-        if (teamSummaryTitle) {
-            teamSummaryTitle.textContent = (currentSeason === "career") ? "Career Team Summary" : "Season Team Summary";
-        }
+if (teamSummaryTitle) {
+    teamSummaryTitle.textContent = (currentSeason === "career")
+        ? "Career Team Summary"
+        : `${currentSeason} Team Summary`;
+}
 
         if ($("#summaryPanelTitle")) {
             $("#summaryPanelTitle").textContent = (currentSeason === "career") ? "Career Summary" : "Season Summary";
