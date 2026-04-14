@@ -244,6 +244,14 @@ body {
     gap: 18px;
 }
 
+.vs-opp-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1f3a93; /* Penn blue */
+    margin-bottom: 12px;
+    letter-spacing: .5px;
+}
+
 .hero-stat-item {
     padding: 0;
     text-align: center;
@@ -1590,15 +1598,13 @@ td[data-label="Opponent"] .opp-emoji {
                             </div>
 
                             <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
-                                <div class="tag" style="margin-bottom:10px;">
-                                    <span id="vsOppLabel">—</span>
-                                </div>
+                                <div id="vsOppLabel" class="vs-opp-title">—</div>
 
                                 <div class="stat-strip" id="vsOppStrip"></div>
 
                                 <div class="divider"></div>
 
-                                <div class="tag" style="margin-bottom:10px;">Hit Type vs <b id="vsOppName2">—</b></div>
+                                
                                 <div class="chart-wrap">
                                     <canvas id="vsOppHitTypeChart" width="600" height="220"></canvas>
                                 </div>
@@ -3369,11 +3375,11 @@ const opponentHitPie = createHitPie();
         const { avg, slg, ops } = computeOPSFromTotals(t);
 
         strip.innerHTML = [
-            { k: "G", v: rows.length, s: "Games vs opponent" },
+            { k: "G", v: rows.length, s: "Games vs Opponent" },
             { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
             { k: "AVG", v: fmt3(avg), s: "H / AB" },
             { k: "SLG", v: fmt3(slg), s: "TB / AB" },
-            { k: "OPS", v: fmt3(ops), s: "AVG + SLG (from logs)" },
+            { k: "OPS", v: fmt3(ops), s: "AVG + SLG " },
             { k: "HR", v: t.HR, s: "From logs" },
             { k: "RBI", v: t.RBI, s: "From logs" },
             { k: "TB", v: t.TB, s: "From logs" }
@@ -3411,7 +3417,7 @@ const opponentHitPie = createHitPie();
 
         wrap.style.display = "block";
         strip.innerHTML = [
-            { k: "G", v: rows.length, s: "Games vs opponent" },
+            { k: "G", v: rows.length, s: "Games vs Opponent" },
             { k: "TC", v: fld.TC, s: "Total chances" },
             { k: "PO", v: fld.PO, s: "Putouts" },
             { k: "A", v: fld.A, s: "Assists" },
