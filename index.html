@@ -8,20 +8,39 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
   <style>
-      /* =========================================================
+    /* =========================================================
    1. ROOT / GLOBAL COLORS
 ========================================================= */
 :root {
-    --bg: #0a1633;
-    --panel: #102348;
-    --panel2: #16315f;
+    --bg: #081225;
+    --page-top: #0a1730;
+    --page-bottom: #09101f;
+
+    --panel: #0f2245;
+    --panel-2: #132b57;
+    --panel-3: #183764;
+    --panel-4: #0c1c39;
+
+    --hero-blue: #011f5b;
+    --hero-blue-dark: #00153f;
+    --hero-red: #990000;
+
+    --awards-bg: #15284a;
+    --awards-accent: #7f1020;
+
     --text: #f4f7fb;
     --muted: #c7d3e6;
+    --muted-2: #9fb1cc;
+
     --accent: #990000;
+    --accent-bright: #b30018;
+
     --shadow: 0 10px 30px rgba(0, 0, 0, .30);
     --radius: 14px;
+
     --border: rgba(255, 255, 255, .10);
     --border-soft: rgba(255, 255, 255, .14);
+
     --surface: rgba(255, 255, 255, .04);
     --surface-2: rgba(255, 255, 255, .06);
 }
@@ -35,7 +54,7 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color: var(--text);
     background:
-        linear-gradient(180deg, #081126 0%, #0a1633 100%);
+        linear-gradient(180deg, var(--page-top) 0%, var(--page-bottom) 100%);
 }
 
 .page-layout {
@@ -124,8 +143,8 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     background:
-        linear-gradient(90deg, rgba(0, 0, 0, .34), rgba(0, 0, 0, .10)),
-        linear-gradient(135deg, #00153f 0%, #011f5b 62%, #990000 100%);
+        linear-gradient(90deg, rgba(0, 0, 0, .30), rgba(0, 0, 0, .08)),
+        linear-gradient(135deg, var(--hero-blue-dark) 0%, var(--hero-blue) 60%, var(--hero-red) 100%);
 }
 
 .hero::before {
@@ -323,8 +342,8 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, .02), transparent 50%),
-        #0f2146;
+        linear-gradient(180deg, rgba(255, 255, 255, .03), transparent 50%),
+        var(--panel-2);
 }
 
 .summary-bar-head {
@@ -429,7 +448,7 @@ body {
     gap: 12px;
     padding: 14px 14px 10px;
     border-bottom: 1px solid var(--border);
-    background: rgba(0, 0, 0, .08);
+    background: rgba(0, 0, 0, .10);
 }
 
 .panel-title {
@@ -466,7 +485,7 @@ body {
     padding: 4px 8px;
     border: 1px solid rgba(255, 255, 255, .10);
     border-radius: 999px;
-    background: #0e2248;
+    background: #0b1d3d;
     color: #ffffff;
     font-size: 11px;
 }
@@ -676,7 +695,7 @@ body {
     padding: 9px 10px;
     border: 1px solid rgba(255, 255, 255, .10) !important;
     border-radius: 12px;
-    background: #0d2043 !important;
+    background: #0b1d3d !important;
     color: #ffffff !important;
 }
 
@@ -691,7 +710,7 @@ select {
     padding: 6px 12px;
     border: 1px solid rgba(255, 255, 255, .14) !important;
     border-radius: 999px;
-    background: #081735 !important;
+    background: #07142f !important;
     color: #ffffff !important;
     font-size: 13px;
     outline: none;
@@ -732,14 +751,14 @@ select option {
     cursor: pointer;
     font-weight: 800;
     color: #ffffff !important;
-    background: #142c59 !important;
+    background: #183764 !important;
     box-shadow: none;
 }
 
 .btn:hover,
 .btn.secondary:hover {
     border-color: #ffffff !important;
-    background: #1c3a73 !important;
+    background: #21467c !important;
 }
 
 .btn.secondary {
@@ -783,7 +802,7 @@ select,
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: #0b1c3d;
+    background: #0a1833;
 }
 
 .chart-wrap::before {
@@ -793,7 +812,7 @@ select,
     pointer-events: none;
     filter: blur(10px);
     background:
-        radial-gradient(420px 220px at 35% 55%, rgba(153, 0, 0, .16), transparent 60%),
+        radial-gradient(420px 220px at 35% 55%, rgba(153, 0, 0, .14), transparent 60%),
         radial-gradient(320px 220px at 35% 55%, rgba(56, 94, 168, .18), transparent 55%);
 }
 
@@ -835,7 +854,7 @@ thead th {
     border-bottom: 1px solid rgba(255, 255, 255, .10);
     background:
         linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(0, 0, 0, 0)),
-        #18325f;
+        var(--panel-3);
     color: #ffffff;
     font-size: 12px;
     text-align: left;
@@ -1046,6 +1065,15 @@ td[data-label="Opponent"] .opp-emoji {
 
 .awards-panel {
     height: auto;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .02), transparent 48%),
+        var(--awards-bg);
+}
+
+.awards-panel .panel-head {
+    background:
+        linear-gradient(90deg, rgba(127, 16, 32, .40), rgba(0, 0, 0, .10)),
+        rgba(0, 0, 0, .10);
 }
 
 .awards-panel-body {
@@ -1065,7 +1093,7 @@ td[data-label="Opponent"] .opp-emoji {
     border-radius: 14px;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, .03), transparent 60%),
-        #11264d;
+        #1a2f56;
     border: 1px solid rgba(255, 255, 255, .10);
 }
 
@@ -1234,7 +1262,7 @@ td[data-label="Opponent"] .opp-emoji {
         z-index: 5;
         background:
             linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(0, 0, 0, 0)),
-            #18325f;
+            var(--panel-3);
     }
 
     #battingTable td:first-child,
