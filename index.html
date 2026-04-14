@@ -286,7 +286,7 @@ body {
 
 .tab {
     padding: 10px 14px;
-    border: 1px solid transparent !important; /* 👈 key fix */
+    border: 1px solid transparent !important;
     border-radius: 12px;
     cursor: pointer;
     user-select: none;
@@ -300,18 +300,13 @@ body {
 .tab:hover {
     color: #ffffff;
     background: #222633;
-    border-color: #cc0000 !important; /* 👈 cleaner than redefining border */
+    border-color: #cc0000 !important;
 }
 
 .tab.active {
     background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
     color: #ffffff !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.game-log-tabs .tab {
-    border: none !important;
+    border-color: transparent !important;
     box-shadow: none !important;
 }
 
