@@ -1609,8 +1609,8 @@ td[data-label="Opponent"] .opp-emoji {
                                     <thead>
                                         <tr>
                                             <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
-                                            <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                            <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                                            <th>Opponent</th>
+                                            <th style="width: 12ch;">Result</th>
                                             <th class="right" data-key="H">H <span class="sort">↕</span></th>
                                             <th class="right" data-key="AB">AB <span class="sort">↕</span></th>
                                             <th class="right" data-key="R">R <span class="sort">↕</span></th>
@@ -3431,7 +3431,7 @@ if (teamSummaryTitle) {
             const { avg, slg, ops } = computeOPSFromTotals(t);
 
             const items = [
-                { k: "G", v: rows.length, s: "Games vs opponent (filtered)" },
+                { k: "G", v: rows.length, s: "Games vs opponent" },
                 { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
                 { k: "AVG", v: fmt3(avg), s: "H / AB" },
                 { k: "SLG", v: fmt3(slg), s: "TB / AB" },
