@@ -12,29 +12,29 @@
    1. ROOT / GLOBAL
 ========================================================= */
 :root {
-    --bg: #eef1f5;
-    --bg-soft: #f6f7f9;
-    --panel: #ffffff;
-    --panel-2: #f8f9fb;
-    --panel-3: #f1f4f8;
+    --bg: #d9dde4;
+    --bg-soft: #e3e6eb;
+    --panel: #eef1f4;
+    --panel-2: #e7ebf0;
+    --panel-3: #dde3ea;
 
-    --text: #15233b;
-    --muted: #627089;
-    --muted-2: #7b889f;
+    --text: #17253d;
+    --muted: #5f6e86;
+    --muted-2: #78859a;
 
     --penn-blue: #011f5b;
-    --penn-blue-2: #163d84;
+    --penn-blue-2: #173d82;
     --penn-red: #990000;
     --penn-red-2: #b00012;
 
     --accent: #990000;
-    --shadow: 0 10px 28px rgba(17, 30, 54, .08);
+    --shadow: 0 10px 28px rgba(17, 30, 54, .10);
     --radius: 14px;
 
-    --border: rgba(1, 31, 91, .10);
-    --border-soft: rgba(1, 31, 91, .14);
-    --surface: rgba(1, 31, 91, .03);
-    --surface-2: rgba(1, 31, 91, .05);
+    --border: rgba(1, 31, 91, .12);
+    --border-soft: rgba(1, 31, 91, .16);
+    --surface: rgba(1, 31, 91, .04);
+    --surface-2: rgba(1, 31, 91, .06);
 }
 
 * {
@@ -46,7 +46,14 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color: var(--text);
     background:
-        linear-gradient(180deg, #f4f5f7 0%, #eceff3 100%);
+        linear-gradient(135deg,
+            rgba(1, 31, 91, .32) 0%,
+            rgba(1, 31, 91, .18) 24%,
+            rgba(235, 238, 243, .92) 48%,
+            rgba(153, 0, 0, .14) 76%,
+            rgba(153, 0, 0, .24) 100%
+        );
+    background-attachment: fixed;
 }
 
 .page-layout {
@@ -312,7 +319,7 @@ body {
     user-select: none;
     font-size: 13px;
     font-weight: 800;
-    background: #ffffff;
+    background: #f1f4f8;
     color: var(--penn-blue);
     transition: all .15s ease;
 }
@@ -320,7 +327,7 @@ body {
 .tab:hover {
     color: var(--penn-blue);
     border-color: rgba(1, 31, 91, .28) !important;
-    background: #f4f7fb;
+    background: #e9edf3;
 }
 
 .tab.active {
@@ -359,7 +366,7 @@ body {
     border: 1px solid rgba(1, 31, 91, .10);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    background: #f7f8fa;
+    background: #e7ebf0;
 }
 
 .summary-bar-head {
@@ -450,7 +457,7 @@ body {
     border: 1px solid rgba(1, 31, 91, .10);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    background: #ffffff;
+    background: #eef1f4;
 }
 
 .panel-head {
@@ -461,7 +468,7 @@ body {
     gap: 12px;
     padding: 14px 14px 10px;
     border-bottom: 1px solid rgba(1, 31, 91, .08);
-    background: #fafbfd;
+    background: #e5e9ee;
 }
 
 .panel-title {
@@ -498,7 +505,7 @@ body {
     padding: 4px 8px;
     border: 1px solid rgba(1, 31, 91, .10);
     border-radius: 999px;
-    background: #f4f7fb;
+    background: #f1f4f8;
     color: var(--penn-blue);
     font-size: 11px;
 }
@@ -688,7 +695,7 @@ body {
     padding: 9px 10px;
     border: 1px solid rgba(1, 31, 91, .10) !important;
     border-radius: 12px;
-    background: #f6f8fb !important;
+    background: #e8edf2 !important;
     color: var(--text) !important;
 }
 
@@ -703,7 +710,7 @@ select {
     padding: 6px 12px;
     border: 1px solid rgba(1, 31, 91, .14) !important;
     border-radius: 999px;
-    background: #ffffff !important;
+    background: #f7f9fb !important;
     color: var(--text) !important;
     font-size: 13px;
     outline: none;
@@ -755,7 +762,7 @@ select option {
 }
 
 .btn.secondary {
-    background: #ffffff !important;
+    background: #f6f8fb !important;
     color: var(--penn-blue) !important;
 }
 
@@ -796,7 +803,7 @@ select,
     padding: 10px;
     border: 1px solid rgba(1, 31, 91, .10);
     border-radius: 12px;
-    background: #f7f8fb;
+    background: #f0f3f7;
 }
 
 .chart-wrap::before {
@@ -845,7 +852,7 @@ table {
 thead th {
     padding: 10px;
     border-bottom: 1px solid rgba(1, 31, 91, .10);
-    background: #edf2f8;
+    background: #dbe2ea;
     color: var(--penn-blue);
     font-size: 12px;
     text-align: left;
@@ -874,15 +881,15 @@ tbody td {
 }
 
 tbody tr:nth-child(even) td {
-    background: #fafbfc;
+    background: #f1f4f7;
 }
 
 tbody tr:nth-child(odd) td {
-    background: #ffffff;
+    background: #eef2f5;
 }
 
 tbody tr:hover td {
-    background: #f2f5f9;
+    background: #e4e9ef;
     transition: background .15s ease, box-shadow .15s ease;
 }
 
@@ -893,7 +900,7 @@ tbody tr:hover td {
 
 #battingBody tr.selected-game td,
 #fieldingBody tr.selected-game td {
-    background: rgba(176, 0, 18, .08) !important;
+    background: rgba(176, 0, 18, .10) !important;
     color: var(--text) !important;
     box-shadow: inset 3px 0 0 var(--penn-red);
 }
@@ -1057,11 +1064,11 @@ td[data-label="Opponent"] .opp-emoji {
 
 .awards-panel {
     height: auto;
-    background: #ffffff;
+    background: #edf1f4;
 }
 
 .awards-panel .panel-head {
-    background: #fafbfd;
+    background: #e3e8ee;
     border-bottom: 1px solid rgba(1, 31, 91, .08);
     position: relative;
 }
@@ -1089,7 +1096,7 @@ td[data-label="Opponent"] .opp-emoji {
     flex-direction: column;
     overflow: hidden;
     border-radius: 14px;
-    background: #f8f9fb;
+    background: #f4f6f9;
     border: 1px solid rgba(1, 31, 91, .10);
 }
 
@@ -1098,7 +1105,7 @@ td[data-label="Opponent"] .opp-emoji {
     width: 100%;
     height: 140px;
     padding: 12px;
-    background: #f1f4f8;
+    background: #e6ebf1;
     object-fit: contain;
 }
 
@@ -1229,7 +1236,7 @@ td[data-label="Opponent"] .opp-emoji {
         position: sticky;
         left: 0;
         z-index: 5;
-        background-color: #ffffff !important;
+        background-color: #eef2f5 !important;
         background-image: none;
     }
 
@@ -1240,7 +1247,7 @@ td[data-label="Opponent"] .opp-emoji {
         position: sticky;
         left: 72px;
         z-index: 5;
-        background-color: #ffffff !important;
+        background-color: #eef2f5 !important;
         background-image: none;
     }
 
@@ -1256,7 +1263,7 @@ td[data-label="Opponent"] .opp-emoji {
     #fieldingTable thead th:first-child,
     #fieldingTable thead th:nth-child(2) {
         z-index: 5;
-        background: #edf2f8;
+        background: #dbe2ea;
     }
 
     #battingTable td:first-child,
