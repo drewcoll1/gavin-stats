@@ -1655,8 +1655,8 @@ td[data-label="Opponent"] .opp-emoji {
                                     <thead>
                                         <tr>
                                             <th data-key="dateValue" style="width: 12ch;">Date <span class="sort">↕</span></th>
-                                            <th data-key="opponent">Opponent <span class="sort"></span></th>
-                                            <th data-key="result" style="width: 12ch;">Result <span class="sort">↕</span></th>
+                                            <th>Opponent</th>
+                                            <th style="width: 12ch;">Result</th>
                                             <th class="right" data-key="TC" style="width: 6ch;">TC <span class="sort">↕</span></th>
                                             <th class="right" data-key="PO" style="width: 6ch;">PO <span class="sort">↕</span></th>
                                             <th class="right" data-key="A" style="width: 6ch;">A <span class="sort">↕</span></th>
@@ -2322,7 +2322,6 @@ function computeAdvancedFromLog(t) {
 
 function showSelectedBattingGame(r) {
     selectedBattingGame = r;
-    selectedFieldingGame = null;
     const summaryLogoBatting = document.getElementById("summaryLogoBatting");
 if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
@@ -2442,7 +2441,6 @@ if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
 function showSelectedFieldingGame(r, tr = null) {
     selectedFieldingGame = r;
-    selectedBattingGame = null;
     const summaryLogoFielding = document.getElementById("summaryLogoFielding");
 if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
     if (tr) setSelectedRow("fieldingBody", tr);
@@ -3297,8 +3295,6 @@ strip.innerHTML = [...topBlock, ...base].map(x => `
   `).join("");
         }
 function setTab(tabName) {
-    clearSelectedGameSummary();
-
     document.querySelectorAll(".tab").forEach(t => {
         t.classList.toggle("active", t.dataset.tab === tabName);
     });
@@ -3309,24 +3305,32 @@ function setTab(tabName) {
     document.getElementById("summary-batting").classList.remove("active");
     document.getElementById("summary-fielding").classList.remove("active");
 
-   
-
     if (tabName === "batting") {
         document.getElementById("section-batting").classList.add("active");
         document.getElementById("summary-batting").classList.add("active");
         $("#panelTitle").textContent = "Batting • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshBatting();
+
+        if (selectedBattingGame) {
+            showSelectedBattingGame(selectedBattingGame);
+        } else {
+            renderSummary();
+        }
     } else if (tabName === "fielding") {
         document.getElementById("section-fielding").classList.add("active");
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshFielding();
-    } 
-}
-         
-                            
+
+        if (selectedFieldingGame) {
+            showSelectedFieldingGame(selectedFieldingGame);
+        } else {
+            renderSummary();
+        }
+    }
+}                      
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
