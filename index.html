@@ -2365,72 +2365,317 @@ td[data-label="Opponent"] .opp-emoji {
         if (fieldingRow) fieldingRow.classList.add("selected-game");
     }
 
-    /* ------------ SIMPLE PIE RENDERER ------------ */
-    function createPieRenderer() {
-        return {
-            render(canvas, labels, values) {
-                if (!canvas) return;
-                const ctx = canvas.getContext("2d");
-                if (!ctx) return;
+   /* ------------ HIT PIE CHART ------------ */
+function createHitPie() {
+    let state = {
+        canvas: null,
+        ctx: null,
+        labels: [],
+        values: [],
+        slices: [],
+        hoveredIndex: -1,
+        hoverAnim: 0,
+        hoverTarget: 0,
+        introT: 0,
+        fadeT: 0,
+        raf: null
+    };
 
-                const width = canvas.width;
-                const height = canvas.height;
-                ctx.clearRect(0, 0, width, height);
+    const palette = [
+        ["#C41E3A", "#8B0000"],  // 1B
+        ["#1F3A93", "#0B1E3F"],  // 2B
+        ["#2E8B57", "#1F5C3A"],  // 3B
+        ["#F4A300", "#C77C00"]   // HR
+    ];
 
-                const total = values.reduce((a, b) => a + b, 0);
-                if (!total) {
-                    ctx.font = "14px sans-serif";
-                    ctx.fillStyle = "#ffffff";
-                    ctx.textAlign = "center";
-                    ctx.fillText("No data", width / 2, height / 2);
-                    return;
-                }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+    function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 
-                const cx = width * 0.28;
-                const cy = height * 0.52;
-                const r = Math.min(width, height) * 0.28;
+    function setupCanvas(canvas) {
+        const ctx = canvas.getContext("2d");
+        state.canvas = canvas;
+        state.ctx = ctx;
 
-                const colors = [
-                    "rgba(255,255,255,.92)",
-                    "rgba(204,0,0,.92)",
-                    "rgba(100,160,255,.92)",
-                    "rgba(255,215,0,.92)"
-                ];
-
-                let start = -Math.PI / 2;
-                values.forEach((v, i) => {
-                    const angle = (v / total) * Math.PI * 2;
-                    const end = start + angle;
-
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy);
-                    ctx.arc(cx, cy, r, start, end);
-                    ctx.closePath();
-                    ctx.fillStyle = colors[i % colors.length];
-                    ctx.fill();
-
-                    start = end;
-                });
-
-                ctx.font = "12px sans-serif";
-                ctx.textAlign = "left";
-
-                labels.forEach((label, i) => {
-                    const x = width * 0.60;
-                    const y = 40 + i * 28;
-
-                    ctx.fillStyle = colors[i % colors.length];
-                    ctx.fillRect(x, y - 10, 12, 12);
-
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillText(`${label}: ${values[i]}`, x + 18, y);
-                });
-            }
-        };
+        if (!canvas.__hitPieBound) {
+            canvas.addEventListener("mousemove", onMove);
+            canvas.addEventListener("mouseleave", onLeave);
+            canvas.__hitPieBound = true;
+        }
     }
 
-    const seasonHitPie = createPieRenderer();
-    const opponentHitPie = createPieRenderer();
+    function resizeToDPR() {
+        const { canvas, ctx } = state;
+        if (!canvas || !ctx) return;
+
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
+        const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 240;
+
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        return { w: cssW, h: cssH };
+    }
+
+    function buildSlices(w, h, introRotation) {
+        const total = state.values.reduce((a, b) => a + b, 0);
+        state.slices = [];
+        if (!total) return { total: 0 };
+
+        const cx = w * 0.32;
+        const cy = h * 0.55;
+        const r = Math.min(w, h) * 0.36;
+
+        let start = (-Math.PI / 2) + introRotation;
+        for (let i = 0; i < state.values.length; i++) {
+            const v = state.values[i];
+            const angle = (v / total) * Math.PI * 2;
+            const end = start + angle;
+
+            state.slices.push({ i, label: state.labels[i], value: v, pct: v / total, start, end, cx, cy, r });
+            start = end;
+        }
+        return { total, cx, cy, r };
+    }
+
+    function drawBackgroundGlow(ctx, cx, cy, r) {
+        const glow = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 1.35);
+        glow.addColorStop(0, "rgba(196,30,58,18)");
+        glow.addColorStop(0.4, "rgba(31,58,147,14)");
+        glow.addColorStop(0.7, "rgba(244,163,0,10)");
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.28, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawSlice(ctx, s, hoverPop, isHovered) {
+        const { cx, cy, r } = s;
+        const mid = (s.start + s.end) / 2;
+        const pop = hoverPop * (isHovered ? 14 : 0);
+        const ox = Math.cos(mid) * pop;
+        const oy = Math.sin(mid) * pop;
+
+        const grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+        grad.addColorStop(0, palette[s.i][0]);
+        grad.addColorStop(1, palette[s.i][1]);
+
+        ctx.shadowColor = "rgba(0,0,0,.45)";
+        ctx.shadowBlur = isHovered ? 18 : 12;
+        ctx.shadowOffsetY = isHovered ? 9 : 6;
+
+        ctx.beginPath();
+        ctx.moveTo(cx + ox, cy + oy);
+        ctx.arc(cx + ox, cy + oy, r, s.start, s.end);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+
+        ctx.strokeStyle = isHovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.14)";
+        ctx.lineWidth = isHovered ? 2.4 : 2;
+        ctx.stroke();
+    }
+
+    function drawLegend(ctx, w, h, total) {
+        const lx = w * 0.60;
+        const startY = h * 0.22;
+
+        ctx.textAlign = "left";
+        for (let i = 0; i < state.labels.length; i++) {
+            const y = startY + i * 34;
+
+            const grad = ctx.createLinearGradient(lx, y - 10, lx + 20, y + 10);
+            grad.addColorStop(0, palette[i][0]);
+            grad.addColorStop(1, palette[i][1]);
+            ctx.fillStyle = grad;
+            ctx.fillRect(lx, y - 10, 22, 14);
+
+            ctx.fillStyle = "rgba(255,255,255,.92)";
+            ctx.font = "700 13px ui-sans-serif";
+            ctx.fillText(state.labels[i], lx + 32, y + 1);
+
+            const v = state.values[i] || 0;
+            const pct = total ? ((v / total) * 100).toFixed(1) : "0.0";
+            ctx.fillStyle = "rgba(255,255,255,.65)";
+            ctx.font = "13px ui-sans-serif";
+            ctx.fillText(`${v} (${pct}%)`, lx + 78, y + 1);
+        }
+    }
+
+    function drawCenter(ctx, cx, cy, total) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 44, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0,0,0,.35)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,.10)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(255,255,255,.95)";
+        ctx.font = "900 22px ui-sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(total, cx, cy + 7);
+
+        ctx.fillStyle = "rgba(255,255,255,.60)";
+        ctx.font = "12px ui-sans-serif";
+        ctx.fillText("Total Hits", cx, cy + 25);
+    }
+
+    function renderFrame() {
+        if (!state.canvas || !state.ctx) return;
+        const ctx = state.ctx;
+
+        const { w, h } = resizeToDPR() || { w: 600, h: 240 };
+        ctx.clearRect(0, 0, w, h);
+
+        state.introT = clamp01(state.introT + 0.035);
+        state.fadeT = clamp01(state.fadeT + 0.06);
+        state.hoverAnim += (state.hoverTarget - state.hoverAnim) * 0.18;
+
+        const introEase = easeOutExpo(state.introT);
+        const fade = easeOutCubic(state.fadeT);
+        const introRotation = (1 - introEase) * (Math.PI * 0.20);
+
+        const { total, cx, cy, r } = buildSlices(w, h, introRotation);
+
+        ctx.globalAlpha = fade;
+
+        if (!total) {
+            ctx.fillStyle = "rgba(255,255,255,.75)";
+            ctx.font = "15px ui-sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("No hit data available", w / 2, h / 2);
+            ctx.globalAlpha = 1;
+            cancelIfDone();
+            return;
+        }
+
+        drawBackgroundGlow(ctx, cx, cy, r);
+
+        const hoverIndex = state.hoveredIndex;
+        for (const s of state.slices) {
+            if (s.i === hoverIndex) continue;
+            drawSlice(ctx, s, state.hoverAnim, false);
+        }
+        if (hoverIndex >= 0 && state.slices[hoverIndex]) {
+            drawSlice(ctx, state.slices[hoverIndex], state.hoverAnim, true);
+        }
+
+        drawCenter(ctx, cx, cy, total);
+        drawLegend(ctx, w, h, total);
+
+        ctx.globalAlpha = 1;
+        cancelIfDone();
+    }
+
+    function cancelIfDone() {
+        const still =
+            state.introT < 1 ||
+            state.fadeT < 1 ||
+            Math.abs(state.hoverAnim - state.hoverTarget) > 0.01;
+
+        if (still) state.raf = requestAnimationFrame(renderFrame);
+        else state.raf = null;
+    }
+
+    function ensureRAF() {
+        if (!state.raf) state.raf = requestAnimationFrame(renderFrame);
+    }
+
+    function getMousePos(evt) {
+        const rect = state.canvas.getBoundingClientRect();
+        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    }
+
+    function hitTest(pos) {
+        for (const s of state.slices) {
+            const dx = pos.x - s.cx;
+            const dy = pos.y - s.cy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > s.r) continue;
+
+            let a = Math.atan2(dy, dx);
+            const to0_2pi = (ang) => (ang < 0 ? ang + Math.PI * 2 : ang);
+
+            const an = to0_2pi(a);
+            const sn = to0_2pi(s.start);
+            const en = to0_2pi(s.end);
+
+            const inside = (sn <= en) ? (an >= sn && an <= en) : (an >= sn || an <= en);
+            if (inside) return s.i;
+        }
+        return -1;
+    }
+
+    function showTooltip(i, evt) {
+        const tip = document.getElementById("tooltip");
+        if (!tip) return;
+
+        const total = state.values.reduce((a, b) => a + b, 0) || 1;
+        const v = state.values[i] || 0;
+        const pct = ((v / total) * 100).toFixed(1);
+
+        tip.innerHTML = `
+            <div class="tip-title">Hit Type</div>
+            <div class="tip-row"><span class="k">Type</span><span class="v">${state.labels[i]}</span></div>
+            <div class="tip-row"><span class="k">Count</span><span class="v">${v}</span></div>
+            <div class="tip-row"><span class="k">Share</span><span class="v">${pct}%</span></div>
+            <div class="tip-sub">Based on filtered logs</div>
+        `;
+
+        const pad = 14;
+        tip.style.left = (evt.pageX + pad) + "px";
+        tip.style.top = (evt.pageY + pad) + "px";
+        tip.classList.add("show");
+    }
+
+    function hideTooltip() {
+        const tip = document.getElementById("tooltip");
+        if (!tip) return;
+        tip.classList.remove("show");
+    }
+
+    function onMove(evt) {
+        const pos = getMousePos(evt);
+        const idx = hitTest(pos);
+
+        if (idx !== state.hoveredIndex) {
+            state.hoveredIndex = idx;
+            state.hoverTarget = (idx >= 0) ? 1 : 0;
+            ensureRAF();
+        }
+
+        if (idx >= 0) showTooltip(idx, evt);
+        else hideTooltip();
+    }
+
+    function onLeave() {
+        state.hoveredIndex = -1;
+        state.hoverTarget = 0;
+        hideTooltip();
+        ensureRAF();
+    }
+
+    function render(canvas, labels, values) {
+        setupCanvas(canvas);
+        state.labels = labels.slice();
+        state.values = values.slice();
+        state.introT = 0;
+        state.fadeT = 0;
+        ensureRAF();
+    }
+
+    return { render };
+}
+
+const seasonHitPie = createHitPie();
+const opponentHitPie = createHitPie();
 
     /* ------------ STATE ------------ */
     let currentSeason = "2026";
