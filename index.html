@@ -2440,17 +2440,7 @@ function createHitPie() {
         return { total, cx, cy, r };
     }
 
-    function drawBackgroundGlow(ctx, cx, cy, r) {
-        const glow = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 1.35);
-        glow.addColorStop(0, "rgba(196,30,58,18)");
-        glow.addColorStop(0.4, "rgba(31,58,147,14)");
-        glow.addColorStop(0.7, "rgba(244,163,0,10)");
-        glow.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r * 1.28, 0, Math.PI * 2);
-        ctx.fill();
-    }
+    
 
     function drawSlice(ctx, s, hoverPop, isHovered) {
         const { cx, cy, r } = s;
@@ -2556,7 +2546,6 @@ function createHitPie() {
             return;
         }
 
-        drawBackgroundGlow(ctx, cx, cy, r);
 
         const hoverIndex = state.hoveredIndex;
         for (const s of state.slices) {
