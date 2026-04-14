@@ -2319,6 +2319,37 @@ function computeAdvancedFromLog(t) {
 
     renderSummary();
 }
+function sameGame(a, b) {
+    if (!a || !b) return false;
+    return a.date === b.date &&
+           a.opponent === b.opponent &&
+           (a.result || "") === (b.result || "");
+}
+
+function findMatchingBattingGame(fieldingGame) {
+    if (!fieldingGame) return null;
+    return battingLog.find(g => sameGame(g, fieldingGame)) || null;
+}
+
+function findMatchingFieldingGame(battingGame) {
+    if (!battingGame) return null;
+    return fieldingLog.find(g => sameGame(g, battingGame)) || null;
+}
+
+function findRowByGame(tbodyId, game) {
+    if (!game) return null;
+    const rows = document.querySelectorAll(`#${tbodyId} tr`);
+    for (const tr of rows) {
+        if (
+            tr.dataset.date === game.date &&
+            tr.dataset.opponent === game.opponent &&
+            (tr.dataset.result || "") === (game.result || "")
+        ) {
+            return tr;
+        }
+    }
+    return null;
+}
 
 function showSelectedBattingGame(r) {
     selectedBattingGame = r;
@@ -3299,7 +3330,6 @@ function setTab(tabName) {
         t.classList.toggle("active", t.dataset.tab === tabName);
     });
 
-    // main areas
     document.getElementById("section-batting").classList.remove("active");
     document.getElementById("section-fielding").classList.remove("active");
     document.getElementById("summary-batting").classList.remove("active");
@@ -3312,8 +3342,15 @@ function setTab(tabName) {
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshBatting();
 
-        if (selectedBattingGame) {
-            showSelectedBattingGame(selectedBattingGame);
+        const match = selectedFieldingGame
+            ? findMatchingBattingGame(selectedFieldingGame)
+            : selectedBattingGame;
+
+        if (match) {
+            selectedBattingGame = match;
+            const tr = findRowByGame("battingBody", match);
+            if (tr) setSelectedRow("battingBody", tr);
+            showSelectedBattingGame(match);
         } else {
             renderSummary();
         }
@@ -3324,13 +3361,20 @@ function setTab(tabName) {
         $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
         refreshFielding();
 
-        if (selectedFieldingGame) {
-            showSelectedFieldingGame(selectedFieldingGame);
+        const match = selectedBattingGame
+            ? findMatchingFieldingGame(selectedBattingGame)
+            : selectedFieldingGame;
+
+        if (match) {
+            selectedFieldingGame = match;
+            const tr = findRowByGame("fieldingBody", match);
+            if (tr) setSelectedRow("fieldingBody", tr);
+            showSelectedFieldingGame(match, tr);
         } else {
             renderSummary();
         }
     }
-}                      
+}                    
 
         function applySeason(seasonKey) {
             currentSeason = seasonKey;
