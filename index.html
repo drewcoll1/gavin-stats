@@ -333,11 +333,14 @@ body {
 }
 
 .pill select {
-    padding: 4px 10px;
-    font-size: 12px;
-    background: rgba(0, 0, 0, .20) !important;
+    padding: 6px 12px;
+    font-size: 13px;
+    background: #171922 !important; /* same as buttons/tabs */
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, .18) !important;
+    border: 1px solid #2a2e3d !important;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s ease;
 }
 
 
@@ -2614,7 +2617,6 @@ function createHitPie() {
             <div class="tip-row"><span class="k">Type</span><span class="v">${state.labels[i]}</span></div>
             <div class="tip-row"><span class="k">Count</span><span class="v">${v}</span></div>
             <div class="tip-row"><span class="k">Share</span><span class="v">${pct}%</span></div>
-            <div class="tip-sub">Based on filtered logs</div>
         `;
 
         const pad = 14;
