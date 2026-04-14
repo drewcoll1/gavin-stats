@@ -280,6 +280,11 @@ body {
     color: #ffffff;
 }
 
+.selected-game-stats .stat .v,
+.selected-game-stats .stat-full .v {
+    font-size: 32px !important;
+    font-weight: 900;
+}
 
 /* =========================================================
    4. TOP CONTROLS / HERO PILL
@@ -600,7 +605,7 @@ body {
 }
 
 .stat-full .v {
-    font-size: 22px;
+    font-size: 32px;
     font-weight: 900;
 }
 
@@ -3016,7 +3021,7 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         $("#summaryStrip").innerHTML = [
             { k: "AVG", v: fmt3(officialBat.AVG), s: "Batting average" },
             { k: "OBP", v: fmt3(officialBat.OBP), s: "On-base percentage" },
-            { k: "OPS", v: fmt3(officialBat.OPS), s: "On-base + slugging" },
+            { k: "OPS", v: fmt3(officialBat.OPS), s: "OBP + SLG" },
             { k: "GP", v: officialBat.GP, s: "Games played" },
             { k: "R", v: officialBat.R, s: "Runs" },
             { k: "RBI", v: officialBat.RBI, s: "Runs batted in" },
@@ -3151,7 +3156,7 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
                     <div class="stat">
                         <div class="k">OPS</div>
                         <div class="v">${fmt3(opsObj.ops)}</div>
-                        <div class="s">On-base + Slugging %</div>
+                        <div class="s">OBP + SLG %</div>
                     </div>
                 </div>
             </div>
