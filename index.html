@@ -3026,7 +3026,7 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
             { k: "R", v: officialBat.R, s: "Runs" },
             { k: "RBI", v: officialBat.RBI, s: "Runs batted in" },
             { k: "TB", v: officialBat.TB, s: "Total bases" },
-            { k: "H / AB", v: `${officialBat.H} / ${officialBat.AB}`, s: "", full: true }
+            { k: "H / AB", v: `${officialBat.H} / ${officialBat.AB}`, s: ""}
         ].map(x => `
             <div class="stat ${x.full ? "stat-full" : ""}">
                 <div class="k">${x.k}</div>
