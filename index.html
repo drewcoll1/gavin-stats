@@ -3004,29 +3004,25 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         return raw;
     }
 
-    function renderTeamSummaryBar() {
+   function renderTeamSummaryBar() {
     const strip = $("#teamRecordStrip");
     if (!strip) return;
 
     const rec = teamRecords[currentSeason] || teamRecords["career"];
 
-    // 🔥 ADD THIS helper
     function pctFromRecord(record) {
         if (!record) return "—";
         const [w, l] = record.split("-").map(Number);
         const total = w + l;
-        return total ? ((w / total) * 100).toFixed(1) + "%" : "—";
+        return total ? (w / total).toFixed(3) : "—";
     }
 
     strip.innerHTML = [
         { k: "Overall", v: rec.overall, s: rec.overallPct },
         { k: "Conference", v: rec.conf, s: rec.confPct },
-
-        // ✅ FIXED THESE 3
         { k: "Home", v: rec.home, s: pctFromRecord(rec.home) },
         { k: "Away", v: rec.away, s: pctFromRecord(rec.away) },
         { k: "Neutral", v: rec.neutral, s: pctFromRecord(rec.neutral) }
-
     ].map(x => `
         <div class="stat">
             <div class="k">${x.k}</div>
