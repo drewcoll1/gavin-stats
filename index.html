@@ -3004,17 +3004,20 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
         return raw;
     }
 
-   function renderTeamSummaryBar() {
+function renderTeamSummaryBar() {
     const strip = $("#teamRecordStrip");
     if (!strip) return;
 
     const rec = teamRecords[currentSeason] || teamRecords["career"];
 
     function pctFromRecord(record) {
-        if (!record) return "—";
+        if (!record) return ".000";
         const [w, l] = record.split("-").map(Number);
         const total = w + l;
-        return total ? (w / total).toFixed(3) : "—";
+
+        return total
+            ? (w / total).toFixed(3).replace(/^0/, "")
+            : ".000";
     }
 
     strip.innerHTML = [
