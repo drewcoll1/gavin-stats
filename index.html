@@ -3441,9 +3441,12 @@ if (teamSummaryTitle) {
         const t = computeBattingTotals(rows);
         const { avg, slg, ops } = computeOPSFromTotals(t);
 
-        strip.innerHTML = [
-    { k: "REC", v: `${wins}-${losses}`, s: "Team record vs opponent" },
-    { k: "G", v: rows.length, s: "Games vs Opponent" },
+        const recLabel = (currentSeason === "career")
+    ? `Career Record vs ${opponent}`
+    : `${currentSeason} Record vs ${opponent}`;
+
+strip.innerHTML = [
+    { k: "REC", v: `${wins}-${losses}`, s: recLabel },
     { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
     { k: "AVG", v: fmt3(avg), s: "H / AB" },
     { k: "SLG", v: fmt3(slg), s: "TB / AB" },
