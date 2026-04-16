@@ -534,6 +534,9 @@ body {
     gap: 10px;
     width: 100%;
     min-width: 0;
+    #summaryStrip > .stat:last-child {
+    grid-column: 2 / 3;
+}
 }
 
 .stat {
@@ -3071,7 +3074,7 @@ function renderTeamSummaryBar() {
             { k: "R", v: officialBat.R, s: "Runs" },
             { k: "RBI", v: officialBat.RBI, s: "Runs Batted In" },
             { k: "TB", v: officialBat.TB, s: "Total Bases" },
-            { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats", full: true }
+            { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats" }
         ].map(x => `
             <div class="stat">
                 <div class="k">${x.k}</div>
