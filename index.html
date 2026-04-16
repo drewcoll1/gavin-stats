@@ -3100,7 +3100,8 @@ function renderTeamSummaryBar() {
     }
 
     /* ------------ SELECTED GAME SUMMARY ------------ */
-    function showSelectedBattingGame(r) {
+
+function showSelectedBattingGame(r) {
     selectedBattingGame = r;
 
     const battingRow = findRowByGame("battingBody", r);
@@ -3195,12 +3196,8 @@ function renderTeamSummaryBar() {
     `;
 
     const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-
-    if (panelTitle) panelTitle.textContent = "";
-
-    if (panelSub) {
-        panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result || ""}</span>`;
+    if (panelTitle) {
+        panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
     }
 
     const chartWrap = document.querySelector("#summary-batting .chart-wrap");
@@ -3216,6 +3213,7 @@ function renderTeamSummaryBar() {
 
     restoreSelectedRows();
 }
+
 function showSelectedFieldingGame(r, tr = null) {
     selectedFieldingGame = r;
 
@@ -3276,17 +3274,12 @@ function showSelectedFieldingGame(r, tr = null) {
     `;
 
     const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-
-    if (panelTitle) panelTitle.textContent = "";
-
-    if (panelSub) {
-        panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result || ""}</span>`;
+    if (panelTitle) {
+        panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
     }
 
     restoreSelectedRows();
 }
-
     /* ------------ TABS ------------ */
     function setTab(tabName) {
         document.querySelectorAll(".tab").forEach(t => {
