@@ -1716,7 +1716,6 @@ td[data-label="Opponent"] .opp-emoji {
                     <div class="panel-head">
                         <div>
                             <h2 class="panel-title" id="summaryPanelTitle"></h2>
-                            <p class="panel-sub">Batting and fielding at a glance.</p>
                         </div>
                     </div>
 
@@ -3197,7 +3196,6 @@ function renderTeamSummaryBar() {
 
         const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
         const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-        if (panelTitle) panelTitle.textContent = "Game Summary";
         if (panelSub) {
     panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result}</span>`;
 }
