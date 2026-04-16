@@ -3071,7 +3071,7 @@ function renderTeamSummaryBar() {
             { k: "R", v: officialBat.R, s: "Runs" },
             { k: "RBI", v: officialBat.RBI, s: "Runs Batted In" },
             { k: "TB", v: officialBat.TB, s: "Total Bases" },
-            { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats" }
+            { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats", full: true }
         ].map(x => `
             <div class="stat">
                 <div class="k">${x.k}</div>
