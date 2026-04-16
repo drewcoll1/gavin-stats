@@ -3065,13 +3065,13 @@ function renderTeamSummaryBar() {
         const hitTypes = computeHitTypeTotals(battingLog);
 
         $("#summaryStrip").innerHTML = [
-            { k: "AVG", v: fmt3(officialBat.AVG), s: "Batting average" },
-            { k: "OBP", v: fmt3(officialBat.OBP), s: "On-base percentage" },
+            { k: "AVG", v: fmt3(officialBat.AVG), s: "Batting Average" },
+            { k: "OBP", v: fmt3(officialBat.OBP), s: "On-Base Percentage" },
             { k: "OPS", v: fmt3(officialBat.OPS), s: "OBP + SLG" },
-            { k: "GP", v: officialBat.GP, s: "Games played" },
+            { k: "GP", v: officialBat.GP, s: "Games Played" },
             { k: "R", v: officialBat.R, s: "Runs" },
-            { k: "RBI", v: officialBat.RBI, s: "Runs batted in" },
-            { k: "TB", v: officialBat.TB, s: "Total bases" },
+            { k: "RBI", v: officialBat.RBI, s: "Runs Batted In" },
+            { k: "TB", v: officialBat.TB, s: "Total Bases" },
             { k: "H / AB", v: `${officialBat.H} / ${officialBat.AB}`, s: ""}
         ].map(x => `
             <div class="stat ${x.full ? "stat-full" : ""}">
