@@ -580,7 +580,10 @@ body {
     overflow: visible;
     text-overflow: clip;
     white-space: nowrap;
-    font-size: clamp(20px, 3vw, 32px);
+    font-size: 32px;
+}
+#summaryStrip > .stat:last-child {
+    min-width: max-content;
 }
 
 .stat .s {
