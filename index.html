@@ -3073,7 +3073,7 @@ function renderTeamSummaryBar() {
             { k: "TB", v: officialBat.TB, s: "Total Bases" },
             { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats" }
         ].map(x => `
-            <div class="stat ${x.full ? "stat-full" : ""}">
+            <div class="stat">
                 <div class="k">${x.k}</div>
                 <div class="v">${x.v}</div>
                 <div class="s">${x.s}</div>
