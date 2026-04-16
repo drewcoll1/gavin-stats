@@ -576,6 +576,12 @@ body {
     font-weight: 900;
     letter-spacing: .2px;
 }
+#summaryStrip > .stat:last-child .v {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+    font-size: clamp(20px, 3vw, 32px);
+}
 
 .stat .s {
     margin-top: 4px;
