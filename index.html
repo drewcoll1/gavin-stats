@@ -1555,7 +1555,7 @@ td[data-label="Opponent"] .opp-emoji {
                                     </div>
 
                                     <div class="player-meta-inline">
-                                        <span><strong>#16</strong> • RF • B/T: R/L</span>
+                                        <span><strong>#16</strong> • LF • B/T: R/L</span>
                                         <span class="meta-divider">•</span>
                                         <span id="heroSeasonText">2025</span> Game Log
                                     </div>
@@ -3005,24 +3005,36 @@ const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
     }
 
     function renderTeamSummaryBar() {
-        const strip = $("#teamRecordStrip");
-        if (!strip) return;
+    const strip = $("#teamRecordStrip");
+    if (!strip) return;
 
-        const rec = teamRecords[currentSeason] || teamRecords["career"];
-        strip.innerHTML = [
-            { k: "Overall", v: rec.overall, s: rec.overallPct },
-            { k: "Conference", v: rec.conf, s: rec.confPct },
-            { k: "Home", v: rec.home, s: "Home record" },
-            { k: "Away", v: rec.away, s: "Away record" },
-            { k: "Neutral", v: rec.neutral, s: "Neutral record" }
-        ].map(x => `
-            <div class="stat">
-                <div class="k">${x.k}</div>
-                <div class="v">${x.v}</div>
-                <div class="s">${x.s}</div>
-            </div>
-        `).join("");
+    const rec = teamRecords[currentSeason] || teamRecords["career"];
+
+    // 🔥 ADD THIS helper
+    function pctFromRecord(record) {
+        if (!record) return "—";
+        const [w, l] = record.split("-").map(Number);
+        const total = w + l;
+        return total ? ((w / total) * 100).toFixed(1) + "%" : "—";
     }
+
+    strip.innerHTML = [
+        { k: "Overall", v: rec.overall, s: rec.overallPct },
+        { k: "Conference", v: rec.conf, s: rec.confPct },
+
+        // ✅ FIXED THESE 3
+        { k: "Home", v: rec.home, s: pctFromRecord(rec.home) },
+        { k: "Away", v: rec.away, s: pctFromRecord(rec.away) },
+        { k: "Neutral", v: rec.neutral, s: pctFromRecord(rec.neutral) }
+
+    ].map(x => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
 
     function renderSummary() {
         renderTeamSummaryBar();
