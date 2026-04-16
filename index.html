@@ -3101,183 +3101,191 @@ function renderTeamSummaryBar() {
 
     /* ------------ SELECTED GAME SUMMARY ------------ */
     function showSelectedBattingGame(r) {
-        selectedBattingGame = r;
+    selectedBattingGame = r;
 
-        const battingRow = findRowByGame("battingBody", r);
-        if (battingRow) setSelectedRow("battingBody", battingRow);
+    const battingRow = findRowByGame("battingBody", r);
+    if (battingRow) setSelectedRow("battingBody", battingRow);
 
-        const matchingFieldingGame = findMatchingFieldingGame(r);
-        if (matchingFieldingGame) {
-            selectedFieldingGame = matchingFieldingGame;
-        }
+    const matchingFieldingGame = findMatchingFieldingGame(r);
+    if (matchingFieldingGame) {
+        selectedFieldingGame = matchingFieldingGame;
+    }
 
-        const summaryLogoBatting = document.getElementById("summaryLogoBatting");
-        if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
+    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
+    if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
 
-        const totals = computeBattingTotals([r]);
-        const rates = computeAdvancedFromLog(totals);
-        const opsObj = computeOPSFromTotals(totals);
-        const hitTypes = computeHitTypeTotals([r]);
+    const totals = computeBattingTotals([r]);
+    const rates = computeAdvancedFromLog(totals);
+    const opsObj = computeOPSFromTotals(totals);
+    const hitTypes = computeHitTypeTotals([r]);
 
-        const logoSrc = logoMap[r.opponent] || "";
-        const logoHTML = logoSrc
-            ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
-            : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
+    const logoSrc = logoMap[r.opponent] || "";
+    const logoHTML = logoSrc
+        ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
+        : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
 
-        $("#summaryStrip").innerHTML = `
-            <div class="selected-game-layout">
-                <div class="selected-game-top">
-    <div class="selected-game-logo-wrap">${logoHTML}</div>
-</div>
+    $("#summaryStrip").innerHTML = `
+        <div class="selected-game-layout">
+            <div class="selected-game-top">
+                <div class="selected-game-logo-wrap">${logoHTML}</div>
+            </div>
 
-                <div class="selected-game-stats">
-                    <div class="stat stat-full">
-                        <div class="k">H / AB</div>
-                        <div class="v">${r.H}  /  ${r.AB}</div>
-                        <div class="s">Hits / At Bats</div>
-                    </div>
+            <div class="selected-game-stats">
+                <div class="stat stat-full">
+                    <div class="k">H / AB</div>
+                    <div class="v">${r.H} / ${r.AB}</div>
+                    <div class="s">Hits / At Bats</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">R</div>
-                        <div class="v">${r.R}</div>
-                        <div class="s">Runs</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">R</div>
+                    <div class="v">${r.R}</div>
+                    <div class="s">Runs</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">RBI</div>
-                        <div class="v">${r.RBI}</div>
-                        <div class="s">Runs Batted In</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">RBI</div>
+                    <div class="v">${r.RBI}</div>
+                    <div class="s">Runs Batted In</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">2B</div>
-                        <div class="v">${r["2B"]}</div>
-                        <div class="s">Doubles</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">2B</div>
+                    <div class="v">${r["2B"]}</div>
+                    <div class="s">Doubles</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">3B</div>
-                        <div class="v">${r["3B"]}</div>
-                        <div class="s">Triples</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">3B</div>
+                    <div class="v">${r["3B"]}</div>
+                    <div class="s">Triples</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">HR</div>
-                        <div class="v">${r.HR}</div>
-                        <div class="s">Home Runs</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">HR</div>
+                    <div class="v">${r.HR}</div>
+                    <div class="s">Home Runs</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">TB</div>
-                        <div class="v">${totals.TB}</div>
-                        <div class="s">Total Bases</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">TB</div>
+                    <div class="v">${totals.TB}</div>
+                    <div class="s">Total Bases</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">AVG</div>
-                        <div class="v">${fmt3(rates.AVG)}</div>
-                        <div class="s">Batting Average</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">AVG</div>
+                    <div class="v">${fmt3(rates.AVG)}</div>
+                    <div class="s">Batting Average</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">SLG</div>
-                        <div class="v">${fmt3(opsObj.slg)}</div>
-                        <div class="s">Slugging %</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">SLG</div>
+                    <div class="v">${fmt3(opsObj.slg)}</div>
+                    <div class="s">Slugging %</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">OPS</div>
-                        <div class="v">${fmt3(opsObj.ops)}</div>
-                        <div class="s">OBP + SLG %</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">OPS</div>
+                    <div class="v">${fmt3(opsObj.ops)}</div>
+                    <div class="s">OBP + SLG %</div>
                 </div>
             </div>
-        `;
+        </div>
+    `;
 
-        const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-        const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-        if (panelSub) {
-    panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result}</span>`;
+    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+
+    if (panelTitle) panelTitle.textContent = "";
+
+    if (panelSub) {
+        panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result || ""}</span>`;
+    }
+
+    const chartWrap = document.querySelector("#summary-batting .chart-wrap");
+    const chartCanvas = document.getElementById("hitTypeChart");
+
+    if (chartWrap) chartWrap.style.display = "";
+
+    if (chartCanvas) {
+        seasonHitPie.render(chartCanvas, ["1B", "2B", "3B", "HR"], [
+            hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs
+        ]);
+    }
+
+    restoreSelectedRows();
 }
+function showSelectedFieldingGame(r, tr = null) {
+    selectedFieldingGame = r;
 
-        const chartWrap = document.querySelector("#summary-batting .chart-wrap");
-        const chartCanvas = document.getElementById("hitTypeChart");
-        if (chartWrap) chartWrap.style.display = "";
-        if (chartCanvas) {
-            seasonHitPie.render(chartCanvas, ["1B", "2B", "3B", "HR"], [
-                hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs
-            ]);
-        }
+    const fieldingRow = tr || findRowByGame("fieldingBody", r);
+    if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
 
-        restoreSelectedRows();
+    const matchingBattingGame = findMatchingBattingGame(r);
+    if (matchingBattingGame) {
+        selectedBattingGame = matchingBattingGame;
     }
 
-    function showSelectedFieldingGame(r, tr = null) {
-        selectedFieldingGame = r;
+    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
+    if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
 
-        const fieldingRow = tr || findRowByGame("fieldingBody", r);
-        if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
+    const logoSrc = logoMap[r.opponent] || "";
+    const logoHTML = logoSrc
+        ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
+        : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
 
-        const matchingBattingGame = findMatchingBattingGame(r);
-        if (matchingBattingGame) {
-            selectedBattingGame = matchingBattingGame;
-        }
+    $("#fieldingStrip").innerHTML = `
+        <div class="selected-game-layout">
+            <div class="selected-game-top">
+                <div class="selected-game-logo-wrap">${logoHTML}</div>
+            </div>
 
-        const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-        if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
+            <div class="selected-game-stats">
+                <div class="stat">
+                    <div class="k">TC</div>
+                    <div class="v">${r.TC}</div>
+                    <div class="s">Total chances</div>
+                </div>
 
-        const logoSrc = logoMap[r.opponent] || "";
-        const logoHTML = logoSrc
-            ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
-            : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
+                <div class="stat">
+                    <div class="k">PO</div>
+                    <div class="v">${r.PO}</div>
+                    <div class="s">Putouts</div>
+                </div>
 
-        $("#fieldingStrip").innerHTML = `
-            <div class="selected-game-layout">
-                <div class="selected-game-top">
-    <div class="selected-game-logo-wrap">${logoHTML}</div>
-</div>
+                <div class="stat">
+                    <div class="k">A</div>
+                    <div class="v">${r.A}</div>
+                    <div class="s">Assists</div>
+                </div>
 
-                <div class="selected-game-stats">
-                    <div class="stat">
-                        <div class="k">TC</div>
-                        <div class="v">${r.TC}</div>
-                        <div class="s">Total chances</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">E</div>
+                    <div class="v">${r.E}</div>
+                    <div class="s">Errors</div>
+                </div>
 
-                    <div class="stat">
-                        <div class="k">PO</div>
-                        <div class="v">${r.PO}</div>
-                        <div class="s">Putouts</div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="k">A</div>
-                        <div class="v">${r.A}</div>
-                        <div class="s">Assists</div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="k">E</div>
-                        <div class="v">${r.E}</div>
-                        <div class="s">Errors</div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="k">FPCT</div>
-                        <div class="v">${fmt3(r.FPCT)}</div>
-                        <div class="s">Fielding %</div>
-                    </div>
+                <div class="stat">
+                    <div class="k">FPCT</div>
+                    <div class="v">${fmt3(r.FPCT)}</div>
+                    <div class="s">Fielding %</div>
                 </div>
             </div>
-        `;
+        </div>
+    `;
 
-        const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-        const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-        if (panelTitle) panelTitle.textContent = "Game Summary";
-        if (panelSub) panelSub.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
+    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
 
-        restoreSelectedRows();
+    if (panelTitle) panelTitle.textContent = "";
+
+    if (panelSub) {
+        panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result || ""}</span>`;
     }
+
+    restoreSelectedRows();
+}
 
     /* ------------ TABS ------------ */
     function setTab(tabName) {
