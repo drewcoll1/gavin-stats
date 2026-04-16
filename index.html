@@ -493,13 +493,17 @@ body {
     color: #ffffff;
 }
 
-
+.summary-big {
+    font-size: 28px;
+    font-weight: 900;
+    display: block;
+    line-height: 1.2;
+}
 
 .panel-sub {
     margin: 6px 0 0;
     max-width: 70ch;
-    font-size: 28px;     /* ⬅️ MATCH TITLE */
-    font-weight: 900;    /* ⬅️ MATCH TITLE */
+    font-size: 12px;
     color: #ffffff;
 }
 
@@ -3195,7 +3199,7 @@ function renderTeamSummaryBar() {
         const panelSub = document.querySelector(".grid > .panel:last-child .panel-sub");
         if (panelTitle) panelTitle.textContent = "Game Summary";
         if (panelSub) {
-    panelSub.innerHTML = `${r.date} • ${r.opponent} • ${r.result}`;
+    panelSub.innerHTML = `<span class="summary-big">${r.date} • ${r.opponent} • ${r.result}</span>`;
 }
 
         const chartWrap = document.querySelector("#summary-batting .chart-wrap");
