@@ -3068,7 +3068,7 @@ function renderTeamSummaryBar() {
             { k: "PO", v: logFldTotals.PO, s: "Putouts" },
             { k: "A", v: logFldTotals.A, s: "Assists" },
             { k: "E", v: logFldTotals.E, s: "Errors" },
-            { k: "FPCT", v: fmt3(logFldTotals.FPCT), s: "(PO + A) / (PO + A + E)" }
+            { k: "FPCT", v: fmt3(logFldTotals.FPCT), s: "Fielding %" }
         ].map(x => `
             <div class="stat">
                 <div class="k">${x.k}</div>
