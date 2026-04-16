@@ -3262,7 +3262,7 @@ function renderTeamSummaryBar() {
                     <div class="stat">
                         <div class="k">FPCT</div>
                         <div class="v">${fmt3(r.FPCT)}</div>
-                        <div class="s">Fielding Percentage</div>
+                        <div class="s">Fielding %</div>
                     </div>
                 </div>
             </div>
@@ -3475,7 +3475,7 @@ strip.innerHTML = [
             { k: "PO", v: fld.PO, s: "Putouts" },
             { k: "A", v: fld.A, s: "Assists" },
             { k: "E", v: fld.E, s: "Errors" },
-            { k: "FPCT", v: fmt3(fld.FPCT), s: "(PO + A) / (PO + A + E)" }
+            { k: "FPCT", v: fmt3(fld.FPCT), s: "Fielding %" }
         ].map(x => `
             <div class="stat">
                 <div class="k">${x.k}</div>
