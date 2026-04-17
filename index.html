@@ -2462,10 +2462,10 @@ td[data-label="Opponent"] .opp-emoji {
         return;
     }
 
-    const cx = w * 0.28;
-    const cy = h * 0.56;
-    const radius = 58;
-    const lineWidth = 20;
+    const cx = w * 0.24;
+const cy = h * 0.54;
+const radius = 50;
+const lineWidth = 18;
 
     const startAngle = -Math.PI / 2;
     const cleanAngle = (clean / total) * Math.PI * 2;
@@ -2505,37 +2505,39 @@ td[data-label="Opponent"] .opp-emoji {
     ctx.fillText("FPCT", cx, cy + 24);
 
     // right-side legend/stats
-    const legendX = w * 0.52;
-    const topY = 62;
+    const legendX = w * 0.48;
+const topY = 56;
 
     const items = [
         { label: "Clean Plays", value: clean, sub: `${po} PO + ${a} A`, color: "#173d82" },
-        { label: "Errors", value: e, sub: "Misplays", color: "#cc0000" },
-        { label: "Total Chances", value: total, sub: "PO + A + E", color: "#ffffff" }
+        { label: "Errors", value: e, sub: "", color: "#cc0000" },
+        { label: "Total Chances", value: total, sub: "", color: "#ffffff" }
     ];
 
-    items.forEach((item, i) => {
-        const y = topY + i * 52;
+   items.forEach((item, i) => {
+    const y = topY + i * 48;
 
-        if (item.label !== "Total Chances") {
-            ctx.fillStyle = item.color;
-            ctx.fillRect(legendX, y - 10, 14, 14);
-        } else {
-            ctx.strokeStyle = "rgba(255,255,255,.5)";
-            ctx.strokeRect(legendX, y - 10, 14, 14);
-        }
+    if (item.label !== "Total Chances") {
+        ctx.fillStyle = item.color;
+        ctx.fillRect(legendX, y - 8, 12, 12);
+    } else {
+        ctx.strokeStyle = "rgba(255,255,255,.5)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(legendX, y - 8, 12, 12);
+    }
 
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "left";
-        ctx.font = "800 13px system-ui";
-        ctx.fillText(item.label, legendX + 24, y + 1);
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "left";
+    ctx.font = "800 12px system-ui";
+    ctx.fillText(item.label, legendX + 20, y + 1);
 
-        ctx.font = "900 22px system-ui";
-        ctx.fillText(String(item.value), legendX + 24, y + 25);
+    ctx.font = "900 19px system-ui";
+    ctx.fillText(String(item.value), legendX + 20, y + 20);
 
-        ctx.fillStyle = "rgba(255,255,255,.72)";
-        ctx.font = "12px system-ui";
-        ctx.fillText(item.sub, legendX + 24, y + 42);
+    ctx.fillStyle = "rgba(255,255,255,.72)";
+    ctx.font = "11px system-ui";
+    ctx.fillText(item.sub, legendX + 20, y + 35);
+});
     });
 
     ctx.fillStyle = "rgba(255,255,255,.72)";
