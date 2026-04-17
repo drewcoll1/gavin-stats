@@ -2466,11 +2466,6 @@ function renderFieldingChart(canvas, totals) {
     const total = clean + e;
     const fpct = total ? clean / total : NaN;
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "800 14px system-ui";
-    ctx.textAlign = "left";
-    ctx.fillText("Fielding Efficiency", 14, 22);
-
     if (!total) {
         ctx.fillStyle = "rgba(255,255,255,.72)";
         ctx.font = "700 14px system-ui";
@@ -2526,40 +2521,37 @@ const lineWidth = 22;
     ctx.font = "12px ui-sans-serif";
     ctx.fillText("FPCT", cx, cy + 24);
 
-    // compact legend area on right
-    const legendX = w * 0.66;
+   const legendX = w * 0.62;
 const startY = h * 0.24;
-    const items = [
-        { label: "Clean", value: clean, meta: `${po} PO + ${a} A`, color: "#173d82", box: true },
-        { label: "Errors", value: e, meta: "Misplays", color: "#cc0000", box: true },
-        { label: "TC", value: total, meta: "Total Chances", color: "#ffffff", box: false }
-    ];
+const items = [
+    { label: "Clean", value: clean, meta: `${po} PO + ${a} A`, color: "#173d82", box: true },
+    { label: "Errors", value: e, meta: "", color: "#cc0000", box: true },
+    { label: "TC", value: total, meta: "", color: "#ffffff", box: false }
+];
 
-    ctx.textAlign = "left";
+ctx.textAlign = "left";
 
-    items.forEach((item, i) => {
-        const y = startY + i * 40;
+items.forEach((item, i) => {
+    const y = startY + i * 34;
 
-        if (item.box) {
-            ctx.fillStyle = item.color;
-            ctx.fillRect(legendX, y - 8, 12, 12);
-        } else {
-            ctx.strokeStyle = "rgba(255,255,255,.45)";
-            ctx.lineWidth = 1;
-            ctx.strokeRect(legendX, y - 8, 12, 12);
-        }
+    if (item.box) {
+        ctx.fillStyle = item.color;
+        ctx.fillRect(legendX, y - 10, 22, 14);
+    } else {
+        ctx.strokeStyle = "rgba(255,255,255,.45)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(legendX, y - 10, 22, 14);
+    }
 
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "700 12px ui-sans-serif";
-        ctx.fillText(item.label, legendX + 20, y + 1);
+    ctx.fillStyle = "rgba(255,255,255,.92)";
+    ctx.font = "700 13px ui-sans-serif";
+    ctx.fillText(item.label, legendX + 32, y + 1);
 
-        ctx.font = "700 12px ui-sans-serif";
-        ctx.fillText(String(item.value), legendX + 78, y + 1);
-
-        ctx.fillStyle = "rgba(255,255,255,.65)";
-        ctx.font = "11px ui-sans-serif";
-        ctx.fillText(item.meta, legendX + 20, y + 16);
-    });
+    ctx.fillStyle = "rgba(255,255,255,.65)";
+    ctx.font = "13px ui-sans-serif";
+    const valueText = item.meta ? `${item.value} (${item.meta})` : `${item.value}`;
+    ctx.fillText(valueText, legendX + 78, y + 1);
+});
 
     ctx.fillStyle = "rgba(255,255,255,.65)";
     ctx.font = "12px ui-sans-serif";
