@@ -2479,68 +2479,9 @@ function renderFieldingChart(canvas, totals) {
     const radius = Math.min(w, h) * 0.31;
     const lineWidth = 22;
 
-    const hover = canvas.__fieldingHover || { index: -1 };
-    const slices = [
-        {
-            label: "Clean",
-            value: clean,
-            color: "#173d82",
-            start: -Math.PI / 2,
-            end: -Math.PI / 2 + (clean / total) * Math.PI * 2
-        },
-        {
-            label: "Errors",
-            value: e,
-            color: "#cc0000",
-            start: -Math.PI / 2 + (clean / total) * Math.PI * 2,
-            end: -Math.PI / 2 + Math.PI * 2
-        }
-    ];
-
-    function pointInSlice(mx, my, slice) {
-        const dx = mx - cx;
-        const dy = my - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        const innerR = radius - lineWidth;
-        const outerR = radius + lineWidth / 2;
-
-        if (dist < innerR || dist > outerR) return false;
-
-        let angle = Math.atan2(dy, dx);
-        if (angle < -Math.PI / 2) angle += Math.PI * 2;
-
-        let start = slice.start;
-        let end = slice.end;
-        if (start < -Math.PI / 2) start += Math.PI * 2;
-        if (end < -Math.PI / 2) end += Math.PI * 2;
-
-        if (end < start) {
-            return angle >= start || angle <= end;
-        }
-        return angle >= start && angle <= end;
-    }
-
-    function drawSlice(slice, isHovered) {
-        const mid = (slice.start + slice.end) / 2;
-        const pop = isHovered ? 8 : 0;
-        const ox = Math.cos(mid) * pop;
-        const oy = Math.sin(mid) * pop;
-
-        ctx.beginPath();
-        ctx.arc(cx + ox, cy + oy, radius, slice.start, slice.end);
-        ctx.strokeStyle = slice.color;
-        ctx.lineWidth = lineWidth;
-        ctx.lineCap = "butt";
-
-        ctx.shadowColor = isHovered ? "rgba(0,0,0,.45)" : "transparent";
-        ctx.shadowBlur = isHovered ? 14 : 0;
-        ctx.shadowOffsetY = isHovered ? 6 : 0;
-        ctx.stroke();
-
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
-    }
+    const startAngle = -Math.PI / 2;
+    const poAngle = total ? (po / total) * Math.PI * 2 : 0;
+    const aAngle = total ? (a / total) * Math.PI * 2 : 0;
 
     // background ring
     ctx.beginPath();
@@ -2549,8 +2490,29 @@ function renderFieldingChart(canvas, totals) {
     ctx.lineWidth = lineWidth;
     ctx.stroke();
 
-    drawSlice(slices[0], hover.index === 0);
-    drawSlice(slices[1], hover.index === 1);
+    // putouts
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle, startAngle + poAngle);
+    ctx.strokeStyle = "#173d82";
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "butt";
+    ctx.stroke();
+
+    // assists
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle + poAngle, startAngle + poAngle + aAngle);
+    ctx.strokeStyle = "#4f8cff";
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "butt";
+    ctx.stroke();
+
+    // errors
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle + poAngle + aAngle, startAngle + Math.PI * 2);
+    ctx.strokeStyle = "#cc0000";
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "butt";
+    ctx.stroke();
 
     // center fill
     ctx.fillStyle = "rgba(0,0,0,.35)";
@@ -2572,8 +2534,9 @@ function renderFieldingChart(canvas, totals) {
     const legendX = w * 0.62;
     const startY = h * 0.28;
     const items = [
-        { label: "Clean", value: clean, meta: `${po} PO + ${a} A`, color: "#173d82", box: true },
-        { label: "Errors", value: e, meta: "", color: "#cc0000", box: true }
+        { label: "Putouts", value: po, meta: `${po}/${total} putouts`, color: "#173d82" },
+        { label: "Assists", value: a, meta: `${a}/${total} assists`, color: "#4f8cff" },
+        { label: "Errors", value: e, meta: `${e}/${total} errors`, color: "#cc0000" }
     ];
 
     ctx.textAlign = "left";
@@ -2590,59 +2553,14 @@ function renderFieldingChart(canvas, totals) {
 
         ctx.fillStyle = "rgba(255,255,255,.65)";
         ctx.font = "13px ui-sans-serif";
-        const valueText = item.meta ? `${item.value} (${item.meta})` : `${item.value}`;
-        ctx.fillText(valueText, legendX + 78, y + 1);
+        ctx.fillText(String(item.value), legendX + 110, y + 1);
     });
 
-    // bottom text pushed lower
+    // bottom line
     ctx.fillStyle = "rgba(255,255,255,.65)";
     ctx.font = "12px ui-sans-serif";
     ctx.textAlign = "left";
-    ctx.fillText(`${clean}/${total} chances handled cleanly`, 14, h - 4);
-
-    // hover interactions
-    if (!canvas.__fieldingHoverBound) {
-        canvas.addEventListener("mousemove", (evt) => {
-            const r = canvas.getBoundingClientRect();
-            const mx = evt.clientX - r.left;
-            const my = evt.clientY - r.top;
-
-            let hoveredIndex = -1;
-            if (pointInSlice(mx, my, slices[0])) hoveredIndex = 0;
-            else if (pointInSlice(mx, my, slices[1])) hoveredIndex = 1;
-
-            canvas.__fieldingHover = { index: hoveredIndex };
-
-            const tip = document.getElementById("tooltip");
-            if (tip && hoveredIndex >= 0) {
-                const s = slices[hoveredIndex];
-                const pct = total ? ((s.value / total) * 100).toFixed(1) : "0.0";
-
-                tip.innerHTML = `
-                    <div class="tip-title">Fielding</div>
-                    <div class="tip-row"><span class="k">Type</span><span class="v">${s.label}</span></div>
-                    <div class="tip-row"><span class="k">Count</span><span class="v">${s.value}</span></div>
-                    <div class="tip-row"><span class="k">Share</span><span class="v">${pct}%</span></div>
-                `;
-                tip.style.left = `${evt.pageX + 14}px`;
-                tip.style.top = `${evt.pageY + 14}px`;
-                tip.classList.add("show");
-            } else if (tip) {
-                tip.classList.remove("show");
-            }
-
-            renderFieldingChart(canvas, totals);
-        });
-
-        canvas.addEventListener("mouseleave", () => {
-            canvas.__fieldingHover = { index: -1 };
-            const tip = document.getElementById("tooltip");
-            if (tip) tip.classList.remove("show");
-            renderFieldingChart(canvas, totals);
-        });
-
-        canvas.__fieldingHoverBound = true;
-    }
+    ctx.fillText(`${po}/${total} putouts`, 14, h - 4);
 }
 /* ------------ HIT PIE CHART ------------ */
 function createHitPie() {
