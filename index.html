@@ -2225,204 +2225,221 @@ td[data-label="Opponent"] .opp-emoji {
             SLG: 0.337, BB: 11, HBP: 9, SO: 18, GDP: 1, OBP: 0.349, SF: 2, SH: 0, SB: 7, SBAtt: 8
         }
     };
+/* ------------ HELPERS ------------ */
+const $ = (sel) => document.querySelector(sel);
 
-    /* ------------ HELPERS ------------ */
-    const $ = (sel) => document.querySelector(sel);
+function parseHAB(hab) {
+    const parts = String(hab).split("-");
+    return { H: Number(parts[0] || 0), AB: Number(parts[1] || 0) };
+}
 
-    function parseHAB(hab) {
-        const parts = String(hab).split("-");
-        return { H: Number(parts[0] || 0), AB: Number(parts[1] || 0) };
+function toDateValue(mmddyyyy) {
+    const [m, d, y] = mmddyyyy.split("/");
+    return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+function fmt3(x) {
+    if (!isFinite(x)) return "—";
+    const v = Math.round(x * 1000) / 1000;
+    return v < 1 ? v.toFixed(3).replace("0.", ".") : v.toFixed(3);
+}
+
+function safeDiv(a, b) {
+    return b === 0 ? NaN : (a / b);
+}
+
+function logoFor(opponent) {
+    return logoMap[opponent] || "";
+}
+
+function initials(opponent) {
+    const clean = String(opponent)
+        .replace(/\(.*?\)/g, "")
+        .replace(/[^A-Za-z\s']/g, "")
+        .trim();
+    const parts = clean.split(/\s+/).filter(Boolean);
+    const a = parts[0]?.[0] || "?";
+    const b = parts[1]?.[0] || "";
+    return (a + b).toUpperCase();
+}
+
+function computeBattingTotals(rows) {
+    const t = { H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
+    for (const g of rows) {
+        t.H += g.H || 0;
+        t.AB += g.AB || 0;
+        t.R += g.R || 0;
+        t["2B"] += g["2B"] || 0;
+        t["3B"] += g["3B"] || 0;
+        t.HR += g.HR || 0;
+        t.RBI += g.RBI || 0;
+        t.TB += g.TB || 0;
+    }
+    return t;
+}
+
+function computeHitTypeTotals(rows) {
+    let singles = 0, doubles = 0, triples = 0, hrs = 0;
+
+    for (const g of rows) {
+        doubles += g["2B"] || 0;
+        triples += g["3B"] || 0;
+        hrs += g.HR || 0;
+        singles += Math.max(
+            0,
+            (g.H || 0) - (g["2B"] || 0) - (g["3B"] || 0) - (g.HR || 0)
+        );
     }
 
-    function toDateValue(mmddyyyy) {
-        const [m, d, y] = mmddyyyy.split("/");
-        return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    return { singles, doubles, triples, hrs };
+}
+
+function computeAdvancedFromLog(t) {
+    return {
+        AVG: safeDiv(t.H, t.AB),
+        SLG: safeDiv(t.TB, t.AB)
+    };
+}
+
+function computeOPSFromTotals(t) {
+    const avg = safeDiv(t.H, t.AB);
+    const slg = safeDiv(t.TB, t.AB);
+    const ops = isFinite(avg) && isFinite(slg) ? avg + slg : NaN;
+    return { avg, slg, ops };
+}
+
+function computeFieldingTotals(rows) {
+    let TC = 0, PO = 0, A = 0, E = 0;
+
+    for (const g of rows) {
+        TC += g.TC || 0;
+        PO += g.PO || 0;
+        A += g.A || 0;
+        E += g.E || 0;
     }
 
-    function fmt3(x) {
-        if (!isFinite(x)) return "—";
-        const v = Math.round(x * 1000) / 1000;
-        return (v < 1 ? v.toFixed(3).replace("0.", ".") : v.toFixed(3));
-    }
+    const FPCT = safeDiv(PO + A, PO + A + E);
+    return { TC, PO, A, E, FPCT };
+}
 
-    function safeDiv(a, b) {
-        return b === 0 ? NaN : (a / b);
-    }
-
-    function logoFor(opponent) {
-        return logoMap[opponent] || "";
-    }
-
-    function initials(opponent) {
-        const clean = String(opponent)
-            .replace(/\(.*?\)/g, "")
-            .replace(/[^A-Za-z\s']/g, "")
-            .trim();
-        const parts = clean.split(/\s+/).filter(Boolean);
-        const a = parts[0]?.[0] || "?";
-        const b = parts[1]?.[0] || "";
-        return (a + b).toUpperCase();
-    }
-
-    function computeBattingTotals(rows) {
-        const t = { H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
-        for (const g of rows) {
-            t.H += g.H || 0;
-            t.AB += g.AB || 0;
-            t.R += g.R || 0;
-            t["2B"] += g["2B"] || 0;
-            t["3B"] += g["3B"] || 0;
-            t.HR += g.HR || 0;
-            t.RBI += g.RBI || 0;
-            t.TB += g.TB || 0;
-        }
-        return t;
-    }
-
-    function computeHitTypeTotals(rows) {
-        let singles = 0, doubles = 0, triples = 0, hrs = 0;
-        for (const g of rows) {
-            doubles += (g["2B"] || 0);
-            triples += (g["3B"] || 0);
-            hrs += (g.HR || 0);
-            singles += Math.max(0, (g.H || 0) - (g["2B"] || 0) - (g["3B"] || 0) - (g.HR || 0));
-        }
-        return { singles, doubles, triples, hrs };
-    }
-
-    function computeAdvancedFromLog(t) {
-        return { AVG: safeDiv(t.H, t.AB), SLG: safeDiv(t.TB, t.AB) };
-    }
-
-    function computeOPSFromTotals(t) {
-        const avg = safeDiv(t.H, t.AB);
-        const slg = safeDiv(t.TB, t.AB);
-        const ops = (isFinite(avg) && isFinite(slg)) ? (avg + slg) : NaN;
-        return { avg, slg, ops };
-    }
-
-    function computeFieldingTotals(rows) {
-        let TC = 0, PO = 0, A = 0, E = 0;
-        for (const g of rows) {
-            TC += g.TC || 0;
-            PO += g.PO || 0;
-            A += g.A || 0;
-            E += g.E || 0;
-        }
-        const FPCT = safeDiv(PO + A, PO + A + E);
-        return { TC, PO, A, E, FPCT };
-    }
-
-    function opponentCellHTML(r) {
-        if (r.logo) {
-            return `
-                <div class="opp">
-                    <img class="logo" src="${r.logo}" alt="${r.opponent} logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-                    <span class="logo fallback" style="display:none;">${initials(r.opponent)}</span>
-                    <span>${r.opponent}</span>
-                </div>
-            `;
-        }
+function opponentCellHTML(r) {
+    if (r.logo) {
         return `
             <div class="opp">
-                <span class="logo fallback">${initials(r.opponent)}</span>
+                <img class="logo" src="${r.logo}" alt="${r.opponent} logo"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+                <span class="logo fallback" style="display:none;">${initials(r.opponent)}</span>
                 <span>${r.opponent}</span>
             </div>
         `;
     }
 
-    function getRightPanelEls() {
-        const panel = document.querySelector(".grid > .panel:last-child");
-        return {
-            title: panel?.querySelector(".panel-title"),
-            sub: panel?.querySelector(".panel-sub"),
-            battingChartWrap: document.querySelector("#summary-batting .chart-wrap")
-        };
+    return `
+        <div class="opp">
+            <span class="logo fallback">${initials(r.opponent)}</span>
+            <span>${r.opponent}</span>
+        </div>
+    `;
+}
+
+function getRightPanelEls() {
+    const panel = document.querySelector(".grid > .panel:last-child");
+    return {
+        title: panel?.querySelector(".panel-title"),
+        sub: panel?.querySelector(".panel-sub"),
+        battingChartWrap: document.querySelector("#summary-batting .chart-wrap")
+    };
+}
+
+function clearSelectedRows() {
+    document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach((row) => {
+        row.classList.remove("selected-game");
+    });
+}
+
+function setSelectedRow(tbodyId, tr) {
+    document.querySelectorAll(`#${tbodyId} tr`).forEach((row) => {
+        row.classList.remove("selected-game");
+    });
+    if (tr) tr.classList.add("selected-game");
+}
+
+function clearSelectedGameSummary() {
+    selectedBattingGame = null;
+    selectedFieldingGame = null;
+    clearSelectedRows();
+
+    const rightTitle = document.querySelector(".grid > .panel:last-child .panel-title");
+    const rightSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+
+    if (rightTitle) {
+        rightTitle.textContent = currentSeason === "career" ? "Career Summary" : "Season Summary";
+    }
+    if (rightSub) {
+        rightSub.textContent = "Batting and fielding at a glance.";
     }
 
-    function clearSelectedRows() {
-        document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach(row => {
-            row.classList.remove("selected-game");
-        });
-    }
+    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
+    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
+    if (summaryLogoBatting) summaryLogoBatting.style.display = "flex";
+    if (summaryLogoFielding) summaryLogoFielding.style.display = "flex";
 
-    function setSelectedRow(tbodyId, tr) {
-        document.querySelectorAll(`#${tbodyId} tr`).forEach(row => row.classList.remove("selected-game"));
-        if (tr) tr.classList.add("selected-game");
-    }
+    const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
+    const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
+    if (battingChartWrap) battingChartWrap.style.display = "";
+    if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
-    function clearSelectedGameSummary() {
-        selectedBattingGame = null;
-        selectedFieldingGame = null;
-        clearSelectedRows();
+    renderSummary();
+}
 
-        const rightTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-        const rightSub = document.querySelector(".grid > .panel:last-child .panel-sub");
+function sameGame(a, b) {
+    if (!a || !b) return false;
+    return (
+        a.date === b.date &&
+        a.opponent === b.opponent &&
+        (a.result || "") === (b.result || "")
+    );
+}
 
-        if (rightTitle) {
-            rightTitle.textContent = (currentSeason === "career") ? "Career Summary" : "Season Summary";
+function findMatchingBattingGame(fieldingGame) {
+    if (!fieldingGame) return null;
+    return battingLog.find((g) => sameGame(g, fieldingGame)) || null;
+}
+
+function findMatchingFieldingGame(battingGame) {
+    if (!battingGame) return null;
+    return fieldingLog.find((g) => sameGame(g, battingGame)) || null;
+}
+
+function findRowByGame(tbodyId, game) {
+    if (!game) return null;
+    const rows = document.querySelectorAll(`#${tbodyId} tr`);
+
+    for (const tr of rows) {
+        if (
+            tr.dataset.date === game.date &&
+            tr.dataset.opponent === game.opponent &&
+            (tr.dataset.result || "") === (game.result || "")
+        ) {
+            return tr;
         }
-        if (rightSub) {
-            rightSub.textContent = "Batting and fielding at a glance.";
-        }
-
-        const summaryLogoBatting = document.getElementById("summaryLogoBatting");
-        const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-        if (summaryLogoBatting) summaryLogoBatting.style.display = "flex";
-        if (summaryLogoFielding) summaryLogoFielding.style.display = "flex";
-
-        const chartWrap = document.querySelector("#summary-batting .chart-wrap");
-        if (chartWrap) chartWrap.style.display = "";
-
-        renderSummary();
     }
+    return null;
+}
 
-    function sameGame(a, b) {
-        if (!a || !b) return false;
-        return a.date === b.date &&
-               a.opponent === b.opponent &&
-               (a.result || "") === (b.result || "");
-    }
+function restoreSelectedRows() {
+    document.querySelectorAll("#battingBody tr").forEach((row) => row.classList.remove("selected-game"));
+    document.querySelectorAll("#fieldingBody tr").forEach((row) => row.classList.remove("selected-game"));
 
-    function findMatchingBattingGame(fieldingGame) {
-        if (!fieldingGame) return null;
-        return battingLog.find(g => sameGame(g, fieldingGame)) || null;
-    }
+    const battingRow = findRowByGame("battingBody", selectedBattingGame);
+    const fieldingRow = findRowByGame("fieldingBody", selectedFieldingGame);
 
-    function findMatchingFieldingGame(battingGame) {
-        if (!battingGame) return null;
-        return fieldingLog.find(g => sameGame(g, battingGame)) || null;
-    }
+    if (battingRow) battingRow.classList.add("selected-game");
+    if (fieldingRow) fieldingRow.classList.add("selected-game");
+}
 
-    function findRowByGame(tbodyId, game) {
-        if (!game) return null;
-        const rows = document.querySelectorAll(`#${tbodyId} tr`);
-        for (const tr of rows) {
-            if (
-                tr.dataset.date === game.date &&
-                tr.dataset.opponent === game.opponent &&
-                (tr.dataset.result || "") === (game.result || "")
-            ) {
-                return tr;
-            }
-        }
-        return null;
-    }
-
-    function restoreSelectedRows() {
-        document.querySelectorAll("#battingBody tr").forEach(row => row.classList.remove("selected-game"));
-        document.querySelectorAll("#fieldingBody tr").forEach(row => row.classList.remove("selected-game"));
-
-        const battingRow = findRowByGame("battingBody", selectedBattingGame);
-        const fieldingRow = findRowByGame("fieldingBody", selectedFieldingGame);
-
-        if (battingRow) battingRow.classList.add("selected-game");
-        if (fieldingRow) fieldingRow.classList.add("selected-game");
-    }
-
-
-    function renderFieldingChart(canvas, totals) {
+/* ------------ FIELDING DONUT CHART ------------ */
+function renderFieldingChart(canvas, totals) {
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
@@ -2462,20 +2479,23 @@ td[data-label="Opponent"] .opp-emoji {
         return;
     }
 
-    const cx = w * 0.24;
-    const cy = h * 0.54;
-    const radius = 50;
+    // sized to feel closer to the batting chart
+    const cx = w * 0.31;
+    const cy = h * 0.55;
+    const radius = Math.min(w, h) * 0.22;
     const lineWidth = 18;
 
     const startAngle = -Math.PI / 2;
     const cleanAngle = (clean / total) * Math.PI * 2;
 
+    // background ring
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(255,255,255,.08)";
     ctx.lineWidth = lineWidth;
     ctx.stroke();
 
+    // clean slice
     ctx.beginPath();
     ctx.arc(cx, cy, radius, startAngle, startAngle + cleanAngle);
     ctx.strokeStyle = "#173d82";
@@ -2483,6 +2503,7 @@ td[data-label="Opponent"] .opp-emoji {
     ctx.lineCap = "butt";
     ctx.stroke();
 
+    // error slice
     ctx.beginPath();
     ctx.arc(cx, cy, radius, startAngle + cleanAngle, startAngle + Math.PI * 2);
     ctx.strokeStyle = "#cc0000";
@@ -2490,59 +2511,65 @@ td[data-label="Opponent"] .opp-emoji {
     ctx.lineCap = "butt";
     ctx.stroke();
 
+    // center
+    ctx.fillStyle = "rgba(0,0,0,.35)";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius - lineWidth * 0.72, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
-    ctx.font = "900 24px system-ui";
+    ctx.font = "900 22px ui-sans-serif";
     ctx.fillText(isFinite(fpct) ? fmt3(fpct) : "—", cx, cy + 6);
 
-    ctx.fillStyle = "rgba(255,255,255,.72)";
-    ctx.font = "12px system-ui";
+    ctx.fillStyle = "rgba(255,255,255,.60)";
+    ctx.font = "12px ui-sans-serif";
     ctx.fillText("FPCT", cx, cy + 24);
 
-    const legendX = w * 0.48;
-    const topY = 56;
-
+    // compact legend area on right
+    const legendX = w * 0.58;
+    const startY = h * 0.26;
     const items = [
-        { label: "Clean", value: clean, sub: `${po} PO + ${a} A`, color: "#173d82", box: true },
-        { label: "Errors", value: e, sub: "Misplays", color: "#cc0000", box: true },
-        { label: "TC", value: total, sub: "Total Chances", color: "#ffffff", box: false }
+        { label: "Clean", value: clean, meta: `${po} PO + ${a} A`, color: "#173d82", box: true },
+        { label: "Errors", value: e, meta: "Misplays", color: "#cc0000", box: true },
+        { label: "TC", value: total, meta: "Total Chances", color: "#ffffff", box: false }
     ];
 
     ctx.textAlign = "left";
 
     items.forEach((item, i) => {
-        const y = topY + i * 48;
+        const y = startY + i * 40;
 
         if (item.box) {
             ctx.fillStyle = item.color;
             ctx.fillRect(legendX, y - 8, 12, 12);
         } else {
-            ctx.strokeStyle = "rgba(255,255,255,.5)";
+            ctx.strokeStyle = "rgba(255,255,255,.45)";
             ctx.lineWidth = 1;
             ctx.strokeRect(legendX, y - 8, 12, 12);
         }
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "800 12px system-ui";
+        ctx.font = "700 12px ui-sans-serif";
         ctx.fillText(item.label, legendX + 20, y + 1);
 
-        ctx.font = "900 19px system-ui";
-        ctx.fillText(String(item.value), legendX + 20, y + 20);
+        ctx.font = "700 12px ui-sans-serif";
+        ctx.fillText(String(item.value), legendX + 78, y + 1);
 
-        ctx.fillStyle = "rgba(255,255,255,.72)";
-        ctx.font = "11px system-ui";
-        ctx.fillText(item.sub, legendX + 20, y + 35);
+        ctx.fillStyle = "rgba(255,255,255,.65)";
+        ctx.font = "11px ui-sans-serif";
+        ctx.fillText(item.meta, legendX + 20, y + 16);
     });
 
-    ctx.fillStyle = "rgba(255,255,255,.72)";
-    ctx.font = "12px system-ui";
+    ctx.fillStyle = "rgba(255,255,255,.65)";
+    ctx.font = "12px ui-sans-serif";
     ctx.textAlign = "left";
     ctx.fillText(`${clean} of ${total} chances handled cleanly`, 14, h - 14);
 }
 
-   /* ------------ HIT PIE CHART ------------ */
+/* ------------ HIT PIE CHART ------------ */
 function createHitPie() {
-    let state = {
+    const state = {
         canvas: null,
         ctx: null,
         labels: [],
@@ -2557,15 +2584,23 @@ function createHitPie() {
     };
 
     const palette = [
-        ["#C41E3A", "#8B0000"],  // 1B
-        ["#1F3A93", "#0B1E3F"],  // 2B
-        ["#2E8B57", "#1F5C3A"],  // 3B
-        ["#F4A300", "#C77C00"]   // HR
+        ["#C41E3A", "#8B0000"], // 1B
+        ["#1F3A93", "#0B1E3F"], // 2B
+        ["#2E8B57", "#1F5C3A"], // 3B
+        ["#F4A300", "#C77C00"]  // HR
     ];
 
-    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-    function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    function easeOutExpo(t) {
+        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function clamp01(x) {
+        return Math.max(0, Math.min(1, x));
+    }
 
     function setupCanvas(canvas) {
         const ctx = canvas.getContext("2d");
@@ -2584,8 +2619,8 @@ function createHitPie() {
         if (!canvas || !ctx) return;
 
         const dpr = window.devicePixelRatio || 1;
-        const cssW = (canvas.clientWidth && canvas.clientWidth > 0) ? canvas.clientWidth : 600;
-        const cssH = (canvas.clientHeight && canvas.clientHeight > 0) ? canvas.clientHeight : 240;
+        const cssW = canvas.clientWidth && canvas.clientWidth > 0 ? canvas.clientWidth : 600;
+        const cssH = canvas.clientHeight && canvas.clientHeight > 0 ? canvas.clientHeight : 240;
 
         canvas.width = Math.round(cssW * dpr);
         canvas.height = Math.round(cssH * dpr);
@@ -2604,18 +2639,29 @@ function createHitPie() {
         const r = Math.min(w, h) * 0.36;
 
         let start = (-Math.PI / 2) + introRotation;
+
         for (let i = 0; i < state.values.length; i++) {
             const v = state.values[i];
             const angle = (v / total) * Math.PI * 2;
             const end = start + angle;
 
-            state.slices.push({ i, label: state.labels[i], value: v, pct: v / total, start, end, cx, cy, r });
+            state.slices.push({
+                i,
+                label: state.labels[i],
+                value: v,
+                pct: v / total,
+                start,
+                end,
+                cx,
+                cy,
+                r
+            });
+
             start = end;
         }
+
         return { total, cx, cy, r };
     }
-
-    
 
     function drawSlice(ctx, s, hoverPop, isHovered) {
         const { cx, cy, r } = s;
@@ -2652,6 +2698,7 @@ function createHitPie() {
         const startY = h * 0.22;
 
         ctx.textAlign = "left";
+
         for (let i = 0; i < state.labels.length; i++) {
             const y = startY + i * 34;
 
@@ -2667,6 +2714,7 @@ function createHitPie() {
 
             const v = state.values[i] || 0;
             const pct = total ? ((v / total) * 100).toFixed(1) : "0.0";
+
             ctx.fillStyle = "rgba(255,255,255,.65)";
             ctx.font = "13px ui-sans-serif";
             ctx.fillText(`${v} (${pct}%)`, lx + 78, y + 1);
@@ -2678,6 +2726,7 @@ function createHitPie() {
         ctx.arc(cx, cy, 44, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(0,0,0,.35)";
         ctx.fill();
+
         ctx.strokeStyle = "rgba(255,255,255,.10)";
         ctx.lineWidth = 1;
         ctx.stroke();
@@ -2694,9 +2743,10 @@ function createHitPie() {
 
     function renderFrame() {
         if (!state.canvas || !state.ctx) return;
-        const ctx = state.ctx;
 
+        const ctx = state.ctx;
         const { w, h } = resizeToDPR() || { w: 600, h: 240 };
+
         ctx.clearRect(0, 0, w, h);
 
         state.introT = clamp01(state.introT + 0.035);
@@ -2707,7 +2757,7 @@ function createHitPie() {
         const fade = easeOutCubic(state.fadeT);
         const introRotation = (1 - introEase) * (Math.PI * 0.20);
 
-        const { total, cx, cy, r } = buildSlices(w, h, introRotation);
+        const { total, cx, cy } = buildSlices(w, h, introRotation);
 
         ctx.globalAlpha = fade;
 
@@ -2721,12 +2771,13 @@ function createHitPie() {
             return;
         }
 
-
         const hoverIndex = state.hoveredIndex;
+
         for (const s of state.slices) {
             if (s.i === hoverIndex) continue;
             drawSlice(ctx, s, state.hoverAnim, false);
         }
+
         if (hoverIndex >= 0 && state.slices[hoverIndex]) {
             drawSlice(ctx, state.slices[hoverIndex], state.hoverAnim, true);
         }
@@ -2744,8 +2795,11 @@ function createHitPie() {
             state.fadeT < 1 ||
             Math.abs(state.hoverAnim - state.hoverTarget) > 0.01;
 
-        if (still) state.raf = requestAnimationFrame(renderFrame);
-        else state.raf = null;
+        if (still) {
+            state.raf = requestAnimationFrame(renderFrame);
+        } else {
+            state.raf = null;
+        }
     }
 
     function ensureRAF() {
@@ -2754,7 +2808,10 @@ function createHitPie() {
 
     function getMousePos(evt) {
         const rect = state.canvas.getBoundingClientRect();
-        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
     }
 
     function hitTest(pos) {
@@ -2771,9 +2828,10 @@ function createHitPie() {
             const sn = to0_2pi(s.start);
             const en = to0_2pi(s.end);
 
-            const inside = (sn <= en) ? (an >= sn && an <= en) : (an >= sn || an <= en);
+            const inside = sn <= en ? an >= sn && an <= en : an >= sn || an <= en;
             if (inside) return s.i;
         }
+
         return -1;
     }
 
@@ -2793,8 +2851,8 @@ function createHitPie() {
         `;
 
         const pad = 14;
-        tip.style.left = (evt.pageX + pad) + "px";
-        tip.style.top = (evt.pageY + pad) + "px";
+        tip.style.left = `${evt.pageX + pad}px`;
+        tip.style.top = `${evt.pageY + pad}px`;
         tip.classList.add("show");
     }
 
@@ -2810,7 +2868,7 @@ function createHitPie() {
 
         if (idx !== state.hoveredIndex) {
             state.hoveredIndex = idx;
-            state.hoverTarget = (idx >= 0) ? 1 : 0;
+            state.hoverTarget = idx >= 0 ? 1 : 0;
             ensureRAF();
         }
 
@@ -2840,299 +2898,328 @@ function createHitPie() {
 const seasonHitPie = createHitPie();
 const opponentHitPie = createHitPie();
 
-    /* ------------ STATE ------------ */
-    let currentSeason = "2026";
-    let battingLog = [];
-    let fieldingLog = [];
-    let careerBattingLog = [];
-    let careerFieldingLog = [];
-    let selectedBattingGame = null;
-    let selectedFieldingGame = null;
+/* ------------ STATE ------------ */
+let currentSeason = "2026";
+let battingLog = [];
+let fieldingLog = [];
+let careerBattingLog = [];
+let careerFieldingLog = [];
+let selectedBattingGame = null;
+let selectedFieldingGame = null;
 
-    const battingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
+const battingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
 const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
 
-    function resetState(state) {
-        state.search = "";
-        state.opponent = "";
-        state.sortKey = "dateValue";
-        state.sortDir = "asc";
-    }
+function resetState(state) {
+    state.search = "";
+    state.opponent = "";
+    state.sortKey = "dateValue";
+    state.sortDir = "asc";
+}
 
-    function buildSeasonLogs(seasonKey) {
-        const season = seasonsRaw[seasonKey];
+function buildSeasonLogs(seasonKey) {
+    const season = seasonsRaw[seasonKey];
 
-        const bat = season.batting.map(r => {
-            const { H, AB } = parseHAB(r[2]);
-            const R = Number(r[3]);
-            const DB = Number(r[4]);
-            const TR = Number(r[5]);
-            const HR = Number(r[6]);
-            const RBI = Number(r[7]);
-            const singles = H - DB - TR - HR;
-            const TB = singles + 2 * DB + 3 * TR + 4 * HR;
-            const result = r[8] || "";
+    const bat = season.batting.map((r) => {
+        const { H, AB } = parseHAB(r[2]);
+        const R = Number(r[3]);
+        const DB = Number(r[4]);
+        const TR = Number(r[5]);
+        const HR = Number(r[6]);
+        const RBI = Number(r[7]);
+        const singles = H - DB - TR - HR;
+        const TB = singles + 2 * DB + 3 * TR + 4 * HR;
+        const result = r[8] || "";
 
-            return {
-                date: r[0],
-                dateValue: toDateValue(r[0]),
-                opponent: r[1],
-                logo: logoFor(r[1]),
-                H, AB, R, "2B": DB, "3B": TR, HR, RBI, TB,
-                result
-            };
-        });
-
-        const fld = season.fielding.map(r => {
-            const TC = Number(r[2]);
-            const PO = Number(r[3]);
-            const A = Number(r[4]);
-            const E = Number(r[5]);
-            const denom = PO + A + E;
-            const fp = denom === 0 ? NaN : (PO + A) / denom;
-            const result = r[6] || "";
-
-            return {
-                date: r[0],
-                dateValue: toDateValue(r[0]),
-                opponent: r[1],
-                logo: logoFor(r[1]),
-                TC, PO, A, E, FPCT: fp,
-                result
-            };
-        });
-
-        return { bat, fld };
-    }
-
-    function buildCareer() {
-        careerBattingLog = [];
-        careerFieldingLog = [];
-
-        for (const s of Object.keys(seasonsRaw)) {
-            const { bat, fld } = buildSeasonLogs(s);
-            careerBattingLog.push(...bat.map(x => ({ ...x, season: s })));
-            careerFieldingLog.push(...fld.map(x => ({ ...x, season: s })));
-        }
-
-        careerBattingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
-        careerFieldingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
-    }
-
-    /* ------------ FILTER / SORT ------------ */
-    function filterRows(rows, state) {
-        let out = [...rows];
-
-        if (state.search) {
-            const q = state.search.toLowerCase().trim();
-            out = out.filter(r =>
-                r.date.toLowerCase().includes(q) ||
-                r.opponent.toLowerCase().includes(q) ||
-                String(r.result || "").toLowerCase().includes(q)
-            );
-        }
-
-        if (state.opponent) {
-            out = out.filter(r => r.opponent === state.opponent);
-        }
-
-        out.sort((a, b) => {
-            const key = state.sortKey;
-            let av = a[key];
-            let bv = b[key];
-
-            if (av == null) av = "";
-            if (bv == null) bv = "";
-
-            if (typeof av === "string" && typeof bv === "string") {
-                const cmp = av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" });
-                return state.sortDir === "asc" ? cmp : -cmp;
-            }
-
-            const cmp = av < bv ? -1 : av > bv ? 1 : 0;
-            return state.sortDir === "asc" ? cmp : -cmp;
-        });
-
-        return out;
-    }
-
-    function hookTableSort(tableSel, state, refreshFn) {
-        const table = document.querySelector(tableSel);
-        if (!table) return;
-
-        table.querySelectorAll("thead th[data-key]").forEach(th => {
-            th.addEventListener("click", () => {
-                const key = th.dataset.key;
-                if (state.sortKey === key) {
-                    state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
-                } else {
-                    state.sortKey = key;
-                    state.sortDir = "asc";
-                }
-                refreshFn();
-            });
-        });
-    }
-
-    /* ------------ OPPONENT SELECTS ------------ */
-    function renderOpponentSelect(selectEl, rows) {
-        if (!selectEl) return;
-        const unique = [...new Set(rows.map(r => r.opponent))].sort((a, b) => a.localeCompare(b));
-        selectEl.innerHTML = `<option value="">All</option>` + unique.map(o => `<option value="${o}">${o}</option>`).join("");
-    }
-
-    function setSharedOpponent(opponent) {
-        battingState.opponent = opponent || "";
-        fieldingState.opponent = opponent || "";
-
-        if ($("#oppBat")) $("#oppBat").value = opponent || "";
-        if ($("#oppFld")) $("#oppFld").value = opponent || "";
-
-        clearSelectedGameSummary();
-        refreshBatting();
-        refreshFielding();
-        renderVsOpponentAllTime(opponent || "");
-        renderVsOpponentFieldingAllTime(opponent || "");
-    }
-
-    /* ------------ TABLE RENDER ------------ */
-    function renderBattingTable(rows) {
-        const body = $("#battingBody");
-        if (!body) return;
-        body.innerHTML = "";
-
-        for (const r of rows) {
-            const tr = document.createElement("tr");
-            tr.dataset.date = r.date;
-            tr.dataset.opponent = r.opponent;
-            tr.dataset.result = r.result || "";
-
-            tr.innerHTML = `
-                <td class="muted" data-label="Date">${r.date}</td>
-                <td data-label="Opponent">${opponentCellHTML(r)}</td>
-                <td data-label="Result">${r.result || ""}</td>
-                <td class="right" data-label="H">${r.H}</td>
-                <td class="right" data-label="AB">${r.AB}</td>
-                <td class="right" data-label="R">${r.R}</td>
-                <td class="right" data-label="2B">${r["2B"]}</td>
-                <td class="right" data-label="3B">${r["3B"]}</td>
-                <td class="right" data-label="HR">${r.HR}</td>
-                <td class="right" data-label="RBI">${r.RBI}</td>
-            `;
-
-            tr.addEventListener("click", () => {
-                if (selectedBattingGame && sameGame(selectedBattingGame, r)) {
-                    clearSelectedGameSummary();
-                    return;
-                }
-                showSelectedBattingGame(r);
-            });
-
-            body.appendChild(tr);
-        }
-
-        restoreSelectedRows();
-    }
-
-    function renderFieldingTable(rows) {
-        const body = $("#fieldingBody");
-        if (!body) return;
-        body.innerHTML = "";
-
-        for (const r of rows) {
-            const tr = document.createElement("tr");
-            tr.dataset.date = r.date;
-            tr.dataset.opponent = r.opponent;
-            tr.dataset.result = r.result || "";
-
-            tr.innerHTML = `
-                <td class="muted" data-label="Date">${r.date}</td>
-                <td data-label="Opponent">${opponentCellHTML(r)}</td>
-                <td data-label="Result">${r.result || ""}</td>
-                <td class="right" data-label="TC">${r.TC}</td>
-                <td class="right" data-label="PO">${r.PO}</td>
-                <td class="right" data-label="A">${r.A}</td>
-                <td class="right" data-label="E">${r.E}</td>
-                <td class="right" data-label="FPCT">${fmt3(r.FPCT)}</td>
-            `;
-
-            tr.addEventListener("click", () => {
-                if (selectedFieldingGame && sameGame(selectedFieldingGame, r)) {
-                    clearSelectedGameSummary();
-                    return;
-                }
-                showSelectedFieldingGame(r, tr);
-            });
-
-            body.appendChild(tr);
-        }
-
-        restoreSelectedRows();
-    }
-
-    /* ------------ REFRESH ------------ */
-    function refreshBatting() {
-        const rows = filterRows(battingLog, battingState);
-        renderBattingTable(rows);
-    }
-
-    function refreshFielding() {
-        const rows = filterRows(fieldingLog, fieldingState);
-        renderFieldingTable(rows);
-    }
-
-    /* ------------ SUMMARY ------------ */
-    function careerOfficialBattingTotals() {
-        const seasons = Object.keys(officialTotals);
-        const raw = {
-            GP: 0, GS: 0, AB: 0, R: 0, H: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0,
-            BB: 0, HBP: 0, SO: 0, GDP: 0, SF: 0, SH: 0, SB: 0, SBAtt: 0
+        return {
+            date: r[0],
+            dateValue: toDateValue(r[0]),
+            opponent: r[1],
+            logo: logoFor(r[1]),
+            H,
+            AB,
+            R,
+            "2B": DB,
+            "3B": TR,
+            HR,
+            RBI,
+            TB,
+            result
         };
+    });
 
-        for (const s of seasons) {
-            const t = officialTotals[s];
-            raw.GP += t.GP || 0;
-            raw.GS += t.GS || 0;
-            raw.AB += t.AB || 0;
-            raw.R += t.R || 0;
-            raw.H += t.H || 0;
-            raw["2B"] += t["2B"] || 0;
-            raw["3B"] += t["3B"] || 0;
-            raw.HR += t.HR || 0;
-            raw.RBI += t.RBI || 0;
-            raw.TB += t.TB || 0;
-            raw.BB += t.BB || 0;
-            raw.HBP += t.HBP || 0;
-            raw.SO += t.SO || 0;
-            raw.GDP += t.GDP || 0;
-            raw.SF += t.SF || 0;
-            raw.SH += t.SH || 0;
-            raw.SB += t.SB || 0;
-            raw.SBAtt += t.SBAtt || 0;
+    const fld = season.fielding.map((r) => {
+        const TC = Number(r[2]);
+        const PO = Number(r[3]);
+        const A = Number(r[4]);
+        const E = Number(r[5]);
+        const denom = PO + A + E;
+        const fp = denom === 0 ? NaN : (PO + A) / denom;
+        const result = r[6] || "";
+
+        return {
+            date: r[0],
+            dateValue: toDateValue(r[0]),
+            opponent: r[1],
+            logo: logoFor(r[1]),
+            TC,
+            PO,
+            A,
+            E,
+            FPCT: fp,
+            result
+        };
+    });
+
+    return { bat, fld };
+}
+
+function buildCareer() {
+    careerBattingLog = [];
+    careerFieldingLog = [];
+
+    for (const s of Object.keys(seasonsRaw)) {
+        const { bat, fld } = buildSeasonLogs(s);
+        careerBattingLog.push(...bat.map((x) => ({ ...x, season: s })));
+        careerFieldingLog.push(...fld.map((x) => ({ ...x, season: s })));
+    }
+
+    careerBattingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
+    careerFieldingLog.sort((a, b) => a.dateValue.localeCompare(b.dateValue));
+}
+
+/* ------------ FILTER / SORT ------------ */
+function filterRows(rows, state) {
+    let out = [...rows];
+
+    if (state.search) {
+        const q = state.search.toLowerCase().trim();
+        out = out.filter((r) =>
+            r.date.toLowerCase().includes(q) ||
+            r.opponent.toLowerCase().includes(q) ||
+            String(r.result || "").toLowerCase().includes(q)
+        );
+    }
+
+    if (state.opponent) {
+        out = out.filter((r) => r.opponent === state.opponent);
+    }
+
+    out.sort((a, b) => {
+        const key = state.sortKey;
+        let av = a[key];
+        let bv = b[key];
+
+        if (av == null) av = "";
+        if (bv == null) bv = "";
+
+        if (typeof av === "string" && typeof bv === "string") {
+            const cmp = av.localeCompare(bv, undefined, {
+                numeric: true,
+                sensitivity: "base"
+            });
+            return state.sortDir === "asc" ? cmp : -cmp;
         }
 
-        raw.AVG = safeDiv(raw.H, raw.AB);
-        raw.SLG = safeDiv(raw.TB, raw.AB);
-        raw.OBP = safeDiv(raw.H + raw.BB + raw.HBP, raw.AB + raw.BB + raw.HBP + raw.SF);
-        raw.OPS = (isFinite(raw.OBP) && isFinite(raw.SLG)) ? raw.OBP + raw.SLG : NaN;
+        const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+        return state.sortDir === "asc" ? cmp : -cmp;
+    });
 
-        return raw;
+    return out;
+}
+
+function hookTableSort(tableSel, state, refreshFn) {
+    const table = document.querySelector(tableSel);
+    if (!table) return;
+
+    table.querySelectorAll("thead th[data-key]").forEach((th) => {
+        th.addEventListener("click", () => {
+            const key = th.dataset.key;
+            if (state.sortKey === key) {
+                state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+            } else {
+                state.sortKey = key;
+                state.sortDir = "asc";
+            }
+            refreshFn();
+        });
+    });
+}
+
+/* ------------ OPPONENT SELECTS ------------ */
+function renderOpponentSelect(selectEl, rows) {
+    if (!selectEl) return;
+    const unique = [...new Set(rows.map((r) => r.opponent))].sort((a, b) => a.localeCompare(b));
+    selectEl.innerHTML =
+        `<option value="">All</option>` +
+        unique.map((o) => `<option value="${o}">${o}</option>`).join("");
+}
+
+function setSharedOpponent(opponent) {
+    battingState.opponent = opponent || "";
+    fieldingState.opponent = opponent || "";
+
+    if ($("#oppBat")) $("#oppBat").value = opponent || "";
+    if ($("#oppFld")) $("#oppFld").value = opponent || "";
+
+    clearSelectedGameSummary();
+    refreshBatting();
+    refreshFielding();
+    renderVsOpponentAllTime(opponent || "");
+    renderVsOpponentFieldingAllTime(opponent || "");
+}
+
+/* ------------ TABLE RENDER ------------ */
+function renderBattingTable(rows) {
+    const body = $("#battingBody");
+    if (!body) return;
+    body.innerHTML = "";
+
+    for (const r of rows) {
+        const tr = document.createElement("tr");
+        tr.dataset.date = r.date;
+        tr.dataset.opponent = r.opponent;
+        tr.dataset.result = r.result || "";
+
+        tr.innerHTML = `
+            <td class="muted" data-label="Date">${r.date}</td>
+            <td data-label="Opponent">${opponentCellHTML(r)}</td>
+            <td data-label="Result">${r.result || ""}</td>
+            <td class="right" data-label="H">${r.H}</td>
+            <td class="right" data-label="AB">${r.AB}</td>
+            <td class="right" data-label="R">${r.R}</td>
+            <td class="right" data-label="2B">${r["2B"]}</td>
+            <td class="right" data-label="3B">${r["3B"]}</td>
+            <td class="right" data-label="HR">${r.HR}</td>
+            <td class="right" data-label="RBI">${r.RBI}</td>
+        `;
+
+        tr.addEventListener("click", () => {
+            if (selectedBattingGame && sameGame(selectedBattingGame, r)) {
+                clearSelectedGameSummary();
+                return;
+            }
+            showSelectedBattingGame(r);
+        });
+
+        body.appendChild(tr);
     }
+
+    restoreSelectedRows();
+}
+
+function renderFieldingTable(rows) {
+    const body = $("#fieldingBody");
+    if (!body) return;
+    body.innerHTML = "";
+
+    for (const r of rows) {
+        const tr = document.createElement("tr");
+        tr.dataset.date = r.date;
+        tr.dataset.opponent = r.opponent;
+        tr.dataset.result = r.result || "";
+
+        tr.innerHTML = `
+            <td class="muted" data-label="Date">${r.date}</td>
+            <td data-label="Opponent">${opponentCellHTML(r)}</td>
+            <td data-label="Result">${r.result || ""}</td>
+            <td class="right" data-label="TC">${r.TC}</td>
+            <td class="right" data-label="PO">${r.PO}</td>
+            <td class="right" data-label="A">${r.A}</td>
+            <td class="right" data-label="E">${r.E}</td>
+            <td class="right" data-label="FPCT">${fmt3(r.FPCT)}</td>
+        `;
+
+        tr.addEventListener("click", () => {
+            if (selectedFieldingGame && sameGame(selectedFieldingGame, r)) {
+                clearSelectedGameSummary();
+                return;
+            }
+            showSelectedFieldingGame(r, tr);
+        });
+
+        body.appendChild(tr);
+    }
+
+    restoreSelectedRows();
+}
+
+/* ------------ REFRESH ------------ */
+function refreshBatting() {
+    const rows = filterRows(battingLog, battingState);
+    renderBattingTable(rows);
+}
+
+function refreshFielding() {
+    const rows = filterRows(fieldingLog, fieldingState);
+    renderFieldingTable(rows);
+}
+
+/* ------------ SUMMARY ------------ */
+function careerOfficialBattingTotals() {
+    const seasons = Object.keys(officialTotals);
+    const raw = {
+        GP: 0,
+        GS: 0,
+        AB: 0,
+        R: 0,
+        H: 0,
+        "2B": 0,
+        "3B": 0,
+        HR: 0,
+        RBI: 0,
+        TB: 0,
+        BB: 0,
+        HBP: 0,
+        SO: 0,
+        GDP: 0,
+        SF: 0,
+        SH: 0,
+        SB: 0,
+        SBAtt: 0
+    };
+
+    for (const s of seasons) {
+        const t = officialTotals[s];
+        raw.GP += t.GP || 0;
+        raw.GS += t.GS || 0;
+        raw.AB += t.AB || 0;
+        raw.R += t.R || 0;
+        raw.H += t.H || 0;
+        raw["2B"] += t["2B"] || 0;
+        raw["3B"] += t["3B"] || 0;
+        raw.HR += t.HR || 0;
+        raw.RBI += t.RBI || 0;
+        raw.TB += t.TB || 0;
+        raw.BB += t.BB || 0;
+        raw.HBP += t.HBP || 0;
+        raw.SO += t.SO || 0;
+        raw.GDP += t.GDP || 0;
+        raw.SF += t.SF || 0;
+        raw.SH += t.SH || 0;
+        raw.SB += t.SB || 0;
+        raw.SBAtt += t.SBAtt || 0;
+    }
+
+    raw.AVG = safeDiv(raw.H, raw.AB);
+    raw.SLG = safeDiv(raw.TB, raw.AB);
+    raw.OBP = safeDiv(raw.H + raw.BB + raw.HBP, raw.AB + raw.BB + raw.HBP + raw.SF);
+    raw.OPS = isFinite(raw.OBP) && isFinite(raw.SLG) ? raw.OBP + raw.SLG : NaN;
+
+    return raw;
+}
 
 function renderTeamSummaryBar() {
     const strip = $("#teamRecordStrip");
     if (!strip) return;
 
-    const rec = teamRecords[currentSeason] || teamRecords["career"];
+    const rec = teamRecords[currentSeason] || teamRecords.career;
 
     function pctFromRecord(record) {
         if (!record) return ".000";
         const [w, l] = record.split("-").map(Number);
         const total = w + l;
-
-        return total
-            ? (w / total).toFixed(3).replace(/^0/, "")
-            : ".000";
+        return total ? (w / total).toFixed(3).replace(/^0/, "") : ".000";
     }
 
     strip.innerHTML = [
@@ -3141,7 +3228,7 @@ function renderTeamSummaryBar() {
         { k: "Home", v: rec.home, s: pctFromRecord(rec.home) },
         { k: "Away", v: rec.away, s: pctFromRecord(rec.away) },
         { k: "Neutral", v: rec.neutral, s: pctFromRecord(rec.neutral) }
-    ].map(x => `
+    ].map((x) => `
         <div class="stat">
             <div class="k">${x.k}</div>
             <div class="v">${x.v}</div>
@@ -3150,88 +3237,85 @@ function renderTeamSummaryBar() {
     `).join("");
 }
 
-    function renderSummary() {
-        renderTeamSummaryBar();
+function renderSummary() {
+    renderTeamSummaryBar();
 
-        const rightEls = getRightPanelEls();
-        if (rightEls.title) {
-    rightEls.title.textContent = (currentSeason === "career")
-        ? "Career Stats"
-        : `${currentSeason} Stats`;
-}
-        if (rightEls.sub) {
-            rightEls.sub.textContent = "Batting and fielding at a glance.";
-        }
-
-        const battingLogoWrap = document.getElementById("summaryLogoBatting");
-        const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
-        if (battingLogoWrap) battingLogoWrap.style.display = "flex";
-        if (fieldingLogoWrap) fieldingLogoWrap.style.display = "flex";
-
-        const chartWrap = document.querySelector("#summary-batting .chart-wrap");
-        if (chartWrap) chartWrap.style.display = "";
-
-        const officialBat = (currentSeason === "career")
-            ? careerOfficialBattingTotals()
-            : officialTotals[currentSeason];
-
-        const logBatTotals = computeBattingTotals(battingLog);
-        const logFldTotals = computeFieldingTotals(fieldingLog);
-        const hitTypes = computeHitTypeTotals(battingLog);
-
-        $("#summaryStrip").innerHTML = [
-            { k: "SLG", v: fmt3(officialBat.SLG), s: "Slugging %" },
-            { k: "OPS", v: fmt3(officialBat.OPS), s: "OBP + SLG %" },
-            { k: "GP", v: officialBat.GP, s: "Games Played" },
-            { k: "R", v: officialBat.R, s: "Runs" },
-            { k: "RBI", v: officialBat.RBI, s: "Runs Batted In" },
-            { k: "TB", v: officialBat.TB, s: "Total Bases" },
-            { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats" }
-        ].map(x => `
-            <div class="stat">
-                <div class="k">${x.k}</div>
-                <div class="v">${x.v}</div>
-                <div class="s">${x.s}</div>
-            </div>
-        `).join("");
-
-        $("#fieldingStrip").innerHTML = [
-            { k: "TC", v: logFldTotals.TC, s: "Total chances" },
-            { k: "PO", v: logFldTotals.PO, s: "Putouts" },
-            { k: "A", v: logFldTotals.A, s: "Assists" },
-            { k: "E", v: logFldTotals.E, s: "Errors" },
-            { k: "FPCT", v: fmt3(logFldTotals.FPCT), s: "Fielding %" }
-        ].map(x => `
-            <div class="stat">
-                <div class="k">${x.k}</div>
-                <div class="v">${x.v}</div>
-                <div class="s">${x.s}</div>
-            </div>
-        `).join("");
-
-        const fieldingCanvas = document.getElementById("fieldingChart");
-if (fieldingCanvas) {
-    renderFieldingChart(fieldingCanvas, logFldTotals);
-}
-
-        const heroTotals = officialBat;
-        $("#heroAVG").textContent = fmt3(heroTotals.AVG);
-        $("#heroOBP").textContent = fmt3(heroTotals.OBP);
-        $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(battingLog));
-        $("#heroSeasonText").textContent = (currentSeason === "career") ? "Career" : currentSeason;
-
-        const chartCanvas = document.getElementById("hitTypeChart");
-        if (chartCanvas) {
-            seasonHitPie.render(
-                chartCanvas,
-                ["1B", "2B", "3B", "HR"],
-                [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
-            );
-        }
+    const rightEls = getRightPanelEls();
+    if (rightEls.title) {
+        rightEls.title.textContent = currentSeason === "career" ? "Career Stats" : `${currentSeason} Stats`;
+    }
+    if (rightEls.sub) {
+        rightEls.sub.textContent = "Batting and fielding at a glance.";
     }
 
-    /* ------------ SELECTED GAME SUMMARY ------------ */
+    const battingLogoWrap = document.getElementById("summaryLogoBatting");
+    const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
+    if (battingLogoWrap) battingLogoWrap.style.display = "flex";
+    if (fieldingLogoWrap) fieldingLogoWrap.style.display = "flex";
 
+    const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
+    const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
+    if (battingChartWrap) battingChartWrap.style.display = "";
+    if (fieldingChartWrap) fieldingChartWrap.style.display = "";
+
+    const officialBat = currentSeason === "career"
+        ? careerOfficialBattingTotals()
+        : officialTotals[currentSeason];
+
+    const logFldTotals = computeFieldingTotals(fieldingLog);
+    const hitTypes = computeHitTypeTotals(battingLog);
+
+    $("#summaryStrip").innerHTML = [
+        { k: "SLG", v: fmt3(officialBat.SLG), s: "Slugging %" },
+        { k: "OPS", v: fmt3(officialBat.OPS), s: "OBP + SLG %" },
+        { k: "GP", v: officialBat.GP, s: "Games Played" },
+        { k: "R", v: officialBat.R, s: "Runs" },
+        { k: "RBI", v: officialBat.RBI, s: "Runs Batted In" },
+        { k: "TB", v: officialBat.TB, s: "Total Bases" },
+        { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats" }
+    ].map((x) => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+
+    $("#fieldingStrip").innerHTML = [
+        { k: "TC", v: logFldTotals.TC, s: "Total chances" },
+        { k: "PO", v: logFldTotals.PO, s: "Putouts" },
+        { k: "A", v: logFldTotals.A, s: "Assists" },
+        { k: "E", v: logFldTotals.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(logFldTotals.FPCT), s: "Fielding %" }
+    ].map((x) => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+
+    const fieldingCanvas = document.getElementById("fieldingChart");
+    if (fieldingCanvas) {
+        renderFieldingChart(fieldingCanvas, logFldTotals);
+    }
+
+    $("#heroAVG").textContent = fmt3(officialBat.AVG);
+    $("#heroOBP").textContent = fmt3(officialBat.OBP);
+    $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(battingLog));
+    $("#heroSeasonText").textContent = currentSeason === "career" ? "Career" : currentSeason;
+
+    const chartCanvas = document.getElementById("hitTypeChart");
+    if (chartCanvas) {
+        seasonHitPie.render(
+            chartCanvas,
+            ["1B", "2B", "3B", "HR"],
+            [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
+        );
+    }
+}
+
+/* ------------ SELECTED GAME SUMMARY ------------ */
 function showSelectedBattingGame(r) {
     selectedBattingGame = r;
 
@@ -3331,14 +3415,17 @@ function showSelectedBattingGame(r) {
         panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
     }
 
-    const chartWrap = document.querySelector("#summary-batting .chart-wrap");
+    const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
     const chartCanvas = document.getElementById("hitTypeChart");
 
-    if (chartWrap) chartWrap.style.display = "";
+    if (battingChartWrap) battingChartWrap.style.display = "";
 
     if (chartCanvas) {
         seasonHitPie.render(chartCanvas, ["1B", "2B", "3B", "HR"], [
-            hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs
+            hitTypes.singles,
+            hitTypes.doubles,
+            hitTypes.triples,
+            hitTypes.hrs
         ]);
     }
 
@@ -3405,263 +3492,269 @@ function showSelectedFieldingGame(r, tr = null) {
     `;
 
     const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-if (panelTitle) {
-    panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
+    if (panelTitle) {
+        panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
+    }
+
+    const fieldingCanvas = document.getElementById("fieldingChart");
+    if (fieldingCanvas) {
+        renderFieldingChart(fieldingCanvas, {
+            PO: r.PO || 0,
+            A: r.A || 0,
+            E: r.E || 0
+        });
+    }
+
+    restoreSelectedRows();
 }
 
-const fieldingCanvas = document.getElementById("fieldingChart");
-if (fieldingCanvas) {
-    renderFieldingChart(fieldingCanvas, {
-        PO: r.PO || 0,
-        A: r.A || 0,
-        E: r.E || 0
+/* ------------ TABS ------------ */
+function setTab(tabName) {
+    document.querySelectorAll(".tab").forEach((t) => {
+        t.classList.toggle("active", t.dataset.tab === tabName);
     });
-}
 
-restoreSelectedRows();
-}
-    /* ------------ TABS ------------ */
-    function setTab(tabName) {
-        document.querySelectorAll(".tab").forEach(t => {
-            t.classList.toggle("active", t.dataset.tab === tabName);
-        });
+    document.getElementById("section-batting").classList.remove("active");
+    document.getElementById("section-fielding").classList.remove("active");
+    document.getElementById("summary-batting").classList.remove("active");
+    document.getElementById("summary-fielding").classList.remove("active");
 
-        document.getElementById("section-batting").classList.remove("active");
-        document.getElementById("section-fielding").classList.remove("active");
-        document.getElementById("summary-batting").classList.remove("active");
-        document.getElementById("summary-fielding").classList.remove("active");
+    if (tabName === "batting") {
+        document.getElementById("section-batting").classList.add("active");
+        document.getElementById("summary-batting").classList.add("active");
+        $("#panelTitle").textContent = "Batting • Game Log";
+        $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
 
-        if (tabName === "batting") {
-            document.getElementById("section-batting").classList.add("active");
-            document.getElementById("summary-batting").classList.add("active");
-            $("#panelTitle").textContent = "Batting • Game Log";
-            $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
+        refreshBatting();
+        restoreSelectedRows();
 
-            refreshBatting();
-            restoreSelectedRows();
+        const match = selectedFieldingGame
+            ? findMatchingBattingGame(selectedFieldingGame)
+            : selectedBattingGame;
 
-            const match = selectedFieldingGame
-                ? findMatchingBattingGame(selectedFieldingGame)
-                : selectedBattingGame;
+        if (match) {
+            selectedBattingGame = match;
+            showSelectedBattingGame(match);
+        } else {
+            renderSummary();
+        }
+    } else if (tabName === "fielding") {
+        document.getElementById("section-fielding").classList.add("active");
+        document.getElementById("summary-fielding").classList.add("active");
+        $("#panelTitle").textContent = "Fielding • Game Log";
+        $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
 
-            if (match) {
-                selectedBattingGame = match;
-                showSelectedBattingGame(match);
-            } else {
-                renderSummary();
-            }
-        } else if (tabName === "fielding") {
-            document.getElementById("section-fielding").classList.add("active");
-            document.getElementById("summary-fielding").classList.add("active");
-            $("#panelTitle").textContent = "Fielding • Game Log";
-            $("#panelSub").textContent = "Click any row to view individual game stats. Filter by opponent to see all games played.";
+        refreshFielding();
+        restoreSelectedRows();
 
-            refreshFielding();
-            restoreSelectedRows();
+        const match = selectedBattingGame
+            ? findMatchingFieldingGame(selectedBattingGame)
+            : selectedFieldingGame;
 
-            const match = selectedBattingGame
-                ? findMatchingFieldingGame(selectedBattingGame)
-                : selectedFieldingGame;
-
-            if (match) {
-                selectedFieldingGame = match;
-                const tr = findRowByGame("fieldingBody", match);
-                showSelectedFieldingGame(match, tr);
-            } else {
-                renderSummary();
-            }
+        if (match) {
+            selectedFieldingGame = match;
+            const tr = findRowByGame("fieldingBody", match);
+            showSelectedFieldingGame(match, tr);
+        } else {
+            renderSummary();
         }
     }
-
-    /* ------------ SEASON ------------ */
-    function applySeason(seasonKey) {
-        currentSeason = seasonKey;
-
-        if (currentSeason === "career") {
-            $("#heroStatsSeason").textContent = "Career";
-            $("#heroStatsSuffix").textContent = "Stats";
-        } else {
-            $("#heroStatsSeason").textContent = currentSeason;
-            $("#heroStatsSuffix").textContent = "Season Stats";
-        }
-
-        const teamSummaryTitle = document.getElementById("teamSummaryTitle");
-if (teamSummaryTitle) {
-    teamSummaryTitle.textContent = (currentSeason === "career")
-        ? "Career Team Record"
-        : `${currentSeason} Team Record`;
 }
 
-        if ($("#summaryPanelTitle")) {
-            $("#summaryPanelTitle").textContent = (currentSeason === "career") ? "Career Summary" : "Season Summary";
-        }
+/* ------------ SEASON ------------ */
+function applySeason(seasonKey) {
+    currentSeason = seasonKey;
 
-        if (currentSeason === "career") {
-            battingLog = careerBattingLog;
-            fieldingLog = careerFieldingLog;
-        } else {
-            const { bat, fld } = buildSeasonLogs(currentSeason);
-            battingLog = bat;
-            fieldingLog = fld;
-        }
-
-        resetState(battingState);
-        resetState(fieldingState);
-
-        renderOpponentSelect($("#oppBat"), battingLog);
-        renderOpponentSelect($("#oppFld"), fieldingLog);
-
-        $("#oppBat").value = "";
-        $("#oppFld").value = "";
-        setSharedOpponent("");
-
-        renderVsOpponentAllTime("");
-        renderVsOpponentFieldingAllTime("");
-
-        clearSelectedGameSummary();
-        renderSummary();
-
-        const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
-        setTab(activeTab);
+    if (currentSeason === "career") {
+        $("#heroStatsSeason").textContent = "Career";
+        $("#heroStatsSuffix").textContent = "Stats";
+    } else {
+        $("#heroStatsSeason").textContent = currentSeason;
+        $("#heroStatsSuffix").textContent = "Season Stats";
     }
 
-    /* ------------ VS OPPONENT ------------ */
-    function renderVsOpponentAllTime(opponent) {
-        const wrap = $("#vsOppWrap");
-        const strip = $("#vsOppStrip");
-        if (!wrap || !strip) return;
+    const teamSummaryTitle = document.getElementById("teamSummaryTitle");
+    if (teamSummaryTitle) {
+        teamSummaryTitle.textContent =
+            currentSeason === "career"
+                ? "Career Team Record"
+                : `${currentSeason} Team Record`;
+    }
 
-        if (!opponent) {
-            wrap.style.display = "none";
-            const label = $("#vsOppLabel");
-            if (label) label.textContent = "—";
-            strip.innerHTML = "";
-            const name2 = document.getElementById("vsOppName2");
-            if (name2) name2.textContent = "—";
-            return;
-        }
+    if ($("#summaryPanelTitle")) {
+        $("#summaryPanelTitle").textContent =
+            currentSeason === "career" ? "Career Summary" : "Season Summary";
+    }
 
-        const baseLog = (currentSeason === "career") ? careerBattingLog : battingLog;
-        const rows = baseLog.filter(r => r.opponent === opponent);
-        const wins = rows.filter(r => String(r.result || "").trim().startsWith("W")).length;
-        const losses = rows.filter(r => String(r.result || "").trim().startsWith("L")).length;
+    if (currentSeason === "career") {
+        battingLog = careerBattingLog;
+        fieldingLog = careerFieldingLog;
+    } else {
+        const { bat, fld } = buildSeasonLogs(currentSeason);
+        battingLog = bat;
+        fieldingLog = fld;
+    }
 
+    resetState(battingState);
+    resetState(fieldingState);
+
+    renderOpponentSelect($("#oppBat"), battingLog);
+    renderOpponentSelect($("#oppFld"), fieldingLog);
+
+    $("#oppBat").value = "";
+    $("#oppFld").value = "";
+    setSharedOpponent("");
+
+    renderVsOpponentAllTime("");
+    renderVsOpponentFieldingAllTime("");
+
+    clearSelectedGameSummary();
+    renderSummary();
+
+    const activeTab = document.querySelector(".tab.active")?.dataset.tab || "batting";
+    setTab(activeTab);
+}
+
+/* ------------ VS OPPONENT ------------ */
+function renderVsOpponentAllTime(opponent) {
+    const wrap = $("#vsOppWrap");
+    const strip = $("#vsOppStrip");
+    if (!wrap || !strip) return;
+
+    if (!opponent) {
+        wrap.style.display = "none";
         const label = $("#vsOppLabel");
-        if (label) {
-            const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
-            label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-        }
-        wrap.style.display = "block";
-
+        if (label) label.textContent = "—";
+        strip.innerHTML = "";
         const name2 = document.getElementById("vsOppName2");
-        if (name2) name2.textContent = opponent;
-
-        const ht = computeHitTypeTotals(rows);
-        const oppCanvas = document.getElementById("vsOppHitTypeChart");
-        if (oppCanvas) {
-            opponentHitPie.render(oppCanvas, ["1B", "2B", "3B", "HR"], [
-                ht.singles, ht.doubles, ht.triples, ht.hrs
-            ]);
-        }
-
-        const t = computeBattingTotals(rows);
-        const { avg, slg, ops } = computeOPSFromTotals(t);
-
-        const recLabel = (currentSeason === "career")
-    ? `Career Record vs ${opponent}`
-    : `${currentSeason} Record vs ${opponent}`;
-
-strip.innerHTML = [
-    { k: "REC", v: `${wins}-${losses}`, s: recLabel },
-    { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
-    { k: "AVG", v: fmt3(avg), s: "H / AB" },
-    { k: "SLG", v: fmt3(slg), s: "TB / AB" },
-    { k: "OPS", v: fmt3(ops), s: "AVG + SLG" },
-    { k: "HR", v: t.HR, s: "From logs" },
-    { k: "RBI", v: t.RBI, s: "From logs" },
-    { k: "TB", v: t.TB, s: "From logs" }
-].map(x => `
-            <div class="stat">
-                <div class="k">${x.k}</div>
-                <div class="v">${x.v}</div>
-                <div class="s">${x.s}</div>
-            </div>
-        `).join("");
+        if (name2) name2.textContent = "—";
+        return;
     }
 
-    function renderVsOpponentFieldingAllTime(opponent) {
-        const wrap = $("#vsOppWrapFld");
-        const strip = $("#vsOppStripFld");
-        if (!wrap || !strip) return;
+    const baseLog = currentSeason === "career" ? careerBattingLog : battingLog;
+    const rows = baseLog.filter((r) => r.opponent === opponent);
+    const wins = rows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
+    const losses = rows.filter((r) => String(r.result || "").trim().startsWith("L")).length;
 
-        if (!opponent) {
-            wrap.style.display = "none";
-            const label = $("#vsOppLabelFld");
-            if (label) label.textContent = "—";
-            strip.innerHTML = "";
-            return;
-        }
+    const label = $("#vsOppLabel");
+    if (label) {
+        const seasonText = currentSeason === "career" ? "Career" : currentSeason;
+        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+    }
 
-        const baseLog = (currentSeason === "career") ? careerFieldingLog : fieldingLog;
-        const rows = baseLog.filter(r => r.opponent === opponent);
-        const fld = computeFieldingTotals(rows);
+    wrap.style.display = "block";
 
+    const name2 = document.getElementById("vsOppName2");
+    if (name2) name2.textContent = opponent;
+
+    const ht = computeHitTypeTotals(rows);
+    const oppCanvas = document.getElementById("vsOppHitTypeChart");
+    if (oppCanvas) {
+        opponentHitPie.render(oppCanvas, ["1B", "2B", "3B", "HR"], [
+            ht.singles,
+            ht.doubles,
+            ht.triples,
+            ht.hrs
+        ]);
+    }
+
+    const t = computeBattingTotals(rows);
+    const { avg, slg, ops } = computeOPSFromTotals(t);
+
+    const recLabel =
+        currentSeason === "career"
+            ? `Career Record vs ${opponent}`
+            : `${currentSeason} Record vs ${opponent}`;
+
+    strip.innerHTML = [
+        { k: "REC", v: `${wins}-${losses}`, s: recLabel },
+        { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
+        { k: "AVG", v: fmt3(avg), s: "H / AB" },
+        { k: "SLG", v: fmt3(slg), s: "TB / AB" },
+        { k: "OPS", v: fmt3(ops), s: "AVG + SLG" },
+        { k: "HR", v: t.HR, s: "From logs" },
+        { k: "RBI", v: t.RBI, s: "From logs" },
+        { k: "TB", v: t.TB, s: "From logs" }
+    ].map((x) => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
+
+function renderVsOpponentFieldingAllTime(opponent) {
+    const wrap = $("#vsOppWrapFld");
+    const strip = $("#vsOppStripFld");
+    if (!wrap || !strip) return;
+
+    if (!opponent) {
+        wrap.style.display = "none";
         const label = $("#vsOppLabelFld");
-        if (label) {
-            const seasonText = (currentSeason === "career") ? "Career" : currentSeason;
-            label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-        }
-
-        wrap.style.display = "block";
-        strip.innerHTML = [
-            { k: "G", v: rows.length, s: "Games vs Opponent" },
-            { k: "TC", v: fld.TC, s: "Total chances" },
-            { k: "PO", v: fld.PO, s: "Putouts" },
-            { k: "A", v: fld.A, s: "Assists" },
-            { k: "E", v: fld.E, s: "Errors" },
-            { k: "FPCT", v: fmt3(fld.FPCT), s: "Fielding %" }
-        ].map(x => `
-            <div class="stat">
-                <div class="k">${x.k}</div>
-                <div class="v">${x.v}</div>
-                <div class="s">${x.s}</div>
-            </div>
-        `).join("");
+        if (label) label.textContent = "—";
+        strip.innerHTML = "";
+        return;
     }
 
-    /* ------------ INIT ------------ */
-    (function init() {
-        buildCareer();
-        applySeason("2026");
+    const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
+    const rows = baseLog.filter((r) => r.opponent === opponent);
+    const fld = computeFieldingTotals(rows);
 
-        document.querySelectorAll(".tab").forEach(t => {
-            t.addEventListener("click", () => setTab(t.dataset.tab));
-        });
+    const label = $("#vsOppLabelFld");
+    if (label) {
+        const seasonText = currentSeason === "career" ? "Career" : currentSeason;
+        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+    }
 
-        $("#oppBat").addEventListener("change", (e) => setSharedOpponent(e.target.value));
+    wrap.style.display = "block";
+    strip.innerHTML = [
+        { k: "G", v: rows.length, s: "Games vs Opponent" },
+        { k: "TC", v: fld.TC, s: "Total chances" },
+        { k: "PO", v: fld.PO, s: "Putouts" },
+        { k: "A", v: fld.A, s: "Assists" },
+        { k: "E", v: fld.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(fld.FPCT), s: "Fielding %" }
+    ].map((x) => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
+        </div>
+    `).join("");
+}
 
-        $("#resetBat").addEventListener("click", () => {
-            clearSelectedGameSummary();
-            resetState(battingState);
-            setSharedOpponent("");
-        });
+/* ------------ INIT ------------ */
+(function init() {
+    buildCareer();
+    applySeason("2026");
 
+    document.querySelectorAll(".tab").forEach((t) => {
+        t.addEventListener("click", () => setTab(t.dataset.tab));
+    });
 
-        $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
+    $("#oppBat").addEventListener("change", (e) => setSharedOpponent(e.target.value));
+    $("#resetBat").addEventListener("click", () => {
+        clearSelectedGameSummary();
+        resetState(battingState);
+        setSharedOpponent("");
+    });
 
-        $("#resetFld").addEventListener("click", () => {
-            clearSelectedGameSummary();
-            resetState(fieldingState);
-            setSharedOpponent("");
-        });
+    $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
+    $("#resetFld").addEventListener("click", () => {
+        clearSelectedGameSummary();
+        resetState(fieldingState);
+        setSharedOpponent("");
+    });
 
-        hookTableSort("#battingTable", battingState, refreshBatting);
-        hookTableSort("#fieldingTable", fieldingState, refreshFielding);
+    hookTableSort("#battingTable", battingState, refreshBatting);
+    hookTableSort("#fieldingTable", fieldingState, refreshFielding);
 
-        $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
+    $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
 
-        setTab("batting");
-    })();
+    setTab("batting");
+})();
+
 </script>
 
 
