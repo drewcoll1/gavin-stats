@@ -3680,8 +3680,10 @@ function renderVsOpponentFieldingAllTime(opponent) {
 
     if (!opponent) {
         wrap.style.display = "none";
+
         const label = $("#vsOppLabelFld");
         if (label) label.textContent = "—";
+
         strip.innerHTML = "";
 
         const chart = document.getElementById("vsOppFieldingChart");
@@ -3692,23 +3694,23 @@ function renderVsOpponentFieldingAllTime(opponent) {
         return;
     }
 
-   const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
-const rows = baseLog.filter((r) => r.opponent === opponent);
-const fld = computeFieldingTotals(rows);
+    const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
+    const rows = baseLog.filter((r) => r.opponent === opponent);
+    const fld = computeFieldingTotals(rows);
 
-const wins = rows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
-const losses = rows.filter((r) => String(r.result || "").trim().startsWith("L")).length;
+    const wins = rows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
+    const losses = rows.filter((r) => String(r.result || "").trim().startsWith("L")).length;
 
-  const label = $("#vsOppLabelFld");
-if (label) {
-    const seasonText = currentSeason === "career" ? "Career" : currentSeason;
-    label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-}
+    const label = $("#vsOppLabelFld");
+    if (label) {
+        const seasonText = currentSeason === "career" ? "Career" : currentSeason;
+        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+    }
 
-const recLabel =
-    currentSeason === "career"
-        ? `Career Record vs ${opponent}`
-        : `${currentSeason} Record vs ${opponent}`;}
+    const recLabel =
+        currentSeason === "career"
+            ? `Career Record vs ${opponent}`
+            : `${currentSeason} Record vs ${opponent}`;
 
     wrap.style.display = "block";
 
