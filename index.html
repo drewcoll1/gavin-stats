@@ -2480,10 +2480,10 @@ function renderFieldingChart(canvas, totals) {
     }
 
     // sized to feel closer to the batting chart
-    const cx = w * 0.31;
-    const cy = h * 0.55;
-    const radius = Math.min(w, h) * 0.22;
-    const lineWidth = 18;
+    const cx = w * 0.32;
+const cy = h * 0.55;
+const radius = Math.min(w, h) * 0.31;
+const lineWidth = 22;
 
     const startAngle = -Math.PI / 2;
     const cleanAngle = (clean / total) * Math.PI * 2;
@@ -2527,8 +2527,8 @@ function renderFieldingChart(canvas, totals) {
     ctx.fillText("FPCT", cx, cy + 24);
 
     // compact legend area on right
-    const legendX = w * 0.58;
-    const startY = h * 0.26;
+    const legendX = w * 0.66;
+const startY = h * 0.24;
     const items = [
         { label: "Clean", value: clean, meta: `${po} PO + ${a} A`, color: "#173d82", box: true },
         { label: "Errors", value: e, meta: "Misplays", color: "#cc0000", box: true },
