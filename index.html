@@ -2432,8 +2432,8 @@ td[data-label="Opponent"] .opp-emoji {
     const cssWidth = rect.width || 600;
     const cssHeight = 220;
 
-    canvas.width = cssWidth * dpr;
-    canvas.height = cssHeight * dpr;
+    canvas.width = Math.round(cssWidth * dpr);
+    canvas.height = Math.round(cssHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const w = cssWidth;
@@ -2455,7 +2455,7 @@ td[data-label="Opponent"] .opp-emoji {
     ctx.fillText("Fielding Efficiency", 14, 22);
 
     if (!total) {
-        ctx.fillStyle = "rgba(255,255,255,.7)";
+        ctx.fillStyle = "rgba(255,255,255,.72)";
         ctx.font = "700 14px system-ui";
         ctx.textAlign = "center";
         ctx.fillText("No fielding chances to display", w / 2, h / 2);
@@ -2463,22 +2463,19 @@ td[data-label="Opponent"] .opp-emoji {
     }
 
     const cx = w * 0.24;
-const cy = h * 0.54;
-const radius = 50;
-const lineWidth = 18;
+    const cy = h * 0.54;
+    const radius = 50;
+    const lineWidth = 18;
 
     const startAngle = -Math.PI / 2;
     const cleanAngle = (clean / total) * Math.PI * 2;
-    const errorAngle = (e / total) * Math.PI * 2;
 
-    // background ring
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(255,255,255,.08)";
     ctx.lineWidth = lineWidth;
     ctx.stroke();
 
-    // clean slice
     ctx.beginPath();
     ctx.arc(cx, cy, radius, startAngle, startAngle + cleanAngle);
     ctx.strokeStyle = "#173d82";
@@ -2486,15 +2483,13 @@ const lineWidth = 18;
     ctx.lineCap = "butt";
     ctx.stroke();
 
-    // error slice
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, startAngle + cleanAngle, startAngle + cleanAngle + errorAngle);
+    ctx.arc(cx, cy, radius, startAngle + cleanAngle, startAngle + Math.PI * 2);
     ctx.strokeStyle = "#cc0000";
     ctx.lineWidth = lineWidth;
     ctx.lineCap = "butt";
     ctx.stroke();
 
-    // center text
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.font = "900 24px system-ui";
@@ -2504,45 +2499,44 @@ const lineWidth = 18;
     ctx.font = "12px system-ui";
     ctx.fillText("FPCT", cx, cy + 24);
 
-    // right-side legend/stats
     const legendX = w * 0.48;
-const topY = 56;
+    const topY = 56;
 
     const items = [
-        { label: "Clean", value: clean, sub: `${po} PO + ${a} A`, color: "#173d82" },
-{ label: "Errors", value: e, sub: "Misplays", color: "#cc0000" },
-{ label: "TC", value: total, sub: "Total Chances", color: "#ffffff" }
+        { label: "Clean", value: clean, sub: `${po} PO + ${a} A`, color: "#173d82", box: true },
+        { label: "Errors", value: e, sub: "Misplays", color: "#cc0000", box: true },
+        { label: "TC", value: total, sub: "Total Chances", color: "#ffffff", box: false }
     ];
 
-   items.forEach((item, i) => {
-    const y = topY + i * 48;
-
-    if (item.label !== "Total Chances") {
-        ctx.fillStyle = item.color;
-        ctx.fillRect(legendX, y - 8, 12, 12);
-    } else {
-        ctx.strokeStyle = "rgba(255,255,255,.5)";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(legendX, y - 8, 12, 12);
-    }
-
-    ctx.fillStyle = "#ffffff";
     ctx.textAlign = "left";
-    ctx.font = "800 12px system-ui";
-    ctx.fillText(item.label, legendX + 20, y + 1);
 
-    ctx.font = "900 19px system-ui";
-    ctx.fillText(String(item.value), legendX + 20, y + 20);
+    items.forEach((item, i) => {
+        const y = topY + i * 48;
 
-    ctx.fillStyle = "rgba(255,255,255,.72)";
-    ctx.font = "11px system-ui";
-    ctx.fillText(item.sub, legendX + 20, y + 35);
-});
+        if (item.box) {
+            ctx.fillStyle = item.color;
+            ctx.fillRect(legendX, y - 8, 12, 12);
+        } else {
+            ctx.strokeStyle = "rgba(255,255,255,.5)";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(legendX, y - 8, 12, 12);
+        }
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "800 12px system-ui";
+        ctx.fillText(item.label, legendX + 20, y + 1);
+
+        ctx.font = "900 19px system-ui";
+        ctx.fillText(String(item.value), legendX + 20, y + 20);
+
+        ctx.fillStyle = "rgba(255,255,255,.72)";
+        ctx.font = "11px system-ui";
+        ctx.fillText(item.sub, legendX + 20, y + 35);
     });
 
     ctx.fillStyle = "rgba(255,255,255,.72)";
-    ctx.textAlign = "left";
     ctx.font = "12px system-ui";
+    ctx.textAlign = "left";
     ctx.fillText(`${clean} of ${total} chances handled cleanly`, 14, h - 14);
 }
 
