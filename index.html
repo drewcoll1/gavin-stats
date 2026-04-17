@@ -819,7 +819,8 @@ select,
 }
 
 #hitTypeChart,
-#vsOppHitTypeChart {
+#vsOppHitTypeChart,
+#fieldingChart {
     display: block;
     width: 100%;
     height: 220px;
@@ -1738,12 +1739,18 @@ td[data-label="Opponent"] .opp-emoji {
 
                         <div class="section" id="summary-fielding">
 
-                            <div class="summary-logo-wrap" id="summaryLogoFielding">
-                                <img src="logo.png" class="summary-logo" alt="Penn logo">
-                            </div>
+    <div class="summary-logo-wrap" id="summaryLogoFielding">
+        <img src="logo.png" class="summary-logo" alt="Penn logo">
+    </div>
 
-                            <div class="stat-strip" id="fieldingStrip"></div>
-                        </div>
+    <div class="stat-strip" id="fieldingStrip"></div>
+
+    <div class="divider"></div>
+
+    <div class="chart-wrap">
+        <canvas id="fieldingChart" width="600" height="220"></canvas>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
@@ -2414,6 +2421,126 @@ td[data-label="Opponent"] .opp-emoji {
         if (fieldingRow) fieldingRow.classList.add("selected-game");
     }
 
+
+    function renderFieldingChart(canvas, totals) {
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+
+    const cssWidth = rect.width || 600;
+    const cssHeight = 220;
+
+    canvas.width = cssWidth * dpr;
+    canvas.height = cssHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const w = cssWidth;
+    const h = cssHeight;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const po = Number(totals?.PO || 0);
+    const a = Number(totals?.A || 0);
+    const e = Number(totals?.E || 0);
+    const total = po + a + e;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 14px system-ui";
+    ctx.textAlign = "left";
+    ctx.fillText("Fielding Chances Breakdown", 14, 22);
+
+    if (!total) {
+        ctx.fillStyle = "rgba(255,255,255,.7)";
+        ctx.font = "700 14px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText("No fielding chances to display", w / 2, h / 2);
+        return;
+    }
+
+    const barX = 14;
+    const barY = 62;
+    const barW = w - 28;
+    const barH = 32;
+    const radius = 10;
+
+    const poW = (po / total) * barW;
+    const aW = (a / total) * barW;
+    const eW = (e / total) * barW;
+
+    function roundRect(x, y, width, height, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + width - r, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+        ctx.lineTo(x + width, y + height - r);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+        ctx.lineTo(x + r, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+    }
+
+    roundRect(barX, barY, barW, barH, radius);
+    ctx.save();
+    ctx.clip();
+
+    let x = barX;
+
+    ctx.fillStyle = "#173d82";
+    ctx.fillRect(x, barY, poW, barH);
+    x += poW;
+
+    ctx.fillStyle = "#4f8cff";
+    ctx.fillRect(x, barY, aW, barH);
+    x += aW;
+
+    ctx.fillStyle = "#cc0000";
+    ctx.fillRect(x, barY, eW, barH);
+
+    ctx.restore();
+
+    ctx.strokeStyle = "rgba(255,255,255,.12)";
+    ctx.lineWidth = 1;
+    roundRect(barX, barY, barW, barH, radius);
+    ctx.stroke();
+
+    const items = [
+        { label: "PO", value: po, color: "#173d82", sub: "Putouts" },
+        { label: "A", value: a, color: "#4f8cff", sub: "Assists" },
+        { label: "E", value: e, color: "#cc0000", sub: "Errors" }
+    ];
+
+    const startY = 126;
+    const colW = w / 3;
+
+    items.forEach((item, i) => {
+        const cx = colW * i + 20;
+
+        ctx.fillStyle = item.color;
+        ctx.fillRect(cx, startY, 14, 14);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "800 13px system-ui";
+        ctx.textAlign = "left";
+        ctx.fillText(item.label, cx + 22, startY + 12);
+
+        ctx.font = "900 26px system-ui";
+        ctx.fillText(String(item.value), cx, startY + 52);
+
+        ctx.font = "12px system-ui";
+        ctx.fillStyle = "rgba(255,255,255,.78)";
+        ctx.fillText(item.sub, cx, startY + 72);
+    });
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 12px system-ui";
+    ctx.textAlign = "right";
+    ctx.fillText(`Total Chances: ${total}`, w - 14, 22);
+}
+
    /* ------------ HIT PIE CHART ------------ */
 function createHitPie() {
     let state = {
@@ -3083,6 +3210,11 @@ function renderTeamSummaryBar() {
             </div>
         `).join("");
 
+        const fieldingCanvas = document.getElementById("fieldingChart");
+if (fieldingCanvas) {
+    renderFieldingChart(fieldingCanvas, logFldTotals);
+}
+
         const heroTotals = officialBat;
         $("#heroAVG").textContent = fmt3(heroTotals.AVG);
         $("#heroOBP").textContent = fmt3(heroTotals.OBP);
@@ -3274,11 +3406,20 @@ function showSelectedFieldingGame(r, tr = null) {
     `;
 
     const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    if (panelTitle) {
-        panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
-    }
+if (panelTitle) {
+    panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
+}
 
-    restoreSelectedRows();
+const fieldingCanvas = document.getElementById("fieldingChart");
+if (fieldingCanvas) {
+    renderFieldingChart(fieldingCanvas, {
+        PO: r.PO || 0,
+        A: r.A || 0,
+        E: r.E || 0
+    });
+}
+
+restoreSelectedRows();
 }
     /* ------------ TABS ------------ */
     function setTab(tabName) {
