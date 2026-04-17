@@ -2527,7 +2527,7 @@ function renderFieldingChart(canvas, totals) {
 
     ctx.fillStyle = "rgba(255,255,255,.60)";
     ctx.font = "12px ui-sans-serif";
-    ctx.fillText("FPCT", cx, cy + 24);
+    ctx.fillText("Fielding %", cx, cy + 24);
 
     // legend
     const legendX = w * 0.62;
@@ -2555,11 +2555,6 @@ function renderFieldingChart(canvas, totals) {
         ctx.fillText(String(item.value), legendX + 110, y + 1);
     });
 
-    // bottom line
-    ctx.fillStyle = "rgba(255,255,255,.65)";
-    ctx.font = "12px ui-sans-serif";
-    ctx.textAlign = "left";
-    ctx.fillText(`${po}/${total} putouts`, 14, h - 4);
 }
 /* ------------ HIT PIE CHART ------------ */
 function createHitPie() {
