@@ -3692,20 +3692,28 @@ function renderVsOpponentFieldingAllTime(opponent) {
         return;
     }
 
-    const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
-    const rows = baseLog.filter((r) => r.opponent === opponent);
-    const fld = computeFieldingTotals(rows);
+   const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
+const rows = baseLog.filter((r) => r.opponent === opponent);
+const fld = computeFieldingTotals(rows);
 
-    const label = $("#vsOppLabelFld");
-    if (label) {
-        const seasonText = currentSeason === "career" ? "Career" : currentSeason;
-        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
-    }
+const wins = rows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
+const losses = rows.filter((r) => String(r.result || "").trim().startsWith("L")).length;
+
+  const label = $("#vsOppLabelFld");
+if (label) {
+    const seasonText = currentSeason === "career" ? "Career" : currentSeason;
+    label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+}
+
+const recLabel =
+    currentSeason === "career"
+        ? `Career Record vs ${opponent}`
+        : `${currentSeason} Record vs ${opponent}`;}
 
     wrap.style.display = "block";
 
     strip.innerHTML = [
-        { k: "G", v: rows.length, s: "Games vs Opponent" },
+        { k: "REC", v: `${wins}-${losses}`, s: recLabel },
         { k: "TC", v: fld.TC, s: "Total chances" },
         { k: "PO", v: fld.PO, s: "Putouts" },
         { k: "A", v: fld.A, s: "Assists" },
