@@ -2444,12 +2444,15 @@ td[data-label="Opponent"] .opp-emoji {
     const po = Number(totals?.PO || 0);
     const a = Number(totals?.A || 0);
     const e = Number(totals?.E || 0);
-    const total = po + a + e;
+
+    const clean = po + a;
+    const total = clean + e;
+    const fpct = total ? clean / total : NaN;
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "800 14px system-ui";
     ctx.textAlign = "left";
-    ctx.fillText("Fielding Chances Breakdown", 14, 22);
+    ctx.fillText("Fielding Efficiency", 14, 22);
 
     if (!total) {
         ctx.fillStyle = "rgba(255,255,255,.7)";
@@ -2459,86 +2462,86 @@ td[data-label="Opponent"] .opp-emoji {
         return;
     }
 
-    const barX = 14;
-    const barY = 62;
-    const barW = w - 28;
-    const barH = 32;
-    const radius = 10;
+    const cx = w * 0.28;
+    const cy = h * 0.56;
+    const radius = 58;
+    const lineWidth = 20;
 
-    const poW = (po / total) * barW;
-    const aW = (a / total) * barW;
-    const eW = (e / total) * barW;
+    const startAngle = -Math.PI / 2;
+    const cleanAngle = (clean / total) * Math.PI * 2;
+    const errorAngle = (e / total) * Math.PI * 2;
 
-    function roundRect(x, y, width, height, r) {
-        ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + width - r, y);
-        ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-        ctx.lineTo(x + width, y + height - r);
-        ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-        ctx.lineTo(x + r, y + height);
-        ctx.quadraticCurveTo(x, y + height, x, y + height - r);
-        ctx.lineTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
-        ctx.closePath();
-    }
-
-    roundRect(barX, barY, barW, barH, radius);
-    ctx.save();
-    ctx.clip();
-
-    let x = barX;
-
-    ctx.fillStyle = "#173d82";
-    ctx.fillRect(x, barY, poW, barH);
-    x += poW;
-
-    ctx.fillStyle = "#4f8cff";
-    ctx.fillRect(x, barY, aW, barH);
-    x += aW;
-
-    ctx.fillStyle = "#cc0000";
-    ctx.fillRect(x, barY, eW, barH);
-
-    ctx.restore();
-
-    ctx.strokeStyle = "rgba(255,255,255,.12)";
-    ctx.lineWidth = 1;
-    roundRect(barX, barY, barW, barH, radius);
+    // background ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(255,255,255,.08)";
+    ctx.lineWidth = lineWidth;
     ctx.stroke();
 
+    // clean slice
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle, startAngle + cleanAngle);
+    ctx.strokeStyle = "#173d82";
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "butt";
+    ctx.stroke();
+
+    // error slice
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle + cleanAngle, startAngle + cleanAngle + errorAngle);
+    ctx.strokeStyle = "#cc0000";
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "butt";
+    ctx.stroke();
+
+    // center text
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.font = "900 24px system-ui";
+    ctx.fillText(isFinite(fpct) ? fmt3(fpct) : "—", cx, cy + 6);
+
+    ctx.fillStyle = "rgba(255,255,255,.72)";
+    ctx.font = "12px system-ui";
+    ctx.fillText("FPCT", cx, cy + 24);
+
+    // right-side legend/stats
+    const legendX = w * 0.52;
+    const topY = 62;
+
     const items = [
-        { label: "PO", value: po, color: "#173d82", sub: "Putouts" },
-        { label: "A", value: a, color: "#4f8cff", sub: "Assists" },
-        { label: "E", value: e, color: "#cc0000", sub: "Errors" }
+        { label: "Clean Plays", value: clean, sub: `${po} PO + ${a} A`, color: "#173d82" },
+        { label: "Errors", value: e, sub: "Misplays", color: "#cc0000" },
+        { label: "Total Chances", value: total, sub: "PO + A + E", color: "#ffffff" }
     ];
 
-    const startY = 126;
-    const colW = w / 3;
-
     items.forEach((item, i) => {
-        const cx = colW * i + 20;
+        const y = topY + i * 52;
 
-        ctx.fillStyle = item.color;
-        ctx.fillRect(cx, startY, 14, 14);
+        if (item.label !== "Total Chances") {
+            ctx.fillStyle = item.color;
+            ctx.fillRect(legendX, y - 10, 14, 14);
+        } else {
+            ctx.strokeStyle = "rgba(255,255,255,.5)";
+            ctx.strokeRect(legendX, y - 10, 14, 14);
+        }
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "800 13px system-ui";
         ctx.textAlign = "left";
-        ctx.fillText(item.label, cx + 22, startY + 12);
+        ctx.font = "800 13px system-ui";
+        ctx.fillText(item.label, legendX + 24, y + 1);
 
-        ctx.font = "900 26px system-ui";
-        ctx.fillText(String(item.value), cx, startY + 52);
+        ctx.font = "900 22px system-ui";
+        ctx.fillText(String(item.value), legendX + 24, y + 25);
 
+        ctx.fillStyle = "rgba(255,255,255,.72)";
         ctx.font = "12px system-ui";
-        ctx.fillStyle = "rgba(255,255,255,.78)";
-        ctx.fillText(item.sub, cx, startY + 72);
+        ctx.fillText(item.sub, legendX + 24, y + 42);
     });
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "800 12px system-ui";
-    ctx.textAlign = "right";
-    ctx.fillText(`Total Chances: ${total}`, w - 14, 22);
+    ctx.fillStyle = "rgba(255,255,255,.72)";
+    ctx.textAlign = "left";
+    ctx.font = "12px system-ui";
+    ctx.fillText(`${clean} of ${total} chances handled cleanly`, 14, h - 14);
 }
 
    /* ------------ HIT PIE CHART ------------ */
