@@ -2271,6 +2271,7 @@ td[data-label="Opponent"] .opp-emoji {
             SLG: 0.314, BB: 11, HBP: 9, SO: 22, GDP: 1, OBP: 0.326, SF: 3, SH: 0, SB: 7, SBAtt: 8
         }
     };
+
 /* ------------ HELPERS ------------ */
 const $ = (sel) => document.querySelector(sel);
 
@@ -2291,7 +2292,7 @@ function fmt3(x) {
 }
 
 function safeDiv(a, b) {
-    return b === 0 ? NaN : (a / b);
+    return b === 0 ? NaN : a / b;
 }
 
 function logoFor(opponent) {
@@ -2310,8 +2311,9 @@ function initials(opponent) {
 }
 
 function computeBattingTotals(rows) {
-    const t = { H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
+    const t = { GP: 0, H: 0, AB: 0, R: 0, "2B": 0, "3B": 0, HR: 0, RBI: 0, TB: 0 };
     for (const g of rows) {
+        t.GP += 1;
         t.H += g.H || 0;
         t.AB += g.AB || 0;
         t.R += g.R || 0;
@@ -2322,6 +2324,13 @@ function computeBattingTotals(rows) {
         t.TB += g.TB || 0;
     }
     return t;
+}
+
+function computeAdvancedFromLog(t) {
+    return {
+        AVG: safeDiv(t.H, t.AB),
+        SLG: safeDiv(t.TB, t.AB)
+    };
 }
 
 function computeHitTypeTotals(rows) {
@@ -2340,42 +2349,11 @@ function computeHitTypeTotals(rows) {
     return { singles, doubles, triples, hrs };
 }
 
-function computeAdvancedFromLog(t) {
-    return {
-        AVG: safeDiv(t.H, t.AB),
-        SLG: safeDiv(t.TB, t.AB)
-    };
-}
-
-function syncIvyButtons() {
-    const ivyBat = document.getElementById("ivyBat");
-    const ivyFld = document.getElementById("ivyFld");
-
-    if (ivyBat) ivyBat.classList.toggle("active", !!battingState.ivyOnly);
-    if (ivyFld) ivyFld.classList.toggle("active", !!fieldingState.ivyOnly);
-}
-
-function syncIvyVisibility() {
-    const ivyBat = document.getElementById("ivyBat");
-    const ivyFld = document.getElementById("ivyFld");
-
-    const hide = !!battingState.opponent; // if a team is selected
-
-    if (ivyBat) ivyBat.style.display = hide ? "none" : "inline-flex";
-    if (ivyFld) ivyFld.style.display = hide ? "none" : "inline-flex";
-}
-
-function computeOPSFromTotals(t) {
-    const avg = safeDiv(t.H, t.AB);
-    const slg = safeDiv(t.TB, t.AB);
-    const ops = isFinite(avg) && isFinite(slg) ? avg + slg : NaN;
-    return { avg, slg, ops };
-}
-
 function computeFieldingTotals(rows) {
-    let TC = 0, PO = 0, A = 0, E = 0;
+    let GP = 0, TC = 0, PO = 0, A = 0, E = 0;
 
     for (const g of rows) {
+        GP += 1;
         TC += g.TC || 0;
         PO += g.PO || 0;
         A += g.A || 0;
@@ -2383,7 +2361,79 @@ function computeFieldingTotals(rows) {
     }
 
     const FPCT = safeDiv(PO + A, PO + A + E);
-    return { TC, PO, A, E, FPCT };
+    return { GP, TC, PO, A, E, FPCT };
+}
+
+function computeOBPFromOfficialTotals(t) {
+    if (!t) return NaN;
+    return safeDiv(
+        (t.H || 0) + (t.BB || 0) + (t.HBP || 0),
+        (t.AB || 0) + (t.BB || 0) + (t.HBP || 0) + (t.SF || 0)
+    );
+}
+
+function getSeasonOfficialTotals(seasonKey) {
+    if (seasonKey === "career") return careerOfficialBattingTotals();
+    return officialTotals[seasonKey] || null;
+}
+
+function careerOfficialBattingTotals() {
+    const seasons = Object.keys(officialTotals);
+    const raw = {
+        GP: 0,
+        GS: 0,
+        AB: 0,
+        R: 0,
+        H: 0,
+        "2B": 0,
+        "3B": 0,
+        HR: 0,
+        RBI: 0,
+        TB: 0,
+        BB: 0,
+        HBP: 0,
+        SO: 0,
+        GDP: 0,
+        SF: 0,
+        SH: 0,
+        SB: 0,
+        SBAtt: 0
+    };
+
+    for (const s of seasons) {
+        const t = officialTotals[s];
+        raw.GP += t.GP || 0;
+        raw.GS += t.GS || 0;
+        raw.AB += t.AB || 0;
+        raw.R += t.R || 0;
+        raw.H += t.H || 0;
+        raw["2B"] += t["2B"] || 0;
+        raw["3B"] += t["3B"] || 0;
+        raw.HR += t.HR || 0;
+        raw.RBI += t.RBI || 0;
+        raw.TB += t.TB || 0;
+        raw.BB += t.BB || 0;
+        raw.HBP += t.HBP || 0;
+        raw.SO += t.SO || 0;
+        raw.GDP += t.GDP || 0;
+        raw.SF += t.SF || 0;
+        raw.SH += t.SH || 0;
+        raw.SB += t.SB || 0;
+        raw.SBAtt += t.SBAtt || 0;
+    }
+
+    raw.AVG = safeDiv(raw.H, raw.AB);
+    raw.SLG = safeDiv(raw.TB, raw.AB);
+    raw.OBP = computeOBPFromOfficialTotals(raw);
+    raw.OPS = isFinite(raw.OBP) && isFinite(raw.SLG) ? raw.OBP + raw.SLG : NaN;
+
+    return raw;
+}
+
+function computeOPSFromOfficialTotals(t) {
+    const obp = computeOBPFromOfficialTotals(t);
+    const slg = safeDiv(t.TB || 0, t.AB || 0);
+    return isFinite(obp) && isFinite(slg) ? obp + slg : NaN;
 }
 
 function opponentCellHTML(r) {
@@ -2410,50 +2460,8 @@ function getRightPanelEls() {
     const panel = document.querySelector(".grid > .panel:last-child");
     return {
         title: panel?.querySelector(".panel-title"),
-        sub: panel?.querySelector(".panel-sub"),
-        battingChartWrap: document.querySelector("#summary-batting .chart-wrap")
+        sub: panel?.querySelector(".panel-sub")
     };
-}
-
-function clearSelectedRows() {
-    document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach((row) => {
-        row.classList.remove("selected-game");
-    });
-}
-
-function setSelectedRow(tbodyId, tr) {
-    document.querySelectorAll(`#${tbodyId} tr`).forEach((row) => {
-        row.classList.remove("selected-game");
-    });
-    if (tr) tr.classList.add("selected-game");
-}
-
-function clearSelectedGameSummary() {
-    selectedBattingGame = null;
-    selectedFieldingGame = null;
-    clearSelectedRows();
-
-    const rightTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    const rightSub = document.querySelector(".grid > .panel:last-child .panel-sub");
-
-    if (rightTitle) {
-        rightTitle.textContent = currentSeason === "career" ? "Career Summary" : "Season Summary";
-    }
-    if (rightSub) {
-        rightSub.textContent = "Batting and fielding at a glance.";
-    }
-
-    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
-    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-    if (summaryLogoBatting) summaryLogoBatting.style.display = "flex";
-    if (summaryLogoFielding) summaryLogoFielding.style.display = "flex";
-
-    const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
-    const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
-    if (battingChartWrap) battingChartWrap.style.display = "";
-    if (fieldingChartWrap) fieldingChartWrap.style.display = "";
-
-    renderSummary();
 }
 
 function sameGame(a, b) {
@@ -2478,7 +2486,6 @@ function findMatchingFieldingGame(battingGame) {
 function findRowByGame(tbodyId, game) {
     if (!game) return null;
     const rows = document.querySelectorAll(`#${tbodyId} tr`);
-
     for (const tr of rows) {
         if (
             tr.dataset.date === game.date &&
@@ -2491,15 +2498,37 @@ function findRowByGame(tbodyId, game) {
     return null;
 }
 
+function clearSelectedRows() {
+    document.querySelectorAll("#battingBody tr, #fieldingBody tr").forEach((row) => {
+        row.classList.remove("selected-game");
+    });
+}
+
 function restoreSelectedRows() {
-    document.querySelectorAll("#battingBody tr").forEach((row) => row.classList.remove("selected-game"));
-    document.querySelectorAll("#fieldingBody tr").forEach((row) => row.classList.remove("selected-game"));
+    clearSelectedRows();
 
     const battingRow = findRowByGame("battingBody", selectedBattingGame);
     const fieldingRow = findRowByGame("fieldingBody", selectedFieldingGame);
 
     if (battingRow) battingRow.classList.add("selected-game");
     if (fieldingRow) fieldingRow.classList.add("selected-game");
+}
+
+function syncIvyButtons() {
+    const ivyBat = document.getElementById("ivyBat");
+    const ivyFld = document.getElementById("ivyFld");
+
+    if (ivyBat) ivyBat.classList.toggle("active", !!battingState.ivyOnly);
+    if (ivyFld) ivyFld.classList.toggle("active", !!fieldingState.ivyOnly);
+}
+
+function syncIvyVisibility() {
+    const ivyBat = document.getElementById("ivyBat");
+    const ivyFld = document.getElementById("ivyFld");
+    const hide = !!battingState.opponent;
+
+    if (ivyBat) ivyBat.style.display = hide ? "none" : "inline-flex";
+    if (ivyFld) ivyFld.style.display = hide ? "none" : "inline-flex";
 }
 
 /* ------------ FIELDING DONUT CHART ------------ */
@@ -2547,14 +2576,12 @@ function renderFieldingChart(canvas, totals) {
     const poAngle = total ? (po / total) * Math.PI * 2 : 0;
     const aAngle = total ? (a / total) * Math.PI * 2 : 0;
 
-    // background ring
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(255,255,255,.08)";
     ctx.lineWidth = lineWidth;
     ctx.stroke();
 
-    // putouts
     ctx.beginPath();
     ctx.arc(cx, cy, radius, startAngle, startAngle + poAngle);
     ctx.strokeStyle = "#173d82";
@@ -2562,7 +2589,6 @@ function renderFieldingChart(canvas, totals) {
     ctx.lineCap = "butt";
     ctx.stroke();
 
-    // assists
     ctx.beginPath();
     ctx.arc(cx, cy, radius, startAngle + poAngle, startAngle + poAngle + aAngle);
     ctx.strokeStyle = "#4f8cff";
@@ -2570,7 +2596,6 @@ function renderFieldingChart(canvas, totals) {
     ctx.lineCap = "butt";
     ctx.stroke();
 
-    // errors
     ctx.beginPath();
     ctx.arc(cx, cy, radius, startAngle + poAngle + aAngle, startAngle + Math.PI * 2);
     ctx.strokeStyle = "#cc0000";
@@ -2578,13 +2603,11 @@ function renderFieldingChart(canvas, totals) {
     ctx.lineCap = "butt";
     ctx.stroke();
 
-    // center fill
     ctx.fillStyle = "rgba(0,0,0,.35)";
     ctx.beginPath();
     ctx.arc(cx, cy, radius - lineWidth * 0.72, 0, Math.PI * 2);
     ctx.fill();
 
-    // center text
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.font = "900 22px ui-sans-serif";
@@ -2594,20 +2617,17 @@ function renderFieldingChart(canvas, totals) {
     ctx.font = "12px ui-sans-serif";
     ctx.fillText("Fielding %", cx, cy + 24);
 
-    // legend
     const legendX = w * 0.62;
     const startY = h * 0.28;
     const items = [
-        { label: "Putouts", value: po, meta: `${po}/${total} putouts`, color: "#173d82" },
-        { label: "Assists", value: a, meta: `${a}/${total} assists`, color: "#4f8cff" },
-        { label: "Errors", value: e, meta: `${e}/${total} errors`, color: "#cc0000" }
+        { label: "Putouts", value: po, color: "#173d82" },
+        { label: "Assists", value: a, color: "#4f8cff" },
+        { label: "Errors", value: e, color: "#cc0000" }
     ];
 
     ctx.textAlign = "left";
-
     items.forEach((item, i) => {
         const y = startY + i * 34;
-
         ctx.fillStyle = item.color;
         ctx.fillRect(legendX, y - 10, 22, 14);
 
@@ -2619,8 +2639,8 @@ function renderFieldingChart(canvas, totals) {
         ctx.font = "13px ui-sans-serif";
         ctx.fillText(String(item.value), legendX + 110, y + 1);
     });
-
 }
+
 /* ------------ HIT PIE CHART ------------ */
 function createHitPie() {
     const state = {
@@ -2638,23 +2658,15 @@ function createHitPie() {
     };
 
     const palette = [
-        ["#C41E3A", "#8B0000"], // 1B
-        ["#1F3A93", "#0B1E3F"], // 2B
-        ["#2E8B57", "#1F5C3A"], // 3B
-        ["#F4A300", "#C77C00"]  // HR
+        ["#C41E3A", "#8B0000"],
+        ["#1F3A93", "#0B1E3F"],
+        ["#2E8B57", "#1F5C3A"],
+        ["#F4A300", "#C77C00"]
     ];
 
-    function easeOutCubic(t) {
-        return 1 - Math.pow(1 - t, 3);
-    }
-
-    function easeOutExpo(t) {
-        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-    }
-
-    function clamp01(x) {
-        return Math.max(0, Math.min(1, x));
-    }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+    function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 
     function setupCanvas(canvas) {
         const ctx = canvas.getContext("2d");
@@ -2849,11 +2861,8 @@ function createHitPie() {
             state.fadeT < 1 ||
             Math.abs(state.hoverAnim - state.hoverTarget) > 0.01;
 
-        if (still) {
-            state.raf = requestAnimationFrame(renderFrame);
-        } else {
-            state.raf = null;
-        }
+        if (still) state.raf = requestAnimationFrame(renderFrame);
+        else state.raf = null;
     }
 
     function ensureRAF() {
@@ -2862,10 +2871,7 @@ function createHitPie() {
 
     function getMousePos(evt) {
         const rect = state.canvas.getBoundingClientRect();
-        return {
-            x: evt.clientX - rect.left,
-            y: evt.clientY - rect.top
-        };
+        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
     }
 
     function hitTest(pos) {
@@ -2961,8 +2967,8 @@ let careerFieldingLog = [];
 let selectedBattingGame = null;
 let selectedFieldingGame = null;
 
-const battingState = { opponent: "", ivyOnly: false, sortKey: "dateValue", sortDir: "asc" };
-const fieldingState = { opponent: "", ivyOnly: false, sortKey: "dateValue", sortDir: "asc" };
+const battingState = { search: "", opponent: "", ivyOnly: false, sortKey: "dateValue", sortDir: "asc" };
+const fieldingState = { search: "", opponent: "", ivyOnly: false, sortKey: "dateValue", sortDir: "asc" };
 
 function resetState(state) {
     state.search = "";
@@ -3057,12 +3063,12 @@ function filterRows(rows, state) {
     }
 
     if (state.opponent) {
-    out = out.filter((r) => r.opponent === state.opponent);
-}
+        out = out.filter((r) => r.opponent === state.opponent);
+    }
 
-if (state.ivyOnly) {
-    out = out.filter((r) => ivyTeams.has(r.opponent));
-}
+    if (state.ivyOnly) {
+        out = out.filter((r) => ivyTeams.has(r.opponent));
+    }
 
     out.sort((a, b) => {
         const key = state.sortKey;
@@ -3073,10 +3079,7 @@ if (state.ivyOnly) {
         if (bv == null) bv = "";
 
         if (typeof av === "string" && typeof bv === "string") {
-            const cmp = av.localeCompare(bv, undefined, {
-                numeric: true,
-                sensitivity: "base"
-            });
+            const cmp = av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" });
             return state.sortDir === "asc" ? cmp : -cmp;
         }
 
@@ -3109,15 +3112,20 @@ function hookTableSort(tableSel, state, refreshFn) {
 function renderOpponentSelect(selectEl, rows, ivyOnly = false) {
     if (!selectEl) return;
 
-    const pool = ivyOnly
-        ? rows.filter((r) => ivyTeams.has(r.opponent))
-        : rows;
-
+    const pool = ivyOnly ? rows.filter((r) => ivyTeams.has(r.opponent)) : rows;
     const unique = [...new Set(pool.map((r) => r.opponent))].sort((a, b) => a.localeCompare(b));
 
     selectEl.innerHTML =
         `<option value="">All</option>` +
         unique.map((o) => `<option value="${o}">${o}</option>`).join("");
+}
+
+function syncOpponentSelects() {
+    renderOpponentSelect($("#oppBat"), battingLog, !!battingState.ivyOnly);
+    renderOpponentSelect($("#oppFld"), fieldingLog, !!fieldingState.ivyOnly);
+
+    if ($("#oppBat")) $("#oppBat").value = battingState.opponent || "";
+    if ($("#oppFld")) $("#oppFld").value = fieldingState.opponent || "";
 }
 
 function setSharedOpponent(opponent) {
@@ -3126,7 +3134,6 @@ function setSharedOpponent(opponent) {
     battingState.opponent = selectedOpponent;
     fieldingState.opponent = selectedOpponent;
 
-    // If a team is selected, turn Ivy-only mode off
     if (selectedOpponent) {
         battingState.ivyOnly = false;
         fieldingState.ivyOnly = false;
@@ -3143,14 +3150,6 @@ function setSharedOpponent(opponent) {
     renderVsOpponentAllTime(selectedOpponent);
     renderVsOpponentFieldingAllTime(selectedOpponent);
     renderSummary();
-}
-
-function syncOpponentSelects() {
-    renderOpponentSelect($("#oppBat"), battingLog, !!battingState.ivyOnly);
-    renderOpponentSelect($("#oppFld"), fieldingLog, !!fieldingState.ivyOnly);
-
-    if ($("#oppBat")) $("#oppBat").value = battingState.opponent || "";
-    if ($("#oppFld")) $("#oppFld").value = fieldingState.opponent || "";
 }
 
 /* ------------ TABLE RENDER ------------ */
@@ -3183,6 +3182,8 @@ function renderBattingTable(rows) {
                 clearSelectedGameSummary();
                 return;
             }
+            selectedBattingGame = r;
+            selectedFieldingGame = findMatchingFieldingGame(r);
             showSelectedBattingGame(r);
         });
 
@@ -3219,6 +3220,8 @@ function renderFieldingTable(rows) {
                 clearSelectedGameSummary();
                 return;
             }
+            selectedFieldingGame = r;
+            selectedBattingGame = findMatchingBattingGame(r);
             showSelectedFieldingGame(r, tr);
         });
 
@@ -3240,59 +3243,6 @@ function refreshFielding() {
 }
 
 /* ------------ SUMMARY ------------ */
-function careerOfficialBattingTotals() {
-    const seasons = Object.keys(officialTotals);
-    const raw = {
-        GP: 0,
-        GS: 0,
-        AB: 0,
-        R: 0,
-        H: 0,
-        "2B": 0,
-        "3B": 0,
-        HR: 0,
-        RBI: 0,
-        TB: 0,
-        BB: 0,
-        HBP: 0,
-        SO: 0,
-        GDP: 0,
-        SF: 0,
-        SH: 0,
-        SB: 0,
-        SBAtt: 0
-    };
-
-    for (const s of seasons) {
-        const t = officialTotals[s];
-        raw.GP += t.GP || 0;
-        raw.GS += t.GS || 0;
-        raw.AB += t.AB || 0;
-        raw.R += t.R || 0;
-        raw.H += t.H || 0;
-        raw["2B"] += t["2B"] || 0;
-        raw["3B"] += t["3B"] || 0;
-        raw.HR += t.HR || 0;
-        raw.RBI += t.RBI || 0;
-        raw.TB += t.TB || 0;
-        raw.BB += t.BB || 0;
-        raw.HBP += t.HBP || 0;
-        raw.SO += t.SO || 0;
-        raw.GDP += t.GDP || 0;
-        raw.SF += t.SF || 0;
-        raw.SH += t.SH || 0;
-        raw.SB += t.SB || 0;
-        raw.SBAtt += t.SBAtt || 0;
-    }
-
-    raw.AVG = safeDiv(raw.H, raw.AB);
-    raw.SLG = safeDiv(raw.TB, raw.AB);
-    raw.OBP = safeDiv(raw.H + raw.BB + raw.HBP, raw.AB + raw.BB + raw.HBP + raw.SF);
-    raw.OPS = isFinite(raw.OBP) && isFinite(raw.SLG) ? raw.OBP + raw.SLG : NaN;
-
-    return raw;
-}
-
 function renderTeamSummaryBar() {
     const strip = $("#teamRecordStrip");
     if (!strip) return;
@@ -3326,47 +3276,50 @@ function renderSummary() {
 
     const isIvyMode = !!battingState.ivyOnly || !!fieldingState.ivyOnly;
     const seasonText = currentSeason === "career" ? "Career" : currentSeason;
+    const isBattingTab = document.querySelector('[data-tab="batting"]').classList.contains("active");
+    const mode = isBattingTab ? "Batting" : "Fielding";
 
     const rightEls = getRightPanelEls();
-
     const battingLogoWrap = document.getElementById("summaryLogoBatting");
     const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
     const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
     const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
 
-    const isBattingTab = document.querySelector('[data-tab="batting"]').classList.contains("active");
-const mode = isBattingTab ? "Batting" : "Fielding";
+    const officialBat = getSeasonOfficialTotals(currentSeason);
+    const logBatTotals = computeBattingTotals(battingLog);
+    const logBatRates = computeAdvancedFromLog(logBatTotals);
+    const logFldTotals = computeFieldingTotals(fieldingLog);
+    const hitTypes = computeHitTypeTotals(battingLog);
 
-if (isIvyMode) {
-    if (rightEls.title) {
-        rightEls.title.textContent = `${seasonText} Ivy League ${mode} Stats`;
-    }
-        const ivyLogoHTML = `<img src="ivy.png" class="summary-logo ivy-summary-logo" alt="Ivy League logo">`;
+    if (isIvyMode) {
+        if (rightEls.title) {
+            rightEls.title.textContent = `${seasonText} Ivy League ${mode} Stats`;
+        }
 
         if (battingLogoWrap) {
             battingLogoWrap.style.display = "flex";
-            battingLogoWrap.innerHTML = ivyLogoHTML;
+            battingLogoWrap.innerHTML = `<img src="ivy.png" class="summary-logo ivy-summary-logo" alt="Ivy League logo">`;
         }
 
         if (fieldingLogoWrap) {
             fieldingLogoWrap.style.display = "flex";
-            fieldingLogoWrap.innerHTML = ivyLogoHTML;
+            fieldingLogoWrap.innerHTML = `<img src="ivy.png" class="summary-logo ivy-summary-logo" alt="Ivy League logo">`;
         }
 
         if (battingChartWrap) battingChartWrap.style.display = "";
-if (fieldingChartWrap) fieldingChartWrap.style.display = "";
+        if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
         const ivyBatRows = battingLog.filter((r) => ivyTeams.has(r.opponent));
         const ivyFldRows = fieldingLog.filter((r) => ivyTeams.has(r.opponent));
-
         const ivyBatTotals = computeBattingTotals(ivyBatRows);
         const ivyBatRates = computeAdvancedFromLog(ivyBatTotals);
         const ivyFldTotals = computeFieldingTotals(ivyFldRows);
+        const ivyHitTypes = computeHitTypeTotals(ivyBatRows);
 
         $("#summaryStrip").classList.add("ivy-mode");
         $("#summaryStrip").innerHTML = [
             { k: "SLG", v: fmt3(ivyBatRates.SLG), s: "Slugging %" },
-            { k: "GP", v: ivyBatRows.length, s: "Games Played" },
+            { k: "GP", v: ivyBatTotals.GP, s: "Games Played" },
             { k: "R", v: ivyBatTotals.R, s: "Runs" },
             { k: "RBI", v: ivyBatTotals.RBI, s: "Runs Batted In" },
             { k: "TB", v: ivyBatTotals.TB, s: "Total Bases" },
@@ -3380,7 +3333,7 @@ if (fieldingChartWrap) fieldingChartWrap.style.display = "";
         `).join("");
 
         $("#fieldingStrip").innerHTML = [
-            { k: "GP", v: ivyFldRows.length, s: "Games Played" },
+            { k: "GP", v: ivyFldTotals.GP, s: "Games Played" },
             { k: "TC", v: ivyFldTotals.TC, s: "Total Chances" },
             { k: "PO", v: ivyFldTotals.PO, s: "Putouts" },
             { k: "A", v: ivyFldTotals.A, s: "Assists" },
@@ -3394,39 +3347,30 @@ if (fieldingChartWrap) fieldingChartWrap.style.display = "";
             </div>
         `).join("");
 
-        const ivyHitTypes = computeHitTypeTotals(ivyBatRows);
+        const chartCanvas = document.getElementById("hitTypeChart");
+        if (chartCanvas) {
+            seasonHitPie.render(
+                chartCanvas,
+                ["1B", "2B", "3B", "HR"],
+                [ivyHitTypes.singles, ivyHitTypes.doubles, ivyHitTypes.triples, ivyHitTypes.hrs]
+            );
+        }
 
-const fieldingCanvas = document.getElementById("fieldingChart");
-if (fieldingCanvas) {
-    renderFieldingChart(fieldingCanvas, ivyFldTotals);
-}
+        const fieldingCanvas = document.getElementById("fieldingChart");
+        if (fieldingCanvas) renderFieldingChart(fieldingCanvas, ivyFldTotals);
 
-const chartCanvas = document.getElementById("hitTypeChart");
-if (chartCanvas) {
-    seasonHitPie.render(
-        chartCanvas,
-        ["1B", "2B", "3B", "HR"],
-        [ivyHitTypes.singles, ivyHitTypes.doubles, ivyHitTypes.triples, ivyHitTypes.hrs]
-    );
-}
-
-        $("#heroAVG").textContent = fmt3(
-            currentSeason === "career" ? careerOfficialBattingTotals().AVG : officialTotals[currentSeason].AVG
-        );
-        $("#heroOBP").textContent = fmt3(
-            currentSeason === "career" ? careerOfficialBattingTotals().OBP : officialTotals[currentSeason].OBP
-        );
+        $("#heroAVG").textContent = fmt3(logBatRates.AVG);
+        $("#heroOBP").textContent = officialBat ? fmt3(officialBat.OBP) : "—";
         $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(battingLog));
         $("#heroSeasonText").textContent = seasonText;
-
         return;
     }
 
     if (rightEls.title) {
-    rightEls.title.textContent = currentSeason === "career"
-        ? `Career ${mode} Stats`
-        : `${currentSeason} ${mode} Stats`;
-}
+        rightEls.title.textContent = currentSeason === "career"
+            ? `Career ${mode} Stats`
+            : `${currentSeason} ${mode} Stats`;
+    }
 
     if (battingLogoWrap) {
         battingLogoWrap.style.display = "flex";
@@ -3441,22 +3385,27 @@ if (chartCanvas) {
     if (battingChartWrap) battingChartWrap.style.display = "";
     if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
-    const officialBat = currentSeason === "career"
-        ? careerOfficialBattingTotals()
-        : officialTotals[currentSeason];
-
-    const logFldTotals = computeFieldingTotals(fieldingLog);
-    const hitTypes = computeHitTypeTotals(battingLog);
-
     $("#summaryStrip").classList.remove("ivy-mode");
+
+    const summaryBat = officialBat || {
+        GP: logBatTotals.GP,
+        AB: logBatTotals.AB,
+        R: logBatTotals.R,
+        H: logBatTotals.H,
+        RBI: logBatTotals.RBI,
+        TB: logBatTotals.TB,
+        SLG: logBatRates.SLG,
+        OPS: NaN
+    };
+
     $("#summaryStrip").innerHTML = [
-        { k: "SLG", v: fmt3(officialBat.SLG), s: "Slugging %" },
-        { k: "OPS", v: fmt3(officialBat.OPS), s: "OBP + SLG %" },
-        { k: "GP", v: officialBat.GP, s: "Games Played" },
-        { k: "R", v: officialBat.R, s: "Runs" },
-        { k: "RBI", v: officialBat.RBI, s: "Runs Batted In" },
-        { k: "TB", v: officialBat.TB, s: "Total Bases" },
-        { k: "H/AB", v: `${officialBat.H}/${officialBat.AB}`, s: "Hits / At-Bats" }
+        { k: "SLG", v: fmt3(summaryBat.SLG), s: "Slugging %" },
+        { k: "OPS", v: fmt3(summaryBat.OPS), s: "OBP + SLG %" },
+        { k: "GP", v: summaryBat.GP, s: "Games Played" },
+        { k: "R", v: summaryBat.R, s: "Runs" },
+        { k: "RBI", v: summaryBat.RBI, s: "Runs Batted In" },
+        { k: "TB", v: summaryBat.TB, s: "Total Bases" },
+        { k: "H/AB", v: `${summaryBat.H}/${summaryBat.AB}`, s: "Hits / At-Bats" }
     ].map((x) => `
         <div class="stat">
             <div class="k">${x.k}</div>
@@ -3466,7 +3415,8 @@ if (chartCanvas) {
     `).join("");
 
     $("#fieldingStrip").innerHTML = [
-        { k: "TC", v: logFldTotals.TC, s: "Total chances" },
+        { k: "GP", v: logFldTotals.GP, s: "Games Played" },
+        { k: "TC", v: logFldTotals.TC, s: "Total Chances" },
         { k: "PO", v: logFldTotals.PO, s: "Putouts" },
         { k: "A", v: logFldTotals.A, s: "Assists" },
         { k: "E", v: logFldTotals.E, s: "Errors" },
@@ -3479,16 +3429,6 @@ if (chartCanvas) {
         </div>
     `).join("");
 
-    const fieldingCanvas = document.getElementById("fieldingChart");
-    if (fieldingCanvas) {
-        renderFieldingChart(fieldingCanvas, logFldTotals);
-    }
-
-    $("#heroAVG").textContent = fmt3(officialBat.AVG);
-    $("#heroOBP").textContent = fmt3(officialBat.OBP);
-    $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(battingLog));
-    $("#heroSeasonText").textContent = currentSeason === "career" ? "Career" : currentSeason;
-
     const chartCanvas = document.getElementById("hitTypeChart");
     if (chartCanvas) {
         seasonHitPie.render(
@@ -3497,197 +3437,185 @@ if (chartCanvas) {
             [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
         );
     }
+
+    const fieldingCanvas = document.getElementById("fieldingChart");
+    if (fieldingCanvas) renderFieldingChart(fieldingCanvas, logFldTotals);
+
+    $("#heroAVG").textContent = officialBat ? fmt3(officialBat.AVG) : fmt3(logBatRates.AVG);
+    $("#heroOBP").textContent = officialBat ? fmt3(officialBat.OBP) : "—";
+    $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(battingLog));
+    $("#heroSeasonText").textContent = seasonText;
 }
 
+function clearSelectedGameSummary() {
+    selectedBattingGame = null;
+    selectedFieldingGame = null;
+    clearSelectedRows();
+    renderSummary();
+}
 
-/* ------------ SELECTED GAME SUMMARY ------------ */
-function showSelectedBattingGame(r) {
-    selectedBattingGame = r;
+function showSelectedBattingGame(game) {
+    const row = findRowByGame("battingBody", game);
+    if (row) row.classList.add("selected-game");
 
-    const battingRow = findRowByGame("battingBody", r);
-    if (battingRow) setSelectedRow("battingBody", battingRow);
+    const fieldMatch = findMatchingFieldingGame(game);
+    if (fieldMatch) selectedFieldingGame = fieldMatch;
 
-    const matchingFieldingGame = findMatchingFieldingGame(r);
-    if (matchingFieldingGame) {
-        selectedFieldingGame = matchingFieldingGame;
+    const rightEls = getRightPanelEls();
+    if (rightEls.title) {
+        rightEls.title.textContent = `${game.date} • ${game.opponent} • ${game.result || ""}`;
     }
 
-    const summaryLogoBatting = document.getElementById("summaryLogoBatting");
-    if (summaryLogoBatting) summaryLogoBatting.style.display = "none";
+    const battingLogoWrap = document.getElementById("summaryLogoBatting");
+    if (battingLogoWrap) {
+        battingLogoWrap.style.display = "flex";
+        battingLogoWrap.innerHTML = game.logo
+            ? `<img src="${game.logo}" class="summary-logo" alt="${game.opponent} logo">`
+            : `<div class="selected-game-logo fallback">${initials(game.opponent)}</div>`;
+    }
 
-    const totals = computeBattingTotals([r]);
-    const rates = computeAdvancedFromLog(totals);
-    const opsObj = computeOPSFromTotals(totals);
-    const hitTypes = computeHitTypeTotals([r]);
-
-    const logoSrc = logoMap[r.opponent] || "";
-    const logoHTML = logoSrc
-        ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
-        : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
-
-    $("#summaryStrip").innerHTML = `
-        <div class="selected-game-layout">
-            <div class="selected-game-top">
-                <div class="selected-game-logo-wrap">${logoHTML}</div>
-            </div>
-
-            <div class="selected-game-stats">
-                <div class="stat stat-full">
-                    <div class="k">H / AB</div>
-                    <div class="v">${r.H} / ${r.AB}</div>
-                    <div class="s">Hits / At Bats</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">R</div>
-                    <div class="v">${r.R}</div>
-                    <div class="s">Runs</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">RBI</div>
-                    <div class="v">${r.RBI}</div>
-                    <div class="s">Runs Batted In</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">2B</div>
-                    <div class="v">${r["2B"]}</div>
-                    <div class="s">Doubles</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">3B</div>
-                    <div class="v">${r["3B"]}</div>
-                    <div class="s">Triples</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">HR</div>
-                    <div class="v">${r.HR}</div>
-                    <div class="s">Home Runs</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">TB</div>
-                    <div class="v">${totals.TB}</div>
-                    <div class="s">Total Bases</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">AVG</div>
-                    <div class="v">${fmt3(rates.AVG)}</div>
-                    <div class="s">Batting Average</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">SLG</div>
-                    <div class="v">${fmt3(opsObj.slg)}</div>
-                    <div class="s">Slugging %</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">OPS</div>
-                    <div class="v">${fmt3(opsObj.ops)}</div>
-                    <div class="s">OBP + SLG %</div>
-                </div>
-            </div>
+    $("#summaryStrip").classList.remove("ivy-mode");
+    $("#summaryStrip").innerHTML = [
+        { k: "H", v: game.H, s: "Hits" },
+        { k: "AB", v: game.AB, s: "At-Bats" },
+        { k: "R", v: game.R, s: "Runs" },
+        { k: "2B", v: game["2B"], s: "Doubles" },
+        { k: "3B", v: game["3B"], s: "Triples" },
+        { k: "HR", v: game.HR, s: "Home Runs" },
+        { k: "RBI", v: game.RBI, s: "Runs Batted In" },
+        { k: "TB", v: game.TB, s: "Total Bases" },
+        { k: "AVG", v: fmt3(safeDiv(game.H, game.AB)), s: "Batting Average" },
+        { k: "SLG", v: fmt3(safeDiv(game.TB, game.AB)), s: "Slugging %" }
+    ].map((x) => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
         </div>
-    `;
-
-    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    if (panelTitle) {
-        panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
-    }
+    `).join("");
 
     const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
-    const chartCanvas = document.getElementById("hitTypeChart");
-
     if (battingChartWrap) battingChartWrap.style.display = "";
-
+    const chartCanvas = document.getElementById("hitTypeChart");
     if (chartCanvas) {
-        seasonHitPie.render(chartCanvas, ["1B", "2B", "3B", "HR"], [
-            hitTypes.singles,
-            hitTypes.doubles,
-            hitTypes.triples,
-            hitTypes.hrs
-        ]);
+        const singles = Math.max(0, game.H - game["2B"] - game["3B"] - game.HR);
+        seasonHitPie.render(
+            chartCanvas,
+            ["1B", "2B", "3B", "HR"],
+            [singles, game["2B"], game["3B"], game.HR]
+        );
+    }
+
+    if (fieldMatch) {
+        const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
+        if (fieldingLogoWrap) {
+            fieldingLogoWrap.style.display = "flex";
+            fieldingLogoWrap.innerHTML = game.logo
+                ? `<img src="${game.logo}" class="summary-logo" alt="${game.opponent} logo">`
+                : `<div class="selected-game-logo fallback">${initials(game.opponent)}</div>`;
+        }
+
+        $("#fieldingStrip").innerHTML = [
+            { k: "TC", v: fieldMatch.TC, s: "Total Chances" },
+            { k: "PO", v: fieldMatch.PO, s: "Putouts" },
+            { k: "A", v: fieldMatch.A, s: "Assists" },
+            { k: "E", v: fieldMatch.E, s: "Errors" },
+            { k: "FPCT", v: fmt3(fieldMatch.FPCT), s: "Fielding %" }
+        ].map((x) => `
+            <div class="stat">
+                <div class="k">${x.k}</div>
+                <div class="v">${x.v}</div>
+                <div class="s">${x.s}</div>
+            </div>
+        `).join("");
+
+        const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
+        if (fieldingChartWrap) fieldingChartWrap.style.display = "";
+        const fieldingCanvas = document.getElementById("fieldingChart");
+        if (fieldingCanvas) renderFieldingChart(fieldingCanvas, fieldMatch);
     }
 
     restoreSelectedRows();
 }
 
-function showSelectedFieldingGame(r, tr = null) {
-    selectedFieldingGame = r;
+function showSelectedFieldingGame(game, tr) {
+    if (tr) tr.classList.add("selected-game");
 
-    const fieldingRow = tr || findRowByGame("fieldingBody", r);
-    if (fieldingRow) setSelectedRow("fieldingBody", fieldingRow);
+    const batMatch = findMatchingBattingGame(game);
+    if (batMatch) selectedBattingGame = batMatch;
 
-    const matchingBattingGame = findMatchingBattingGame(r);
-    if (matchingBattingGame) {
-        selectedBattingGame = matchingBattingGame;
+    const rightEls = getRightPanelEls();
+    if (rightEls.title) {
+        rightEls.title.textContent = `${game.date} • ${game.opponent} • ${game.result || ""}`;
     }
 
-    const summaryLogoFielding = document.getElementById("summaryLogoFielding");
-    if (summaryLogoFielding) summaryLogoFielding.style.display = "none";
+    const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
+    if (fieldingLogoWrap) {
+        fieldingLogoWrap.style.display = "flex";
+        fieldingLogoWrap.innerHTML = game.logo
+            ? `<img src="${game.logo}" class="summary-logo" alt="${game.opponent} logo">`
+            : `<div class="selected-game-logo fallback">${initials(game.opponent)}</div>`;
+    }
 
-    const logoSrc = logoMap[r.opponent] || "";
-    const logoHTML = logoSrc
-        ? `<img src="${logoSrc}" alt="${r.opponent} logo" class="selected-game-logo" />`
-        : `<div class="selected-game-logo fallback">${(r.opponent || "?").slice(0, 3).toUpperCase()}</div>`;
-
-    $("#fieldingStrip").innerHTML = `
-        <div class="selected-game-layout">
-            <div class="selected-game-top">
-                <div class="selected-game-logo-wrap">${logoHTML}</div>
-            </div>
-
-            <div class="selected-game-stats">
-                <div class="stat">
-                    <div class="k">TC</div>
-                    <div class="v">${r.TC}</div>
-                    <div class="s">Total chances</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">PO</div>
-                    <div class="v">${r.PO}</div>
-                    <div class="s">Putouts</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">A</div>
-                    <div class="v">${r.A}</div>
-                    <div class="s">Assists</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">E</div>
-                    <div class="v">${r.E}</div>
-                    <div class="s">Errors</div>
-                </div>
-
-                <div class="stat">
-                    <div class="k">FPCT</div>
-                    <div class="v">${fmt3(r.FPCT)}</div>
-                    <div class="s">Fielding %</div>
-                </div>
-            </div>
+    $("#fieldingStrip").innerHTML = [
+        { k: "TC", v: game.TC, s: "Total Chances" },
+        { k: "PO", v: game.PO, s: "Putouts" },
+        { k: "A", v: game.A, s: "Assists" },
+        { k: "E", v: game.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(game.FPCT), s: "Fielding %" }
+    ].map((x) => `
+        <div class="stat">
+            <div class="k">${x.k}</div>
+            <div class="v">${x.v}</div>
+            <div class="s">${x.s}</div>
         </div>
-    `;
+    `).join("");
 
-    const panelTitle = document.querySelector(".grid > .panel:last-child .panel-title");
-    if (panelTitle) {
-        panelTitle.textContent = `${r.date} • ${r.opponent} • ${r.result || ""}`;
-    }
-
+    const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
+    if (fieldingChartWrap) fieldingChartWrap.style.display = "";
     const fieldingCanvas = document.getElementById("fieldingChart");
-    if (fieldingCanvas) {
-        renderFieldingChart(fieldingCanvas, {
-            PO: r.PO || 0,
-            A: r.A || 0,
-            E: r.E || 0
-        });
+    if (fieldingCanvas) renderFieldingChart(fieldingCanvas, game);
+
+    if (batMatch) {
+        const battingLogoWrap = document.getElementById("summaryLogoBatting");
+        if (battingLogoWrap) {
+            battingLogoWrap.style.display = "flex";
+            battingLogoWrap.innerHTML = game.logo
+                ? `<img src="${game.logo}" class="summary-logo" alt="${game.opponent} logo">`
+                : `<div class="selected-game-logo fallback">${initials(game.opponent)}</div>`;
+        }
+
+        $("#summaryStrip").classList.remove("ivy-mode");
+        $("#summaryStrip").innerHTML = [
+            { k: "H", v: batMatch.H, s: "Hits" },
+            { k: "AB", v: batMatch.AB, s: "At-Bats" },
+            { k: "R", v: batMatch.R, s: "Runs" },
+            { k: "2B", v: batMatch["2B"], s: "Doubles" },
+            { k: "3B", v: batMatch["3B"], s: "Triples" },
+            { k: "HR", v: batMatch.HR, s: "Home Runs" },
+            { k: "RBI", v: batMatch.RBI, s: "Runs Batted In" },
+            { k: "TB", v: batMatch.TB, s: "Total Bases" },
+            { k: "AVG", v: fmt3(safeDiv(batMatch.H, batMatch.AB)), s: "Batting Average" },
+            { k: "SLG", v: fmt3(safeDiv(batMatch.TB, batMatch.AB)), s: "Slugging %" }
+        ].map((x) => `
+            <div class="stat">
+                <div class="k">${x.k}</div>
+                <div class="v">${x.v}</div>
+                <div class="s">${x.s}</div>
+            </div>
+        `).join("");
+
+        const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
+        if (battingChartWrap) battingChartWrap.style.display = "";
+        const chartCanvas = document.getElementById("hitTypeChart");
+        if (chartCanvas) {
+            const singles = Math.max(0, batMatch.H - batMatch["2B"] - batMatch["3B"] - batMatch.HR);
+            seasonHitPie.render(
+                chartCanvas,
+                ["1B", "2B", "3B", "HR"],
+                [singles, batMatch["2B"], batMatch["3B"], batMatch.HR]
+            );
+        }
     }
 
     restoreSelectedRows();
@@ -3723,7 +3651,7 @@ function setTab(tabName) {
         } else {
             renderSummary();
         }
-    } else if (tabName === "fielding") {
+    } else {
         document.getElementById("section-fielding").classList.add("active");
         document.getElementById("summary-fielding").classList.add("active");
         $("#panelTitle").textContent = "Fielding • Game Log";
@@ -3766,11 +3694,6 @@ function applySeason(seasonKey) {
                 : `${currentSeason} Team Record`;
     }
 
-    if ($("#summaryPanelTitle")) {
-        $("#summaryPanelTitle").textContent =
-            currentSeason === "career" ? "Career Summary" : "Season Summary";
-    }
-
     if (currentSeason === "career") {
         battingLog = careerBattingLog;
         fieldingLog = careerFieldingLog;
@@ -3784,11 +3707,11 @@ function applySeason(seasonKey) {
     resetState(fieldingState);
 
     syncOpponentSelects();
-
-$("#oppBat").value = "";
-$("#oppFld").value = "";
-setSharedOpponent("");
-syncIvyButtons();
+    $("#oppBat").value = "";
+    $("#oppFld").value = "";
+    setSharedOpponent("");
+    syncIvyButtons();
+    syncIvyVisibility();
 
     renderVsOpponentAllTime("");
     renderVsOpponentFieldingAllTime("");
@@ -3811,55 +3734,37 @@ function renderVsOpponentAllTime(opponent) {
         const label = $("#vsOppLabel");
         if (label) label.textContent = "—";
         strip.innerHTML = "";
-        const name2 = document.getElementById("vsOppName2");
-        if (name2) name2.textContent = "—";
+
+        const chart = document.getElementById("vsOppHitTypeChart");
+        if (chart) {
+            const ctx = chart.getContext("2d");
+            ctx.clearRect(0, 0, chart.width, chart.height);
+        }
         return;
     }
 
+    wrap.style.display = "";
     const baseLog = currentSeason === "career" ? careerBattingLog : battingLog;
     const rows = baseLog.filter((r) => r.opponent === opponent);
+    const totals = computeBattingTotals(rows);
+    const rates = computeAdvancedFromLog(totals);
+    const hitTypes = computeHitTypeTotals(rows);
+
     const wins = rows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
     const losses = rows.filter((r) => String(r.result || "").trim().startsWith("L")).length;
 
     const label = $("#vsOppLabel");
     if (label) {
-        const seasonText = currentSeason === "career" ? "Career" : currentSeason;
-        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+        label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} Record vs ${opponent}`;
     }
-
-    wrap.style.display = "block";
-
-    const name2 = document.getElementById("vsOppName2");
-    if (name2) name2.textContent = opponent;
-
-    const ht = computeHitTypeTotals(rows);
-    const oppCanvas = document.getElementById("vsOppHitTypeChart");
-    if (oppCanvas) {
-        opponentHitPie.render(oppCanvas, ["1B", "2B", "3B", "HR"], [
-            ht.singles,
-            ht.doubles,
-            ht.triples,
-            ht.hrs
-        ]);
-    }
-
-    const t = computeBattingTotals(rows);
-    const { avg, slg, ops } = computeOPSFromTotals(t);
-
-    const recLabel =
-        currentSeason === "career"
-            ? `Career Record vs ${opponent}`
-            : `${currentSeason} Record vs ${opponent}`;
 
     strip.innerHTML = [
-        { k: "REC", v: `${wins}-${losses}`, s: recLabel },
-        { k: "H-AB", v: `${t.H}-${t.AB}`, s: "From logs" },
-        { k: "AVG", v: fmt3(avg), s: "H / AB" },
-        { k: "SLG", v: fmt3(slg), s: "TB / AB" },
-        { k: "OPS", v: fmt3(ops), s: "AVG + SLG" },
-        { k: "HR", v: t.HR, s: "From logs" },
-        { k: "RBI", v: t.RBI, s: "From logs" },
-        { k: "TB", v: t.TB, s: "From logs" }
+        { k: "REC", v: `${wins}-${losses}`, s: "Team Record" },
+        { k: "AVG", v: fmt3(rates.AVG), s: "Batting Average" },
+        { k: "SLG", v: fmt3(rates.SLG), s: "Slugging %" },
+        { k: "R", v: totals.R, s: "Runs" },
+        { k: "RBI", v: totals.RBI, s: "Runs Batted In" },
+        { k: "H/AB", v: `${totals.H}/${totals.AB}`, s: "Hits / At-Bats" }
     ].map((x) => `
         <div class="stat">
             <div class="k">${x.k}</div>
@@ -3867,6 +3772,15 @@ function renderVsOpponentAllTime(opponent) {
             <div class="s">${x.s}</div>
         </div>
     `).join("");
+
+    const chartCanvas = document.getElementById("vsOppHitTypeChart");
+    if (chartCanvas) {
+        opponentHitPie.render(
+            chartCanvas,
+            ["1B", "2B", "3B", "HR"],
+            [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
+        );
+    }
 }
 
 function renderVsOpponentFieldingAllTime(opponent) {
@@ -3876,10 +3790,8 @@ function renderVsOpponentFieldingAllTime(opponent) {
 
     if (!opponent) {
         wrap.style.display = "none";
-
         const label = $("#vsOppLabelFld");
         if (label) label.textContent = "—";
-
         strip.innerHTML = "";
 
         const chart = document.getElementById("vsOppFieldingChart");
@@ -3890,6 +3802,7 @@ function renderVsOpponentFieldingAllTime(opponent) {
         return;
     }
 
+    wrap.style.display = "";
     const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
     const rows = baseLog.filter((r) => r.opponent === opponent);
     const fld = computeFieldingTotals(rows);
@@ -3899,20 +3812,13 @@ function renderVsOpponentFieldingAllTime(opponent) {
 
     const label = $("#vsOppLabelFld");
     if (label) {
-        const seasonText = currentSeason === "career" ? "Career" : currentSeason;
-        label.innerHTML = `<b>${seasonText}</b> vs <b>${opponent}</b>`;
+        label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} Record vs ${opponent}`;
     }
 
-    const recLabel =
-        currentSeason === "career"
-            ? `Career Record vs ${opponent}`
-            : `${currentSeason} Record vs ${opponent}`;
-
-    wrap.style.display = "block";
-
     strip.innerHTML = [
-        { k: "REC", v: `${wins}-${losses}`, s: recLabel },
-        { k: "TC", v: fld.TC, s: "Total chances" },
+        { k: "REC", v: `${wins}-${losses}`, s: "Team Record" },
+        { k: "GP", v: fld.GP, s: "Games Played" },
+        { k: "TC", v: fld.TC, s: "Total Chances" },
         { k: "PO", v: fld.PO, s: "Putouts" },
         { k: "A", v: fld.A, s: "Assists" },
         { k: "E", v: fld.E, s: "Errors" },
@@ -3925,14 +3831,8 @@ function renderVsOpponentFieldingAllTime(opponent) {
         </div>
     `).join("");
 
-    const vsOppFieldingCanvas = document.getElementById("vsOppFieldingChart");
-    if (vsOppFieldingCanvas) {
-        renderFieldingChart(vsOppFieldingCanvas, {
-            PO: fld.PO,
-            A: fld.A,
-            E: fld.E
-        });
-    }
+    const chartCanvas = document.getElementById("vsOppFieldingChart");
+    if (chartCanvas) renderFieldingChart(chartCanvas, fld);
 }
 
 /* ------------ INIT ------------ */
@@ -3964,43 +3864,43 @@ function renderVsOpponentFieldingAllTime(opponent) {
         syncIvyVisibility();
     });
 
-  $("#ivyBat").addEventListener("click", () => {
-    const next = !battingState.ivyOnly;
-    battingState.ivyOnly = next;
-    fieldingState.ivyOnly = next;
+    $("#ivyBat").addEventListener("click", () => {
+        const next = !battingState.ivyOnly;
+        battingState.ivyOnly = next;
+        fieldingState.ivyOnly = next;
 
-    battingState.opponent = "";
-    fieldingState.opponent = "";
+        battingState.opponent = "";
+        fieldingState.opponent = "";
 
-    clearSelectedGameSummary();
-    syncIvyButtons();
-    syncOpponentSelects();
-    syncIvyVisibility();
-    refreshBatting();
-    refreshFielding();
-    renderVsOpponentAllTime("");
-    renderVsOpponentFieldingAllTime("");
-    renderSummary();
-});
+        clearSelectedGameSummary();
+        syncIvyButtons();
+        syncOpponentSelects();
+        syncIvyVisibility();
+        refreshBatting();
+        refreshFielding();
+        renderVsOpponentAllTime("");
+        renderVsOpponentFieldingAllTime("");
+        renderSummary();
+    });
 
-$("#ivyFld").addEventListener("click", () => {
-    const next = !fieldingState.ivyOnly;
-    battingState.ivyOnly = next;
-    fieldingState.ivyOnly = next;
+    $("#ivyFld").addEventListener("click", () => {
+        const next = !fieldingState.ivyOnly;
+        battingState.ivyOnly = next;
+        fieldingState.ivyOnly = next;
 
-    battingState.opponent = "";
-    fieldingState.opponent = "";
+        battingState.opponent = "";
+        fieldingState.opponent = "";
 
-    clearSelectedGameSummary();
-    syncIvyButtons();
-    syncOpponentSelects();
-    syncIvyVisibility();
-    refreshBatting();
-    refreshFielding();
-    renderVsOpponentAllTime("");
-    renderVsOpponentFieldingAllTime("");
-    renderSummary();
-});
+        clearSelectedGameSummary();
+        syncIvyButtons();
+        syncOpponentSelects();
+        syncIvyVisibility();
+        refreshBatting();
+        refreshFielding();
+        renderVsOpponentAllTime("");
+        renderVsOpponentFieldingAllTime("");
+        renderSummary();
+    });
 
     hookTableSort("#battingTable", battingState, refreshBatting);
     hookTableSort("#fieldingTable", fieldingState, refreshFielding);
@@ -4008,9 +3908,12 @@ $("#ivyFld").addEventListener("click", () => {
     $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
 
     syncIvyButtons();
-syncIvyVisibility(); // 👈 ADD THIS
-setTab("batting");
+    syncIvyVisibility();
+    setTab("batting");
 })();
+</script>
+
+
 
 </script>
 
