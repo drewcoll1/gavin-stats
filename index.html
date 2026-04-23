@@ -1058,6 +1058,12 @@ td[data-label="Opponent"] .opp-emoji {
     grid-column: 1 / -1;
 }
 
+.ivy-summary-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+}
+
 
 /* =========================================================
    16. AWARDS SIDEBAR
@@ -3297,7 +3303,7 @@ function renderSummary() {
             rightEls.title.textContent = `${seasonText} Ivy League Stats`;
         }
 
-        const ivyLogoHTML = `<img src="ivy.png" class="summary-logo" alt="Ivy League logo">`;
+        const ivyLogoHTML = `<img src="ivy.png" class="summary-logo ivy-summary-logo" alt="Ivy League logo">`;
 
         if (battingLogoWrap) {
             battingLogoWrap.style.display = "flex";
