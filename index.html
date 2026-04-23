@@ -3329,11 +3329,13 @@ function renderSummary() {
     const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
     const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
 
-    if (isIvyMode) {
-        if (rightEls.title) {
-            rightEls.title.textContent = `${seasonText} Ivy League Stats`;
-        }
+    const isBattingTab = document.querySelector('[data-tab="batting"]').classList.contains("active");
+const mode = isBattingTab ? "Batting" : "Fielding";
 
+if (isIvyMode) {
+    if (rightEls.title) {
+        rightEls.title.textContent = `${seasonText} Ivy League ${mode} Stats`;
+    }
         const ivyLogoHTML = `<img src="ivy.png" class="summary-logo ivy-summary-logo" alt="Ivy League logo">`;
 
         if (battingLogoWrap) {
