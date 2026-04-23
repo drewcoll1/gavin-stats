@@ -777,6 +777,13 @@ select,
     color: #ffffff !important;
 }
 
+.ivy-btn.active {
+    background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
 
 /* =========================================================
    11. SECTIONS
@@ -1627,11 +1634,13 @@ td[data-label="Opponent"] .opp-emoji {
                         <div class="section active" id="section-batting">
                             <div class="controls">
                                 <div class="left-controls">
-                                    <div class="input">
-                                        <label for="oppBat">Opponent</label>
-                                        <select id="oppBat"></select>
-                                    </div>
-                                </div>
+    <div class="input">
+        <label for="oppBat">Opponent</label>
+        <select id="oppBat"></select>
+    </div>
+
+    <button class="btn secondary ivy-btn" id="ivyBat">Ivy Only</button>
+</div>
                                 <div class="right-controls">
                                     <button class="btn secondary" id="resetBat">Reset</button>
                                 </div>
@@ -1675,11 +1684,13 @@ td[data-label="Opponent"] .opp-emoji {
                         <div class="section" id="section-fielding">
                             <div class="controls">
                                 <div class="left-controls">
-                                    <div class="input">
-                                        <label for="oppFld">Opponent</label>
-                                        <select id="oppFld"></select>
-                                    </div>
-                                </div>
+    <div class="input">
+        <label for="oppFld">Opponent</label>
+        <select id="oppFld"></select>
+    </div>
+
+    <button class="btn secondary ivy-btn" id="ivyFld">Ivy Only</button>
+</div>
                                 <div class="right-controls">
                                     <button class="btn secondary" id="resetFld">Reset</button>
                                 </div>
@@ -2308,6 +2319,14 @@ function computeAdvancedFromLog(t) {
     };
 }
 
+function syncIvyButtons() {
+    const ivyBat = document.getElementById("ivyBat");
+    const ivyFld = document.getElementById("ivyFld");
+
+    if (ivyBat) ivyBat.classList.toggle("active", !!battingState.ivyOnly);
+    if (ivyFld) ivyFld.classList.toggle("active", !!fieldingState.ivyOnly);
+}
+
 function computeOPSFromTotals(t) {
     const avg = safeDiv(t.H, t.AB);
     const slg = safeDiv(t.TB, t.AB);
@@ -2904,12 +2923,13 @@ let careerFieldingLog = [];
 let selectedBattingGame = null;
 let selectedFieldingGame = null;
 
-const battingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
-const fieldingState = { opponent: "", sortKey: "dateValue", sortDir: "asc" };
+const battingState = { opponent: "", ivyOnly: false, sortKey: "dateValue", sortDir: "asc" };
+const fieldingState = { opponent: "", ivyOnly: false, sortKey: "dateValue", sortDir: "asc" };
 
 function resetState(state) {
     state.search = "";
     state.opponent = "";
+    state.ivyOnly = false;
     state.sortKey = "dateValue";
     state.sortDir = "asc";
 }
@@ -2999,8 +3019,12 @@ function filterRows(rows, state) {
     }
 
     if (state.opponent) {
-        out = out.filter((r) => r.opponent === state.opponent);
-    }
+    out = out.filter((r) => r.opponent === state.opponent);
+}
+
+if (state.ivyOnly) {
+    out = out.filter((r) => ivyTeams.has(r.opponent));
+}
 
     out.sort((a, b) => {
         const key = state.sortKey;
@@ -3059,6 +3083,7 @@ function setSharedOpponent(opponent) {
     if ($("#oppBat")) $("#oppBat").value = opponent || "";
     if ($("#oppFld")) $("#oppFld").value = opponent || "";
 
+    syncIvyButtons();
     clearSelectedGameSummary();
     refreshBatting();
     refreshFielding();
@@ -3601,6 +3626,7 @@ function applySeason(seasonKey) {
     $("#oppBat").value = "";
     $("#oppFld").value = "";
     setSharedOpponent("");
+    syncIvyButtons();
 
     renderVsOpponentAllTime("");
     renderVsOpponentFieldingAllTime("");
@@ -3760,14 +3786,38 @@ function renderVsOpponentFieldingAllTime(opponent) {
     $("#resetBat").addEventListener("click", () => {
         clearSelectedGameSummary();
         resetState(battingState);
+        resetState(fieldingState);
         setSharedOpponent("");
+        syncIvyButtons();
     });
 
     $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
     $("#resetFld").addEventListener("click", () => {
         clearSelectedGameSummary();
+        resetState(battingState);
         resetState(fieldingState);
         setSharedOpponent("");
+        syncIvyButtons();
+    });
+
+    $("#ivyBat").addEventListener("click", () => {
+        const next = !battingState.ivyOnly;
+        battingState.ivyOnly = next;
+        fieldingState.ivyOnly = next;
+        clearSelectedGameSummary();
+        syncIvyButtons();
+        refreshBatting();
+        refreshFielding();
+    });
+
+    $("#ivyFld").addEventListener("click", () => {
+        const next = !fieldingState.ivyOnly;
+        battingState.ivyOnly = next;
+        fieldingState.ivyOnly = next;
+        clearSelectedGameSummary();
+        syncIvyButtons();
+        refreshBatting();
+        refreshFielding();
     });
 
     hookTableSort("#battingTable", battingState, refreshBatting);
@@ -3775,6 +3825,7 @@ function renderVsOpponentFieldingAllTime(opponent) {
 
     $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
 
+    syncIvyButtons();
     setTab("batting");
 })();
 
