@@ -401,7 +401,7 @@ body {
     justify-content: center;
     align-items: center;
     margin: 10px 0 8px;
-    min-height: var(--logo-panel-size);
+    min-height: 150px;
 }
 
 /* all panel logos behave the same */
@@ -416,6 +416,20 @@ body {
     object-fit: contain;
     object-position: center;
     display: block;
+}
+
+/* Penn logo only in right panel */
+#summaryLogoBatting .summary-logo,
+#summaryLogoFielding .summary-logo {
+    width: 150px;
+    height: 150px;
+}
+
+/* Ivy logo only in right panel */
+#summaryLogoBatting .ivy-summary-logo,
+#summaryLogoFielding .ivy-summary-logo {
+    width: 150px;
+    height: 150px;
 }
 
 /* =========================================================
@@ -1546,6 +1560,13 @@ td[data-label="Opponent"] .opp-emoji {
         height: var(--logo-panel-size-mobile);
         padding: 0;
     }
+    #summaryLogoBatting .summary-logo,
+#summaryLogoFielding .summary-logo,
+#summaryLogoBatting .ivy-summary-logo,
+#summaryLogoFielding .ivy-summary-logo {
+    width: 105px;
+    height: 105px;
+}
 
     .summary-logo-wrap {
         min-height: var(--logo-panel-size-mobile);
