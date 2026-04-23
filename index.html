@@ -1717,7 +1717,7 @@ td[data-label="Opponent"] .opp-emoji {
         <select id="oppFld"></select>
     </div>
 
-    <button class="btn secondary ivy-btn" id="ivyFld">Ivy Only</button>
+    <button class="btn secondary ivy-btn" id="ivyFld">Ivy League</button>
 </div>
                                 <div class="right-controls">
                                     <button class="btn secondary" id="resetFld">Reset</button>
@@ -3755,7 +3755,7 @@ function renderVsOpponentAllTime(opponent) {
 
     const label = $("#vsOppLabel");
     if (label) {
-        label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} Record vs ${opponent}`;
+        label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} vs ${opponent}`;
     }
 
     strip.innerHTML = [
