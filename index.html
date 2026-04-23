@@ -24,6 +24,16 @@
     --border-soft: rgba(255, 255, 255, .10);
     --surface: rgba(0, 0, 0, .18);
     --surface-2: rgba(255, 255, 255, .05);
+
+    /* unified logo sizing */
+    --logo-inline-size: 22px;
+    --logo-panel-size: 110px;
+    --logo-panel-size-mobile: 88px;
+    --logo-panel-pad: 6px;
+    --logo-inline-pad: 2px;
+    --logo-bg: #ffffff;
+    --logo-radius: 12px;
+    --logo-inline-radius: 6px;
 }
 
 * {
@@ -385,28 +395,27 @@ body {
     color: #ffffff;
 }
 
+/* unified right-panel / vs-panel logo wrapper */
 .summary-logo-wrap {
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin: 6px 0;
-    min-height: auto;
+    align-items: center;
+    margin: 10px 0 8px;
+    min-height: calc(var(--logo-panel-size) + 4px);
 }
 
-/* unified logo sizing */
+/* all panel logos behave the same */
 .summary-logo,
 .selected-game-logo,
 .ivy-summary-logo {
-    width: 200px;
-    height: 200px;
+    width: var(--logo-panel-size);
+    height: var(--logo-panel-size);
+    padding: var(--logo-panel-pad);
+    border-radius: var(--logo-radius);
+    background: var(--logo-bg);
     object-fit: contain;
     object-position: center;
-    display: inline-block;
-}
-
-.selected-game-logo {
-    padding: 6px;
-    border-radius: 12px;
+    display: block;
 }
 
 /* =========================================================
@@ -940,14 +949,16 @@ td[data-label="Opponent"] .opp-main {
 
 .logo,
 td[data-label="Opponent"] .logo {
-    width: 22px;
-    height: 22px;
+    width: var(--logo-inline-size);
+    height: var(--logo-inline-size);
     flex: 0 0 auto;
-    padding: 2px;
+    padding: var(--logo-inline-pad);
     border: 1px solid rgba(255, 255, 255, .10);
-    border-radius: 6px;
-    background: #ffffff;
+    border-radius: var(--logo-inline-radius);
+    background: var(--logo-bg);
     object-fit: contain;
+    object-position: center;
+    display: inline-block;
 }
 
 .logo.fallback {
@@ -1528,26 +1539,17 @@ td[data-label="Opponent"] .opp-emoji {
         opacity: 1;
     }
 
-.summary-logo,
-.selected-game-logo,
-.ivy-summary-logo {
-    width: 80px;
-    height: 80px;
-}
+    .summary-logo,
+    .selected-game-logo,
+    .ivy-summary-logo {
+        width: var(--logo-panel-size-mobile);
+        height: var(--logo-panel-size-mobile);
+        padding: 5px;
+    }
 
-#summaryLogoBatting .summary-logo,
-#summaryLogoFielding .summary-logo,
-#summaryLogoBatting .ivy-summary-logo,
-#summaryLogoFielding .ivy-summary-logo,
-#summaryLogoBatting .selected-game-logo,
-#summaryLogoFielding .selected-game-logo {
-    width: 100px;
-    height: 100px;
-}
-
-.summary-logo-wrap {
-    min-height: 105px;
-}
+    .summary-logo-wrap {
+        min-height: calc(var(--logo-panel-size-mobile) + 10px);
+    }
 }
 </style>
 
