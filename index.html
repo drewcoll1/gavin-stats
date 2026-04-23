@@ -27,12 +27,12 @@
 
     /* unified logo sizing */
     --logo-inline-size: 22px;
-    --logo-panel-size: 110px;
-    --logo-panel-size-mobile: 88px;
-    --logo-panel-pad: 6px;
+    --logo-panel-size: 130px;
+    --logo-panel-size-mobile: 95px;
+    --logo-panel-pad: 0px;
     --logo-inline-pad: 2px;
-    --logo-bg: #ffffff;
-    --logo-radius: 12px;
+    --logo-bg: transparent;
+    --logo-radius: 0px;
     --logo-inline-radius: 6px;
 }
 
@@ -401,7 +401,7 @@ body {
     justify-content: center;
     align-items: center;
     margin: 10px 0 8px;
-    min-height: calc(var(--logo-panel-size) + 4px);
+    min-height: var(--logo-panel-size);
 }
 
 /* all panel logos behave the same */
@@ -410,9 +410,9 @@ body {
 .ivy-summary-logo {
     width: var(--logo-panel-size);
     height: var(--logo-panel-size);
-    padding: var(--logo-panel-pad);
-    border-radius: var(--logo-radius);
-    background: var(--logo-bg);
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
     object-fit: contain;
     object-position: center;
     display: block;
@@ -955,7 +955,7 @@ td[data-label="Opponent"] .logo {
     padding: var(--logo-inline-pad);
     border: 1px solid rgba(255, 255, 255, .10);
     border-radius: var(--logo-inline-radius);
-    background: var(--logo-bg);
+    background: #ffffff;
     object-fit: contain;
     object-position: center;
     display: inline-block;
@@ -1544,15 +1544,14 @@ td[data-label="Opponent"] .opp-emoji {
     .ivy-summary-logo {
         width: var(--logo-panel-size-mobile);
         height: var(--logo-panel-size-mobile);
-        padding: 5px;
+        padding: 0;
     }
 
     .summary-logo-wrap {
-        min-height: calc(var(--logo-panel-size-mobile) + 10px);
+        min-height: var(--logo-panel-size-mobile);
     }
 }
 </style>
-
 </head>
 <body>
     <div class="page-layout">
