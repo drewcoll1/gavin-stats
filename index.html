@@ -546,6 +546,17 @@ body {
     grid-column: 2 / 3;
     justify-self: center;
 }
+#summaryStrip.ivy-mode > .stat:last-child {
+    grid-column: auto;
+    justify-self: stretch;
+    min-width: 0;
+}
+
+#summaryStrip.ivy-mode > .stat:last-child .v {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .stat {
     display: flex;
@@ -3325,6 +3336,7 @@ if (fieldingChartWrap) fieldingChartWrap.style.display = "";
         const ivyBatRates = computeAdvancedFromLog(ivyBatTotals);
         const ivyFldTotals = computeFieldingTotals(ivyFldRows);
 
+        $("#summaryStrip").classList.add("ivy-mode");
         $("#summaryStrip").innerHTML = [
             { k: "SLG", v: fmt3(ivyBatRates.SLG), s: "Slugging %" },
             { k: "GP", v: ivyBatRows.length, s: "Games Played" },
@@ -3407,6 +3419,7 @@ if (chartCanvas) {
     const logFldTotals = computeFieldingTotals(fieldingLog);
     const hitTypes = computeHitTypeTotals(battingLog);
 
+    $("#summaryStrip").classList.remove("ivy-mode");
     $("#summaryStrip").innerHTML = [
         { k: "SLG", v: fmt3(officialBat.SLG), s: "Slugging %" },
         { k: "OPS", v: fmt3(officialBat.OPS), s: "OBP + SLG %" },
