@@ -3108,6 +3108,7 @@ function setSharedOpponent(opponent) {
     refreshFielding();
     renderVsOpponentAllTime(selectedOpponent);
     renderVsOpponentFieldingAllTime(selectedOpponent);
+    renderSummary();
 }
 
 /* ------------ TABLE RENDER ------------ */
@@ -3281,21 +3282,111 @@ function renderTeamSummaryBar() {
 function renderSummary() {
     renderTeamSummaryBar();
 
+    const isIvyMode = !!battingState.ivyOnly || !!fieldingState.ivyOnly;
+    const seasonText = currentSeason === "career" ? "Career" : currentSeason;
+
     const rightEls = getRightPanelEls();
-    if (rightEls.title) {
-        rightEls.title.textContent = currentSeason === "career" ? "Career Stats" : `${currentSeason} Stats`;
-    }
-    if (rightEls.sub) {
-        rightEls.sub.textContent = "Batting and fielding at a glance.";
-    }
 
     const battingLogoWrap = document.getElementById("summaryLogoBatting");
     const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
-    if (battingLogoWrap) battingLogoWrap.style.display = "flex";
-    if (fieldingLogoWrap) fieldingLogoWrap.style.display = "flex";
-
     const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
     const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
+
+    if (isIvyMode) {
+        if (rightEls.title) {
+            rightEls.title.textContent = `${seasonText} Ivy League Stats`;
+        }
+
+        const ivyLogoHTML = `<img src="ivy.png" class="summary-logo" alt="Ivy League logo">`;
+
+        if (battingLogoWrap) {
+            battingLogoWrap.style.display = "flex";
+            battingLogoWrap.innerHTML = ivyLogoHTML;
+        }
+
+        if (fieldingLogoWrap) {
+            fieldingLogoWrap.style.display = "flex";
+            fieldingLogoWrap.innerHTML = ivyLogoHTML;
+        }
+
+        if (battingChartWrap) battingChartWrap.style.display = "none";
+        if (fieldingChartWrap) fieldingChartWrap.style.display = "none";
+
+        const ivyBatRows = battingLog.filter((r) => ivyTeams.has(r.opponent));
+        const ivyFldRows = fieldingLog.filter((r) => ivyTeams.has(r.opponent));
+
+        const ivyBatTotals = computeBattingTotals(ivyBatRows);
+        const ivyBatRates = computeAdvancedFromLog(ivyBatTotals);
+        const ivyFldTotals = computeFieldingTotals(ivyFldRows);
+
+        $("#summaryStrip").innerHTML = [
+            { k: "SLG", v: fmt3(ivyBatRates.SLG), s: "Slugging %" },
+            { k: "GP", v: ivyBatRows.length, s: "Games Played" },
+            { k: "R", v: ivyBatTotals.R, s: "Runs" },
+            { k: "RBI", v: ivyBatTotals.RBI, s: "Runs Batted In" },
+            { k: "TB", v: ivyBatTotals.TB, s: "Total Bases" },
+            { k: "H/AB", v: `${ivyBatTotals.H}/${ivyBatTotals.AB}`, s: "Hits / At-Bats" }
+        ].map((x) => `
+            <div class="stat">
+                <div class="k">${x.k}</div>
+                <div class="v">${x.v}</div>
+                <div class="s">${x.s}</div>
+            </div>
+        `).join("");
+
+        $("#fieldingStrip").innerHTML = [
+            { k: "GP", v: ivyFldRows.length, s: "Games Played" },
+            { k: "TC", v: ivyFldTotals.TC, s: "Total Chances" },
+            { k: "PO", v: ivyFldTotals.PO, s: "Putouts" },
+            { k: "A", v: ivyFldTotals.A, s: "Assists" },
+            { k: "E", v: ivyFldTotals.E, s: "Errors" },
+            { k: "FPCT", v: fmt3(ivyFldTotals.FPCT), s: "Fielding %" }
+        ].map((x) => `
+            <div class="stat">
+                <div class="k">${x.k}</div>
+                <div class="v">${x.v}</div>
+                <div class="s">${x.s}</div>
+            </div>
+        `).join("");
+
+        const fieldingCanvas = document.getElementById("fieldingChart");
+        if (fieldingCanvas) {
+            const ctx = fieldingCanvas.getContext("2d");
+            ctx.clearRect(0, 0, fieldingCanvas.width, fieldingCanvas.height);
+        }
+
+        const chartCanvas = document.getElementById("hitTypeChart");
+        if (chartCanvas) {
+            const ctx = chartCanvas.getContext("2d");
+            ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+        }
+
+        $("#heroAVG").textContent = fmt3(
+            currentSeason === "career" ? careerOfficialBattingTotals().AVG : officialTotals[currentSeason].AVG
+        );
+        $("#heroOBP").textContent = fmt3(
+            currentSeason === "career" ? careerOfficialBattingTotals().OBP : officialTotals[currentSeason].OBP
+        );
+        $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(battingLog));
+        $("#heroSeasonText").textContent = seasonText;
+
+        return;
+    }
+
+    if (rightEls.title) {
+        rightEls.title.textContent = currentSeason === "career" ? "Career Stats" : `${currentSeason} Stats`;
+    }
+
+    if (battingLogoWrap) {
+        battingLogoWrap.style.display = "flex";
+        battingLogoWrap.innerHTML = `<img src="logo.png" class="summary-logo" alt="Penn logo">`;
+    }
+
+    if (fieldingLogoWrap) {
+        fieldingLogoWrap.style.display = "flex";
+        fieldingLogoWrap.innerHTML = `<img src="logo.png" class="summary-logo" alt="Penn logo">`;
+    }
+
     if (battingChartWrap) battingChartWrap.style.display = "";
     if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
@@ -3355,6 +3446,7 @@ function renderSummary() {
         );
     }
 }
+
 
 /* ------------ SELECTED GAME SUMMARY ------------ */
 function showSelectedBattingGame(r) {
@@ -3821,25 +3913,27 @@ function renderVsOpponentFieldingAllTime(opponent) {
         syncIvyVisibility();
     });
 
-    $("#ivyBat").addEventListener("click", () => {
-        const next = !battingState.ivyOnly;
-        battingState.ivyOnly = next;
-        fieldingState.ivyOnly = next;
-        clearSelectedGameSummary();
-        syncIvyButtons();
-        refreshBatting();
-        refreshFielding();
-    });
+   $("#ivyBat").addEventListener("click", () => {
+    const next = !battingState.ivyOnly;
+    battingState.ivyOnly = next;
+    fieldingState.ivyOnly = next;
+    clearSelectedGameSummary();
+    syncIvyButtons();
+    refreshBatting();
+    refreshFielding();
+    renderSummary();
+});
 
-    $("#ivyFld").addEventListener("click", () => {
-        const next = !fieldingState.ivyOnly;
-        battingState.ivyOnly = next;
-        fieldingState.ivyOnly = next;
-        clearSelectedGameSummary();
-        syncIvyButtons();
-        refreshBatting();
-        refreshFielding();
-    });
+$("#ivyFld").addEventListener("click", () => {
+    const next = !fieldingState.ivyOnly;
+    battingState.ivyOnly = next;
+    fieldingState.ivyOnly = next;
+    clearSelectedGameSummary();
+    syncIvyButtons();
+    refreshBatting();
+    refreshFielding();
+    renderSummary();
+});
 
     hookTableSort("#battingTable", battingState, refreshBatting);
     hookTableSort("#fieldingTable", fieldingState, refreshFielding);
