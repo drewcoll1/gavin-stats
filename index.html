@@ -3418,8 +3418,10 @@ if (chartCanvas) {
     }
 
     if (rightEls.title) {
-        rightEls.title.textContent = currentSeason === "career" ? "Career Stats" : `${currentSeason} Stats`;
-    }
+    rightEls.title.textContent = currentSeason === "career"
+        ? `Career ${mode} Stats`
+        : `${currentSeason} ${mode} Stats`;
+}
 
     if (battingLogoWrap) {
         battingLogoWrap.style.display = "flex";
