@@ -3087,19 +3087,27 @@ function renderOpponentSelect(selectEl, rows) {
 }
 
 function setSharedOpponent(opponent) {
-    battingState.opponent = opponent || "";
-    fieldingState.opponent = opponent || "";
+    const selectedOpponent = opponent || "";
 
-    if ($("#oppBat")) $("#oppBat").value = opponent || "";
-    if ($("#oppFld")) $("#oppFld").value = opponent || "";
+    battingState.opponent = selectedOpponent;
+    fieldingState.opponent = selectedOpponent;
+
+    // If a team is selected, turn Ivy-only mode off
+    if (selectedOpponent) {
+        battingState.ivyOnly = false;
+        fieldingState.ivyOnly = false;
+    }
+
+    if ($("#oppBat")) $("#oppBat").value = selectedOpponent;
+    if ($("#oppFld")) $("#oppFld").value = selectedOpponent;
 
     syncIvyButtons();
-    syncIvyVisibility(); // 👈 ADD THIS
+    syncIvyVisibility();
     clearSelectedGameSummary();
     refreshBatting();
     refreshFielding();
-    renderVsOpponentAllTime(opponent || "");
-    renderVsOpponentFieldingAllTime(opponent || "");
+    renderVsOpponentAllTime(selectedOpponent);
+    renderVsOpponentFieldingAllTime(selectedOpponent);
 }
 
 /* ------------ TABLE RENDER ------------ */
