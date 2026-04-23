@@ -2493,6 +2493,15 @@ function findMatchingFieldingGame(battingGame) {
     return fieldingLog.find((g) => sameGame(g, battingGame)) || null;
 }
 
+
+function opponentLogoHTML(opponent) {
+    const logo = logoFor(opponent);
+    if (logo) {
+        return `<img src="${logo}" class="summary-logo" alt="${opponent} logo">`;
+    }
+    return `<div class="selected-game-logo fallback">${initials(opponent)}</div>`;
+}
+    
 function findRowByGame(tbodyId, game) {
     if (!game) return null;
     const rows = document.querySelectorAll(`#${tbodyId} tr`);
