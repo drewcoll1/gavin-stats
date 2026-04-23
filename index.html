@@ -3309,8 +3309,8 @@ function renderSummary() {
             fieldingLogoWrap.innerHTML = ivyLogoHTML;
         }
 
-        if (battingChartWrap) battingChartWrap.style.display = "none";
-        if (fieldingChartWrap) fieldingChartWrap.style.display = "none";
+        if (battingChartWrap) battingChartWrap.style.display = "";
+if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
         const ivyBatRows = battingLog.filter((r) => ivyTeams.has(r.opponent));
         const ivyFldRows = fieldingLog.filter((r) => ivyTeams.has(r.opponent));
@@ -3349,17 +3349,21 @@ function renderSummary() {
             </div>
         `).join("");
 
-        const fieldingCanvas = document.getElementById("fieldingChart");
-        if (fieldingCanvas) {
-            const ctx = fieldingCanvas.getContext("2d");
-            ctx.clearRect(0, 0, fieldingCanvas.width, fieldingCanvas.height);
-        }
+        const ivyHitTypes = computeHitTypeTotals(ivyBatRows);
 
-        const chartCanvas = document.getElementById("hitTypeChart");
-        if (chartCanvas) {
-            const ctx = chartCanvas.getContext("2d");
-            ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
-        }
+const fieldingCanvas = document.getElementById("fieldingChart");
+if (fieldingCanvas) {
+    renderFieldingChart(fieldingCanvas, ivyFldTotals);
+}
+
+const chartCanvas = document.getElementById("hitTypeChart");
+if (chartCanvas) {
+    seasonHitPie.render(
+        chartCanvas,
+        ["1B", "2B", "3B", "HR"],
+        [ivyHitTypes.singles, ivyHitTypes.doubles, ivyHitTypes.triples, ivyHitTypes.hrs]
+    );
+}
 
         $("#heroAVG").textContent = fmt3(
             currentSeason === "career" ? careerOfficialBattingTotals().AVG : officialTotals[currentSeason].AVG
