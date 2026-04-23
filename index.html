@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Gavin Collins #16</title>
     <link rel="icon" type="image/png" href="favicon.png">
-
 <style>
 /* =======================================================
    1. ROOT / GLOBAL
@@ -27,8 +26,8 @@
 
     /* unified logo sizing */
     --logo-inline-size: 22px;
-    --logo-panel-size: 130px;
-    --logo-panel-size-mobile: 95px;
+    --logo-panel-size: 140px;
+    --logo-panel-size-mobile: 100px;
     --logo-panel-pad: 0px;
     --logo-inline-pad: 2px;
     --logo-bg: transparent;
@@ -401,15 +400,15 @@ body {
     justify-content: center;
     align-items: center;
     margin: 10px 0 8px;
-    min-height: 150px;
+    min-height: var(--logo-panel-size);
 }
 
 /* all panel logos behave the same */
 .summary-logo,
 .selected-game-logo,
 .ivy-summary-logo {
-    width: var(--logo-panel-size);
-    height: var(--logo-panel-size);
+    width: var(--logo-panel-size) !important;
+    height: var(--logo-panel-size) !important;
     padding: 0;
     border-radius: 0;
     background: transparent;
@@ -418,18 +417,13 @@ body {
     display: block;
 }
 
-/* Penn logo only in right panel */
+/* keep all right-panel logos identical */
 #summaryLogoBatting .summary-logo,
-#summaryLogoFielding .summary-logo {
-    width: 200px;
-    height: 200px;
-}
-
-/* Ivy logo only in right panel */
+#summaryLogoFielding .summary-logo,
 #summaryLogoBatting .ivy-summary-logo,
 #summaryLogoFielding .ivy-summary-logo {
-    width: 200px;
-    height: 200px;
+    width: var(--logo-panel-size) !important;
+    height: var(--logo-panel-size) !important;
 }
 
 /* =========================================================
@@ -1556,23 +1550,25 @@ td[data-label="Opponent"] .opp-emoji {
     .summary-logo,
     .selected-game-logo,
     .ivy-summary-logo {
-        width: var(--logo-panel-size-mobile);
-        height: var(--logo-panel-size-mobile);
+        width: var(--logo-panel-size-mobile) !important;
+        height: var(--logo-panel-size-mobile) !important;
         padding: 0;
     }
+
     #summaryLogoBatting .summary-logo,
-#summaryLogoFielding .summary-logo,
-#summaryLogoBatting .ivy-summary-logo,
-#summaryLogoFielding .ivy-summary-logo {
-    width: 105px;
-    height: 105px;
-}
+    #summaryLogoFielding .summary-logo,
+    #summaryLogoBatting .ivy-summary-logo,
+    #summaryLogoFielding .ivy-summary-logo {
+        width: var(--logo-panel-size-mobile) !important;
+        height: var(--logo-panel-size-mobile) !important;
+    }
 
     .summary-logo-wrap {
         min-height: var(--logo-panel-size-mobile);
     }
 }
 </style>
+
 </head>
 <body>
     <div class="page-layout">
