@@ -3300,94 +3300,55 @@ function renderSummary() {
     renderTeamSummaryBar();
 
     const rightEls = getRightPanelEls();
+    const ivyMode = battingState.ivyOnly;
 
-    const isIvy = battingState.ivyOnly || fieldingState.ivyOnly;
-
-    // ---------- HEADER ----------
     if (rightEls.title) {
-        if (isIvy) {
-            rightEls.title.textContent =
-                currentSeason === "career"
-                    ? "Career Ivy League Stats"
-                    : `${currentSeason} Ivy League Stats`;
-        } else {
-            rightEls.title.textContent =
-                currentSeason === "career"
-                    ? "Career Stats"
-                    : `${currentSeason} Stats`;
-        }
+        rightEls.title.textContent = ivyMode
+            ? (currentSeason === "career" ? "Career Ivy League Stats" : `${currentSeason} Ivy League Stats`)
+            : (currentSeason === "career" ? "Career Stats" : `${currentSeason} Stats`);
     }
 
     if (rightEls.sub) {
-        rightEls.sub.textContent = isIvy
-            ? "Ivy League games only."
+        rightEls.sub.textContent = ivyMode
+            ? "Batting stats against Ivy League opponents."
             : "Batting and fielding at a glance.";
     }
 
     const battingLogoWrap = document.getElementById("summaryLogoBatting");
     const fieldingLogoWrap = document.getElementById("summaryLogoFielding");
+    if (battingLogoWrap) battingLogoWrap.style.display = ivyMode ? "none" : "flex";
+    if (fieldingLogoWrap) fieldingLogoWrap.style.display = "flex";
 
-    if (battingLogoWrap) battingLogoWrap.style.display = isIvy ? "none" : "flex";
-    if (fieldingLogoWrap) fieldingLogoWrap.style.display = isIvy ? "none" : "flex";
+    const battingChartWrap = document.querySelector("#summary-batting .chart-wrap");
+    const fieldingChartWrap = document.querySelector("#summary-fielding .chart-wrap");
+    if (battingChartWrap) battingChartWrap.style.display = "";
+    if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
     const activeBatRows = getActiveBattingRows();
     const activeFldRows = getActiveFieldingRows();
 
     const activeBatTotals = computeBattingTotals(activeBatRows);
     const activeFldTotals = computeFieldingTotals(activeFldRows);
+    const activeHitTypes = computeHitTypeTotals(activeBatRows);
 
-    const hitTypes = computeHitTypeTotals(activeBatRows);
+    if (ivyMode) {
+        const wins = activeBatRows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
+        const losses = activeBatRows.filter((r) => String(r.result || "").trim().startsWith("L")).length;
+        const { AVG, SLG } = computeAdvancedFromLog(activeBatTotals);
 
-    // ---------- IVY MODE (MATCH VS OPPONENT STYLE) ----------
-    if (isIvy) {
-        const wins = activeBatRows.filter((r) =>
-            String(r.result || "").startsWith("W")
-        ).length;
-
-        const losses = activeBatRows.filter((r) =>
-            String(r.result || "").startsWith("L")
-        ).length;
-
-        const rates = computeAdvancedFromLog(activeBatTotals);
+        const recLabel =
+            currentSeason === "career"
+                ? "Career Ivy Record"
+                : `${currentSeason} Ivy Record`;
 
         $("#summaryStrip").innerHTML = [
-            {
-                k: "REC",
-                v: `${wins}-${losses}`,
-                s: currentSeason === "career"
-                    ? "Career Ivy Record"
-                    : `${currentSeason} Ivy Record`
-            },
-            {
-                k: "H-AB",
-                v: `${activeBatTotals.H}-${activeBatTotals.AB}`,
-                s: "From logs"
-            },
-            {
-                k: "AVG",
-                v: fmt3(rates.AVG),
-                s: "H / AB"
-            },
-            {
-                k: "SLG",
-                v: fmt3(rates.SLG),
-                s: "TB / AB"
-            },
-            {
-                k: "HR",
-                v: activeBatTotals.HR,
-                s: "From logs"
-            },
-            {
-                k: "RBI",
-                v: activeBatTotals.RBI,
-                s: "From logs"
-            },
-            {
-                k: "TB",
-                v: activeBatTotals.TB,
-                s: "From logs"
-            }
+            { k: "REC",  v: `${wins}-${losses}`, s: recLabel },
+            { k: "H-AB", v: `${activeBatTotals.H}-${activeBatTotals.AB}`, s: "From logs" },
+            { k: "AVG",  v: fmt3(AVG), s: "H / AB" },
+            { k: "SLG",  v: fmt3(SLG), s: "TB / AB" },
+            { k: "HR",   v: activeBatTotals.HR, s: "From logs" },
+            { k: "RBI",  v: activeBatTotals.RBI, s: "From logs" },
+            { k: "TB",   v: activeBatTotals.TB, s: "From logs" }
         ].map((x) => `
             <div class="stat">
                 <div class="k">${x.k}</div>
@@ -3395,14 +3356,12 @@ function renderSummary() {
                 <div class="s">${x.s}</div>
             </div>
         `).join("");
-
     } else {
-        // ---------- NORMAL MODE ----------
-        const rates = computeBattingRatesFromTotals(activeBatTotals);
+        const activeBatRates = computeBattingRatesFromTotals(activeBatTotals);
 
         $("#summaryStrip").innerHTML = [
-            { k: "AVG", v: fmt3(rates.avg), s: "Batting Average" },
-            { k: "SLG", v: fmt3(rates.slg), s: "Slugging %" },
+            { k: "AVG", v: fmt3(activeBatRates.avg), s: "Batting Average" },
+            { k: "SLG", v: fmt3(activeBatRates.slg), s: "Slugging %" },
             { k: "GP", v: activeBatRows.length, s: "Games Played" },
             { k: "R", v: activeBatTotals.R, s: "Runs" },
             { k: "RBI", v: activeBatTotals.RBI, s: "Runs Batted In" },
@@ -3417,7 +3376,6 @@ function renderSummary() {
         `).join("");
     }
 
-    // ---------- FIELDING (UNCHANGED) ----------
     $("#fieldingStrip").innerHTML = [
         { k: "TC", v: activeFldTotals.TC, s: "Total chances" },
         { k: "PO", v: activeFldTotals.PO, s: "Putouts" },
@@ -3432,24 +3390,20 @@ function renderSummary() {
         </div>
     `).join("");
 
-    // ---------- CHART ----------
+    const fieldingCanvas = document.getElementById("fieldingChart");
+    if (fieldingCanvas) {
+        renderFieldingChart(fieldingCanvas, activeFldTotals);
+    }
+
+    // leave hero unchanged
     const chartCanvas = document.getElementById("hitTypeChart");
     if (chartCanvas) {
         seasonHitPie.render(
             chartCanvas,
             ["1B", "2B", "3B", "HR"],
-            [hitTypes.singles, hitTypes.doubles, hitTypes.triples, hitTypes.hrs]
+            [activeHitTypes.singles, activeHitTypes.doubles, activeHitTypes.triples, activeHitTypes.hrs]
         );
     }
-
-    // ---------- HERO ----------
-    const rates = computeBattingRatesFromTotals(activeBatTotals);
-
-    $("#heroAVG").textContent = fmt3(rates.avg);
-    $("#heroOBP").textContent = fmt3(rates.slg);
-    $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(getBaseBattingRows()));
-    $("#heroSeasonText").textContent =
-        currentSeason === "career" ? "Career" : currentSeason;
 }
 
 
