@@ -3868,14 +3868,6 @@ function renderVsOpponentFieldingAllTime(opponent) {
     renderSummary();
 });
 
-$("#resetFld").addEventListener("click", () => {
-    clearSelectedGameSummary();
-    resetState(fieldingState);
-    $("#oppFld").value = "";
-    setSharedOpponent("");
-    refreshFielding();
-    renderSummary();
-});
 
     $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
 
