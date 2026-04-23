@@ -1675,9 +1675,10 @@ td[data-label="Opponent"] .opp-emoji {
                             </div>
 
                             <div id="vsOppWrap" style="display:none; margin: 10px 0 12px;">
-                                <div id="vsOppLabel" class="vs-opp-title">—</div>
+    <div id="vsOppLabel" class="vs-opp-title">—</div>
+    <div class="summary-logo-wrap" id="vsOppLogoWrapBat"></div>
 
-                                <div class="stat-strip" id="vsOppStrip"></div>
+    <div class="stat-strip" id="vsOppStrip"></div>
 
                                 <div class="divider"></div>
 
@@ -1726,6 +1727,7 @@ td[data-label="Opponent"] .opp-emoji {
 
                             <div id="vsOppWrapFld" style="display:none; margin: 10px 0 12px;">
     <div id="vsOppLabelFld" class="vs-opp-title">—</div>
+    <div class="summary-logo-wrap" id="vsOppLogoWrapFld"></div>
     <div class="stat-strip" id="vsOppStripFld"></div>
 
     <div class="divider"></div>
@@ -2471,6 +2473,14 @@ function sameGame(a, b) {
         a.opponent === b.opponent &&
         (a.result || "") === (b.result || "")
     );
+}
+
+function opponentLogoHTML(opponent) {
+    const logo = logoFor(opponent);
+    if (logo) {
+        return `<img src="${logo}" class="summary-logo" alt="${opponent} logo">`;
+    }
+    return `<div class="selected-game-logo fallback">${initials(opponent)}</div>`;
 }
 
 function findMatchingBattingGame(fieldingGame) {
@@ -3729,19 +3739,21 @@ function renderVsOpponentAllTime(opponent) {
     const strip = $("#vsOppStrip");
     if (!wrap || !strip) return;
 
-    if (!opponent) {
-        wrap.style.display = "none";
-        const label = $("#vsOppLabel");
-        if (label) label.textContent = "—";
-        strip.innerHTML = "";
+   if (!opponent) {
+    wrap.style.display = "none";
+    const label = $("#vsOppLabel");
+    if (label) label.textContent = "—";
+    const logoWrap = $("#vsOppLogoWrapBat");
+    if (logoWrap) logoWrap.innerHTML = "";
+    strip.innerHTML = "";
 
-        const chart = document.getElementById("vsOppHitTypeChart");
-        if (chart) {
-            const ctx = chart.getContext("2d");
-            ctx.clearRect(0, 0, chart.width, chart.height);
-        }
-        return;
+    const chart = document.getElementById("vsOppHitTypeChart");
+    if (chart) {
+        const ctx = chart.getContext("2d");
+        ctx.clearRect(0, 0, chart.width, chart.height);
     }
+    return;
+}
 
     wrap.style.display = "";
     const baseLog = currentSeason === "career" ? careerBattingLog : battingLog;
@@ -3788,19 +3800,21 @@ function renderVsOpponentFieldingAllTime(opponent) {
     const strip = $("#vsOppStripFld");
     if (!wrap || !strip) return;
 
-    if (!opponent) {
-        wrap.style.display = "none";
-        const label = $("#vsOppLabelFld");
-        if (label) label.textContent = "—";
-        strip.innerHTML = "";
+   if (!opponent) {
+    wrap.style.display = "none";
+    const label = $("#vsOppLabelFld");
+    if (label) label.textContent = "—";
+    const logoWrap = $("#vsOppLogoWrapFld");
+    if (logoWrap) logoWrap.innerHTML = "";
+    strip.innerHTML = "";
 
-        const chart = document.getElementById("vsOppFieldingChart");
-        if (chart) {
-            const ctx = chart.getContext("2d");
-            ctx.clearRect(0, 0, chart.width, chart.height);
-        }
-        return;
+    const chart = document.getElementById("vsOppFieldingChart");
+    if (chart) {
+        const ctx = chart.getContext("2d");
+        ctx.clearRect(0, 0, chart.width, chart.height);
     }
+    return;
+}
 
     wrap.style.display = "";
     const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
@@ -3814,6 +3828,10 @@ function renderVsOpponentFieldingAllTime(opponent) {
     if (label) {
         label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} Record vs ${opponent}`;
     }
+    const logoWrap = $("#vsOppLogoWrapBat");
+if (logoWrap) {
+    logoWrap.innerHTML = opponentLogoHTML(opponent);
+}
 
     strip.innerHTML = [
         { k: "REC", v: `${wins}-${losses}`, s: "Team Record" },
