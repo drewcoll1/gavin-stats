@@ -3095,9 +3095,15 @@ function hookTableSort(tableSel, state, refreshFn) {
 }
 
 /* ------------ OPPONENT SELECTS ------------ */
-function renderOpponentSelect(selectEl, rows) {
+function renderOpponentSelect(selectEl, rows, ivyOnly = false) {
     if (!selectEl) return;
-    const unique = [...new Set(rows.map((r) => r.opponent))].sort((a, b) => a.localeCompare(b));
+
+    const pool = ivyOnly
+        ? rows.filter((r) => ivyTeams.has(r.opponent))
+        : rows;
+
+    const unique = [...new Set(pool.map((r) => r.opponent))].sort((a, b) => a.localeCompare(b));
+
     selectEl.innerHTML =
         `<option value="">All</option>` +
         unique.map((o) => `<option value="${o}">${o}</option>`).join("");
@@ -3126,6 +3132,14 @@ function setSharedOpponent(opponent) {
     renderVsOpponentAllTime(selectedOpponent);
     renderVsOpponentFieldingAllTime(selectedOpponent);
     renderSummary();
+}
+
+function syncOpponentSelects() {
+    renderOpponentSelect($("#oppBat"), battingLog, !!battingState.ivyOnly);
+    renderOpponentSelect($("#oppFld"), fieldingLog, !!fieldingState.ivyOnly);
+
+    if ($("#oppBat")) $("#oppBat").value = battingState.opponent || "";
+    if ($("#oppFld")) $("#oppFld").value = fieldingState.opponent || "";
 }
 
 /* ------------ TABLE RENDER ------------ */
@@ -3754,13 +3768,12 @@ function applySeason(seasonKey) {
     resetState(battingState);
     resetState(fieldingState);
 
-    renderOpponentSelect($("#oppBat"), battingLog);
-    renderOpponentSelect($("#oppFld"), fieldingLog);
+    syncOpponentSelects();
 
-    $("#oppBat").value = "";
-    $("#oppFld").value = "";
-    setSharedOpponent("");
-    syncIvyButtons();
+$("#oppBat").value = "";
+$("#oppFld").value = "";
+setSharedOpponent("");
+syncIvyButtons();
 
     renderVsOpponentAllTime("");
     renderVsOpponentFieldingAllTime("");
@@ -3936,14 +3949,22 @@ function renderVsOpponentFieldingAllTime(opponent) {
         syncIvyVisibility();
     });
 
-   $("#ivyBat").addEventListener("click", () => {
+  $("#ivyBat").addEventListener("click", () => {
     const next = !battingState.ivyOnly;
     battingState.ivyOnly = next;
     fieldingState.ivyOnly = next;
+
+    battingState.opponent = "";
+    fieldingState.opponent = "";
+
     clearSelectedGameSummary();
     syncIvyButtons();
+    syncOpponentSelects();
+    syncIvyVisibility();
     refreshBatting();
     refreshFielding();
+    renderVsOpponentAllTime("");
+    renderVsOpponentFieldingAllTime("");
     renderSummary();
 });
 
@@ -3951,10 +3972,18 @@ $("#ivyFld").addEventListener("click", () => {
     const next = !fieldingState.ivyOnly;
     battingState.ivyOnly = next;
     fieldingState.ivyOnly = next;
+
+    battingState.opponent = "";
+    fieldingState.opponent = "";
+
     clearSelectedGameSummary();
     syncIvyButtons();
+    syncOpponentSelects();
+    syncIvyVisibility();
     refreshBatting();
     refreshFielding();
+    renderVsOpponentAllTime("");
+    renderVsOpponentFieldingAllTime("");
     renderSummary();
 });
 
