@@ -2319,11 +2319,17 @@ function computeAdvancedFromLog(t) {
     };
 }
 
-function computeOPSFromTotals(t) {
+function computeOPSFromTotals(t, extras = {}) {
+    const BB = Number(extras.BB || 0);
+    const HBP = Number(extras.HBP || 0);
+    const SF = Number(extras.SF || 0);
+
     const avg = safeDiv(t.H, t.AB);
     const slg = safeDiv(t.TB, t.AB);
-    const ops = isFinite(avg) && isFinite(slg) ? avg + slg : NaN;
-    return { avg, slg, ops };
+    const obp = safeDiv(t.H + BB + HBP, t.AB + BB + HBP + SF);
+    const ops = isFinite(obp) && isFinite(slg) ? obp + slg : NaN;
+
+    return { avg, obp, slg, ops };
 }
 
 function computeFieldingTotals(rows) {
@@ -3319,22 +3325,38 @@ function renderSummary() {
     if (fieldingChartWrap) fieldingChartWrap.style.display = "";
 
     const activeBatRows = getActiveBattingRows();
-const activeFldRows = getActiveFieldingRows();
+    const activeFldRows = getActiveFieldingRows();
 
-const activeBatTotals = computeBattingTotals(activeBatRows);
-const activeFldTotals = computeFieldingTotals(activeFldRows);
-const activeHitTypes = computeHitTypeTotals(activeBatRows);
-const activeBatRates = computeOPSFromTotals(activeBatTotals);
+    const activeBatTotals = computeBattingTotals(activeBatRows);
+    const activeFldTotals = computeFieldingTotals(activeFldRows);
+    const activeHitTypes = computeHitTypeTotals(activeBatRows);
+
+    const seasonOfficial =
+        currentSeason === "career"
+            ? careerOfficialBattingTotals()
+            : officialTotals[currentSeason] || {};
+
+    const activeBatRates = computeOPSFromTotals(
+        activeBatTotals,
+        battingState.ivyOnly || battingState.opponent
+            ? {}
+            : {
+                  BB: seasonOfficial.BB || 0,
+                  HBP: seasonOfficial.HBP || 0,
+                  SF: seasonOfficial.SF || 0
+              }
+    );
 
     $("#summaryStrip").innerHTML = [
-    { k: "SLG", v: fmt3(activeBatRates.slg), s: "Slugging %" },
-    { k: "OPS", v: fmt3(activeBatRates.ops), s: "OBP + SLG %" },
-    { k: "GP", v: activeBatRows.length, s: battingState.ivyOnly ? "Ivy League Games" : "Games Played" },
-    { k: "R", v: activeBatTotals.R, s: "Runs" },
-    { k: "RBI", v: activeBatTotals.RBI, s: "Runs Batted In" },
-    { k: "TB", v: activeBatTotals.TB, s: "Total Bases" },
-    { k: "H/AB", v: `${activeBatTotals.H}/${activeBatTotals.AB}`, s: "Hits / At-Bats" }
-].map((x) => `
+        { k: "OBP", v: fmt3(activeBatRates.obp), s: "On-Base %" },
+        { k: "SLG", v: fmt3(activeBatRates.slg), s: "Slugging %" },
+        { k: "OPS", v: fmt3(activeBatRates.ops), s: "OBP + SLG %" },
+        { k: "GP", v: activeBatRows.length, s: battingState.ivyOnly ? "Ivy League Games" : "Games Played" },
+        { k: "R", v: activeBatTotals.R, s: "Runs" },
+        { k: "RBI", v: activeBatTotals.RBI, s: "Runs Batted In" },
+        { k: "TB", v: activeBatTotals.TB, s: "Total Bases" },
+        { k: "H/AB", v: `${activeBatTotals.H}/${activeBatTotals.AB}`, s: "Hits / At-Bats" }
+    ].map((x) => `
         <div class="stat">
             <div class="k">${x.k}</div>
             <div class="v">${x.v}</div>
@@ -3343,12 +3365,12 @@ const activeBatRates = computeOPSFromTotals(activeBatTotals);
     `).join("");
 
     $("#fieldingStrip").innerHTML = [
-    { k: "TC", v: activeFldTotals.TC, s: "Total chances" },
-    { k: "PO", v: activeFldTotals.PO, s: "Putouts" },
-    { k: "A", v: activeFldTotals.A, s: "Assists" },
-    { k: "E", v: activeFldTotals.E, s: "Errors" },
-    { k: "FPCT", v: fmt3(activeFldTotals.FPCT), s: "Fielding %" }
-].map((x) => `
+        { k: "TC", v: activeFldTotals.TC, s: "Total chances" },
+        { k: "PO", v: activeFldTotals.PO, s: "Putouts" },
+        { k: "A", v: activeFldTotals.A, s: "Assists" },
+        { k: "E", v: activeFldTotals.E, s: "Errors" },
+        { k: "FPCT", v: fmt3(activeFldTotals.FPCT), s: "Fielding %" }
+    ].map((x) => `
         <div class="stat">
             <div class="k">${x.k}</div>
             <div class="v">${x.v}</div>
@@ -3356,13 +3378,13 @@ const activeBatRates = computeOPSFromTotals(activeBatTotals);
         </div>
     `).join("");
 
-        const fieldingCanvas = document.getElementById("fieldingChart");
+    const fieldingCanvas = document.getElementById("fieldingChart");
     if (fieldingCanvas) {
         renderFieldingChart(fieldingCanvas, activeFldTotals);
     }
 
     $("#heroAVG").textContent = fmt3(activeBatRates.avg);
-    $("#heroOBP").textContent = "—";
+    $("#heroOBP").textContent = fmt3(activeBatRates.obp);
     $("#heroIvyAVG").textContent = fmt3(computeIvyAvg(getBaseBattingRows()));
     $("#heroSeasonText").textContent = currentSeason === "career" ? "Career" : currentSeason;
 
