@@ -2327,6 +2327,16 @@ function syncIvyButtons() {
     if (ivyFld) ivyFld.classList.toggle("active", !!fieldingState.ivyOnly);
 }
 
+function syncIvyVisibility() {
+    const ivyBat = document.getElementById("ivyBat");
+    const ivyFld = document.getElementById("ivyFld");
+
+    const hide = !!battingState.opponent; // if a team is selected
+
+    if (ivyBat) ivyBat.style.display = hide ? "none" : "inline-flex";
+    if (ivyFld) ivyFld.style.display = hide ? "none" : "inline-flex";
+}
+
 function computeOPSFromTotals(t) {
     const avg = safeDiv(t.H, t.AB);
     const slg = safeDiv(t.TB, t.AB);
@@ -3084,6 +3094,7 @@ function setSharedOpponent(opponent) {
     if ($("#oppFld")) $("#oppFld").value = opponent || "";
 
     syncIvyButtons();
+    syncIvyVisibility(); // 👈 ADD THIS
     clearSelectedGameSummary();
     refreshBatting();
     refreshFielding();
@@ -3789,6 +3800,7 @@ function renderVsOpponentFieldingAllTime(opponent) {
         resetState(fieldingState);
         setSharedOpponent("");
         syncIvyButtons();
+        syncIvyVisibility();
     });
 
     $("#oppFld").addEventListener("change", (e) => setSharedOpponent(e.target.value));
@@ -3798,6 +3810,7 @@ function renderVsOpponentFieldingAllTime(opponent) {
         resetState(fieldingState);
         setSharedOpponent("");
         syncIvyButtons();
+        syncIvyVisibility();
     });
 
     $("#ivyBat").addEventListener("click", () => {
@@ -3826,7 +3839,8 @@ function renderVsOpponentFieldingAllTime(opponent) {
     $("#seasonSelect").addEventListener("change", (e) => applySeason(e.target.value));
 
     syncIvyButtons();
-    setTab("batting");
+syncIvyVisibility(); // 👈 ADD THIS
+setTab("batting");
 })();
 
 </script>
