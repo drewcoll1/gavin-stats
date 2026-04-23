@@ -2475,13 +2475,6 @@ function sameGame(a, b) {
     );
 }
 
-function opponentLogoHTML(opponent) {
-    const logo = logoFor(opponent);
-    if (logo) {
-        return `<img src="${logo}" class="summary-logo" alt="${opponent} logo">`;
-    }
-    return `<div class="selected-game-logo fallback">${initials(opponent)}</div>`;
-}
 
 function findMatchingBattingGame(fieldingGame) {
     if (!fieldingGame) return null;
@@ -3748,25 +3741,29 @@ function renderVsOpponentAllTime(opponent) {
     const strip = $("#vsOppStrip");
     if (!wrap || !strip) return;
 
-   if (!opponent) {
-    wrap.style.display = "none";
-    const label = $("#vsOppLabel");
-    if (label) label.textContent = "—";
-    const logoWrap = $("#vsOppLogoWrapBat");
-    if (logoWrap) logoWrap.innerHTML = "";
-    strip.innerHTML = "";
+    if (!opponent) {
+        wrap.style.display = "none";
+        const label = $("#vsOppLabel");
+        if (label) label.textContent = "—";
 
-    const chart = document.getElementById("vsOppHitTypeChart");
-    if (chart) {
-        const ctx = chart.getContext("2d");
-        ctx.clearRect(0, 0, chart.width, chart.height);
+        const logoWrap = $("#vsOppLogoWrapBat");
+        if (logoWrap) logoWrap.innerHTML = "";
+
+        strip.innerHTML = "";
+
+        const chart = document.getElementById("vsOppHitTypeChart");
+        if (chart) {
+            const ctx = chart.getContext("2d");
+            ctx.clearRect(0, 0, chart.width, chart.height);
+        }
+        return;
     }
-    return;
-}
 
     wrap.style.display = "";
+
     const baseLog = currentSeason === "career" ? careerBattingLog : battingLog;
     const rows = baseLog.filter((r) => r.opponent === opponent);
+
     const totals = computeBattingTotals(rows);
     const rates = computeAdvancedFromLog(totals);
     const hitTypes = computeHitTypeTotals(rows);
@@ -3777,6 +3774,12 @@ function renderVsOpponentAllTime(opponent) {
     const label = $("#vsOppLabel");
     if (label) {
         label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} vs ${opponent}`;
+    }
+
+    /* ✅ THIS WAS MISSING (BAT LOGO FIX) */
+    const logoWrap = $("#vsOppLogoWrapBat");
+    if (logoWrap) {
+        logoWrap.innerHTML = opponentLogoHTML(opponent);
     }
 
     strip.innerHTML = [
@@ -3809,25 +3812,29 @@ function renderVsOpponentFieldingAllTime(opponent) {
     const strip = $("#vsOppStripFld");
     if (!wrap || !strip) return;
 
-   if (!opponent) {
-    wrap.style.display = "none";
-    const label = $("#vsOppLabelFld");
-    if (label) label.textContent = "—";
-    const logoWrap = $("#vsOppLogoWrapFld");
-    if (logoWrap) logoWrap.innerHTML = "";
-    strip.innerHTML = "";
+    if (!opponent) {
+        wrap.style.display = "none";
+        const label = $("#vsOppLabelFld");
+        if (label) label.textContent = "—";
 
-    const chart = document.getElementById("vsOppFieldingChart");
-    if (chart) {
-        const ctx = chart.getContext("2d");
-        ctx.clearRect(0, 0, chart.width, chart.height);
+        const logoWrap = $("#vsOppLogoWrapFld");
+        if (logoWrap) logoWrap.innerHTML = "";
+
+        strip.innerHTML = "";
+
+        const chart = document.getElementById("vsOppFieldingChart");
+        if (chart) {
+            const ctx = chart.getContext("2d");
+            ctx.clearRect(0, 0, chart.width, chart.height);
+        }
+        return;
     }
-    return;
-}
 
     wrap.style.display = "";
+
     const baseLog = currentSeason === "career" ? careerFieldingLog : fieldingLog;
     const rows = baseLog.filter((r) => r.opponent === opponent);
+
     const fld = computeFieldingTotals(rows);
 
     const wins = rows.filter((r) => String(r.result || "").trim().startsWith("W")).length;
@@ -3835,12 +3842,13 @@ function renderVsOpponentFieldingAllTime(opponent) {
 
     const label = $("#vsOppLabelFld");
     if (label) {
-        label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} Record vs ${opponent}`;
+        label.textContent = `${currentSeason === "career" ? "Career" : currentSeason} vs ${opponent}`;
     }
+
     const logoWrap = $("#vsOppLogoWrapFld");
-if (logoWrap) {
-    logoWrap.innerHTML = opponentLogoHTML(opponent);
-}
+    if (logoWrap) {
+        logoWrap.innerHTML = opponentLogoHTML(opponent);
+    }
 
     strip.innerHTML = [
         { k: "REC", v: `${wins}-${losses}`, s: "Team Record" },
@@ -3861,7 +3869,6 @@ if (logoWrap) {
     const chartCanvas = document.getElementById("vsOppFieldingChart");
     if (chartCanvas) renderFieldingChart(chartCanvas, fld);
 }
-
 /* ------------ INIT ------------ */
 (function init() {
     buildCareer();
