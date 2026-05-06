@@ -438,6 +438,17 @@ body {
     height: 230px !important;
 }
 
+#battingBody tr.tournament-bar td,
+#fieldingBody tr.tournament-bar td {
+    background: linear-gradient(180deg, rgb(166, 0, 0), rgb(120, 0, 0)) !important;
+    color: #fff !important;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    cursor: default !important;
+}
+
 
 /* =========================================================
    6. TEAM RECORD STRIP
@@ -3207,6 +3218,10 @@ function renderBattingTable(rows) {
     body.innerHTML = "";
 
     for (const r of rows) {
+        const tournamentLabel = getTournamentBar(r);
+if (tournamentLabel) {
+    appendTournamentBar(body, tournamentLabel, 10);
+}
         const tr = document.createElement("tr");
         tr.dataset.date = r.date;
         tr.dataset.opponent = r.opponent;
@@ -3241,12 +3256,37 @@ function renderBattingTable(rows) {
     restoreSelectedRows();
 }
 
+function getTournamentBar(r) {
+    const key = `${r.date}|${r.opponent}|${r.result || ""}`;
+
+    const bars = {
+        "5/16/2025|Columbia|L, 3-4": "Ivy League Tournament",
+
+        "5/17/2024|Columbia|W, 8-4": "Ivy League Tournament",
+
+        "5/31/2024|Virginia|L, 2-4": "NCAA Tournament"
+    };
+
+    return bars[key] || "";
+}
+
+function appendTournamentBar(body, label, colSpan) {
+    const bar = document.createElement("tr");
+    bar.className = "tournament-bar";
+    bar.innerHTML = `<td colspan="${colSpan}">${label}</td>`;
+    body.appendChild(bar);
+}
+
 function renderFieldingTable(rows) {
     const body = $("#fieldingBody");
     if (!body) return;
     body.innerHTML = "";
 
     for (const r of rows) {
+        const tournamentLabel = getTournamentBar(r);
+if (tournamentLabel) {
+    appendTournamentBar(body, tournamentLabel, 8);
+}
         const tr = document.createElement("tr");
         tr.dataset.date = r.date;
         tr.dataset.opponent = r.opponent;
