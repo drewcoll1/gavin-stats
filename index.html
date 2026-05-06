@@ -1464,6 +1464,11 @@ td[data-label="Opponent"] .opp-emoji {
         min-width: 120px !important;
     }
 
+        #battingBody tr.tournament-bar td,
+    #fieldingBody tr.tournament-bar td {
+        text-align: left !important;
+        padding-left: 14px !important;
+    }
     .controls {
         flex-wrap: nowrap;
         align-items: center;
@@ -3257,14 +3262,15 @@ if (tournamentLabel) {
 }
 
 function getTournamentBar(r) {
+    if (currentSeason === "career") return "";
     const key = `${r.date}|${r.opponent}|${r.result || ""}`;
 
     const bars = {
-        "5/16/2025|Columbia|L, 3-4": "Ivy League Tournament",
+        "5/16/2025|Columbia|L, 3-4": "2025 Ivy League Tournament",
 
-        "5/17/2024|Columbia|W, 8-4": "Ivy League Tournament",
+        "5/17/2024|Columbia|W, 8-4": "2024 Ivy League Tournament",
 
-        "5/31/2024|Virginia|L, 2-4": "College World Series"
+        "5/31/2024|Virginia|L, 2-4": "2024 College World Series"
     };
 
     return bars[key] || "";
